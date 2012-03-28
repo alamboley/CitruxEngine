@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<app title="Citrux Engine Example" file="CitruxEngineExample" main="fr.aymericlamboley.test.Main" package="fr.aymericlamboley.test" version="1.0.0" company="Aymeric Lamboley"/>
-	
-	<window width="800" height="600" fps="30" orientation="portrait" resizable="true"/>
- 	
-	<set name="BUILD_DIR" value="Export" />
-	
-	<classpath name="Source" />
+	<meta title="Citrux Engine Example" package="fr.aymericlamboley.test" version="1.0.0" company="Aymeric Lamboley" />
+	<app main="fr.aymericlamboley.test.Main" file="CitruxEngineExample" path="Export" />
+
+	<window width="800" height="600" unless="mobile" />
+	<window fps="30" />
+
+	<source path="Source" />
 	
 	<haxelib name="nme" />
-	<haxelib name="actuate" />
 	<haxelib name="box2d" />
-	
-	<icon path="Assets/nme.svg" />
 
 	<assets path="Assets" rename="assets" include="*" exclude="nme.svg" />
+
+	<icon path="Assets/nme.svg" />
 	
 	<ndll name="std" />
 	<ndll name="regexp" />

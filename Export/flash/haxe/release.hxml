@@ -2,7 +2,6 @@
 -D nme_install_tool
 -cp Source
 -lib nme
--lib actuate
 -lib box2d
 -D web
 -swf-version 10

@@ -663,18 +663,6 @@ com.citruxengine.objects.PhysicsObject.prototype.getBody = function() {
 }
 com.citruxengine.objects.PhysicsObject.prototype.__class__ = com.citruxengine.objects.PhysicsObject;
 com.citruxengine.objects.PhysicsObject.__interfaces__ = [com.citruxengine.view.ISpriteView];
-box2D.dynamics.B2ContactListener = function(p) {
-}
-box2D.dynamics.B2ContactListener.__name__ = ["box2D","dynamics","B2ContactListener"];
-box2D.dynamics.B2ContactListener.prototype.beginContact = function(contact) {
-}
-box2D.dynamics.B2ContactListener.prototype.endContact = function(contact) {
-}
-box2D.dynamics.B2ContactListener.prototype.preSolve = function(contact,oldManifold) {
-}
-box2D.dynamics.B2ContactListener.prototype.postSolve = function(contact,impulse) {
-}
-box2D.dynamics.B2ContactListener.prototype.__class__ = box2D.dynamics.B2ContactListener;
 if(!com.citruxengine.objects.platformer) com.citruxengine.objects.platformer = {}
 com.citruxengine.objects.platformer.Platform = function(name,params) {
 	if( name === $_ ) return;
@@ -699,16 +687,7 @@ com.citruxengine.objects.platformer.Platform.prototype.defineFixture = function(
 com.citruxengine.objects.platformer.Platform.prototype.createFixture = function() {
 	com.citruxengine.objects.PhysicsObject.prototype.createFixture.call(this);
 }
-com.citruxengine.objects.platformer.Platform.prototype.beginContact = function(contact) {
-}
-com.citruxengine.objects.platformer.Platform.prototype.endContact = function(contact) {
-}
-com.citruxengine.objects.platformer.Platform.prototype.preSolve = function(contact,oldManifold) {
-}
-com.citruxengine.objects.platformer.Platform.prototype.postSolve = function(contact,impulse) {
-}
 com.citruxengine.objects.platformer.Platform.prototype.__class__ = com.citruxengine.objects.platformer.Platform;
-com.citruxengine.objects.platformer.Platform.__interfaces__ = [box2D.dynamics.B2ContactListener];
 box2D.collision.ClipVertex = function(p) {
 	if( p === $_ ) return;
 	this.v = new box2D.common.math.B2Vec2();
@@ -5421,6 +5400,18 @@ jeash.display.GradientType.RADIAL.__enum__ = jeash.display.GradientType;
 jeash.display.GradientType.LINEAR = ["LINEAR",1];
 jeash.display.GradientType.LINEAR.toString = $estr;
 jeash.display.GradientType.LINEAR.__enum__ = jeash.display.GradientType;
+box2D.dynamics.B2ContactListener = function(p) {
+}
+box2D.dynamics.B2ContactListener.__name__ = ["box2D","dynamics","B2ContactListener"];
+box2D.dynamics.B2ContactListener.prototype.beginContact = function(contact) {
+}
+box2D.dynamics.B2ContactListener.prototype.endContact = function(contact) {
+}
+box2D.dynamics.B2ContactListener.prototype.preSolve = function(contact,oldManifold) {
+}
+box2D.dynamics.B2ContactListener.prototype.postSolve = function(contact,impulse) {
+}
+box2D.dynamics.B2ContactListener.prototype.__class__ = box2D.dynamics.B2ContactListener;
 jeash.display.LineScaleMode = { __ename__ : ["jeash","display","LineScaleMode"], __constructs__ : ["HORIZONTAL","NONE","NORMAL","VERTICAL"] }
 jeash.display.LineScaleMode.HORIZONTAL = ["HORIZONTAL",0];
 jeash.display.LineScaleMode.HORIZONTAL.toString = $estr;
@@ -18827,7 +18818,6 @@ box2D.dynamics.joints.B2Joint.e_inactiveLimit = 0;
 box2D.dynamics.joints.B2Joint.e_atLowerLimit = 1;
 box2D.dynamics.joints.B2Joint.e_atUpperLimit = 2;
 box2D.dynamics.joints.B2Joint.e_equalLimits = 3;
-box2D.dynamics.B2ContactListener.b2_defaultListener = new box2D.dynamics.B2ContactListener();
 jeash.errors.Error.DEFAULT_TO_STRING = "Error";
 box2D.dynamics.B2ContactManager.s_evalCP = new box2D.collision.B2ContactPoint();
 haxe.xml.Check.blanks = new EReg("^[ \r\n\t]*$","");
@@ -18889,6 +18879,7 @@ box2D.collision.shapes.B2Shape.e_shapeTypeCount = 3;
 box2D.collision.shapes.B2Shape.e_hitCollide = 1;
 box2D.collision.shapes.B2Shape.e_missCollide = 0;
 box2D.collision.shapes.B2Shape.e_startsInsideCollide = -1;
+box2D.dynamics.B2ContactListener.b2_defaultListener = new box2D.dynamics.B2ContactListener();
 jeash.display.StageQuality.BEST = "best";
 jeash.display.StageQuality.HIGH = "high";
 jeash.display.StageQuality.MEDIUM = "medium";
