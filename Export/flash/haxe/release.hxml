@@ -1,0 +1,11 @@
+-main ApplicationMain 
+-D nme_install_tool
+-cp Source
+-lib nme
+-lib actuate
+-lib box2d
+-D web
+-swf-version 10
+-swf9 Export/flash/bin/CitruxEngineExample.swf
+-swf-header 800:600:30:ffffff
+-cp Export/flash/haxe

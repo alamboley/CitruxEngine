@@ -1,0 +1,11 @@
+-main ApplicationMain 
+-D nme_install_tool
+-cp Source
+-lib nme
+-lib actuate
+-lib box2d
+-D web
+-js Export/html5/bin/CitruxEngineExample.js
+-cp Export/html5/haxe
+--remap flash:jeash
+-lib jeash
