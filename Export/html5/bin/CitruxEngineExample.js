@@ -463,15 +463,17 @@ com.citruxengine.objects.PhysicsObject = function(name,params) {
 	this.setParallax(1);
 	this._animation = "";
 	this.setVisible(true);
-	this.setX(this.setY(this.setRadius(this.setRotation(this.setOffsetX(this.setOffsetY(0))))));
-	this.setWidth(30);
-	this.setHeight(30);
+	this.setRadius(this.setRotation(this.setOffsetX(this.setOffsetY(0))));
+	this._x = 0;
+	this._y = 0;
+	this._width = 1;
+	this._height = 1;
 	this.setGroup(0);
 	this.setView(jeash.display.MovieClip);
 	this.setRegistration("center");
 	com.citruxengine.core.CitruxObject.call(this,name,params);
 	if(this._box2D == null) {
-		haxe.Log.trace("Cannot create PhysicsObject when a Box2D object has not been added to the state.",{ fileName : "PhysicsObject.hx", lineNumber : 73, className : "com.citruxengine.objects.PhysicsObject", methodName : "new"});
+		haxe.Log.trace("Cannot create PhysicsObject when a Box2D object has not been added to the state.",{ fileName : "PhysicsObject.hx", lineNumber : 80, className : "com.citruxengine.objects.PhysicsObject", methodName : "new"});
 		return;
 	}
 	this.defineBody();
@@ -511,6 +513,10 @@ com.citruxengine.objects.PhysicsObject.prototype._fixtureDef = null;
 com.citruxengine.objects.PhysicsObject.prototype._fixture = null;
 com.citruxengine.objects.PhysicsObject.prototype._inverted = null;
 com.citruxengine.objects.PhysicsObject.prototype._animation = null;
+com.citruxengine.objects.PhysicsObject.prototype._x = null;
+com.citruxengine.objects.PhysicsObject.prototype._y = null;
+com.citruxengine.objects.PhysicsObject.prototype._width = null;
+com.citruxengine.objects.PhysicsObject.prototype._height = null;
 com.citruxengine.objects.PhysicsObject.prototype.destroy = function() {
 	com.citruxengine.core.CitruxObject.prototype.destroy.call(this);
 }
@@ -524,7 +530,7 @@ com.citruxengine.objects.PhysicsObject.prototype.update = function(timeDelta) {
 com.citruxengine.objects.PhysicsObject.prototype.defineBody = function() {
 	this._bodyDef = new box2D.dynamics.B2BodyDef();
 	this._bodyDef.type = box2D.dynamics.B2Body.b2_dynamicBody;
-	this._bodyDef.position.set(this.getX(),this.getY());
+	this._bodyDef.position.set(this._x,this._y);
 	this._bodyDef.angle = this.getRotation();
 }
 com.citruxengine.objects.PhysicsObject.prototype.createBody = function() {
@@ -543,7 +549,7 @@ com.citruxengine.objects.PhysicsObject.prototype.createShape = function() {
 			if(Std["is"]($t,box2D.collision.shapes.B2PolygonShape)) $t; else throw "Class cast error";
 			$r = $t;
 			return $r;
-		}(this))).setAsBox(this.getWidth() / 2,this.getHeight() / 2);
+		}(this))).setAsBox(this._width / 2,this._height / 2);
 	}
 }
 com.citruxengine.objects.PhysicsObject.prototype.defineFixture = function() {
@@ -561,40 +567,40 @@ com.citruxengine.objects.PhysicsObject.prototype.defineJoint = function() {
 com.citruxengine.objects.PhysicsObject.prototype.createJoint = function() {
 }
 com.citruxengine.objects.PhysicsObject.prototype.getX = function() {
-	if(this._body != null) return this._body.getPosition().x * this._box2D.getScale(); else return this.x / this._box2D.getScale();
+	if(this._body != null) return this._body.getPosition().x * this._box2D.getScale(); else return this._x * this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.setX = function(value) {
-	this.x = value;
+	this._x = value / this._box2D.getScale();
 	if(this._body != null) {
 		var pos = this._body.getPosition();
-		pos.x = this.getX();
+		pos.x = this._x;
 		this._body.setTransform(new box2D.common.math.B2Transform(pos,box2D.common.math.B2Mat22.fromAngle(this._body.getAngle())));
 	}
-	return this.getX();
+	return this._x;
 }
 com.citruxengine.objects.PhysicsObject.prototype.getY = function() {
-	if(this._body != null) return this._body.getPosition().y * this._box2D.getScale(); else return this.y / this._box2D.getScale();
+	if(this._body != null) return this._body.getPosition().y * this._box2D.getScale(); else return this._y * this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.setY = function(value) {
-	this.y = value;
+	this._y = value / this._box2D.getScale();
 	if(this._body != null) {
 		var pos = this._body.getPosition();
-		pos.y = this.getY();
+		pos.y = this._y;
 		this._body.setTransform(new box2D.common.math.B2Transform(pos,box2D.common.math.B2Mat22.fromAngle(this._body.getAngle())));
 	}
-	return this.getY();
+	return this._y;
 }
 com.citruxengine.objects.PhysicsObject.prototype.getWidth = function() {
-	return this.width;
+	return this._width * this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.setWidth = function(value) {
-	return this.width = value / this._box2D.getScale();
+	return this._width = value / this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.getHeight = function() {
-	return this.height;
+	return this._height * this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.setHeight = function(value) {
-	return this.height = value / this._box2D.getScale();
+	return this._height = value / this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.getRadius = function() {
 	return this.radius;
@@ -9115,8 +9121,9 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	var box2d = new com.citruxengine.physics.Box2D("Box2D");
 	box2d.setVisible(true);
 	this.add(box2d);
-	var citruxObject = new com.citruxengine.objects.PhysicsObject("monCitruxObject",{ x : 250, y : 200, width : 30, height : 30});
+	var citruxObject = new com.citruxengine.objects.PhysicsObject("monCitruxObject",{ x : 100, y : 20});
 	this.add(citruxObject);
+	haxe.Log.trace(citruxObject.getWidth(),{ fileName : "GameState.hx", lineNumber : 28, className : "fr.aymericlamboley.test.GameState", methodName : "initialize"});
 	var platformBot = new com.citruxengine.objects.platformer.Platform("platformBot",{ x : 260, y : 450, width : 500, height : 30});
 	this.add(platformBot);
 }

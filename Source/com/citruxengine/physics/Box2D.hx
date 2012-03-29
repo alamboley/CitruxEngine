@@ -30,22 +30,29 @@ class Box2D extends CitruxObject, implements ISpriteView {
 
 	private var physicsDebug:Sprite;
 
+	var _world:B2World;
+	var _scale:Int;
+
+	var _visible:Bool;
+	var _group:Int;
+	var _view:Dynamic;
+
 	public function new(name:String, params:Dynamic = null) {
 
 		super(name, params);
 
-		visible = false;
-		group = 1;
-		scale = 30;
+		_visible = false;
+		_group = 1;
+		_scale = 30;
 
 		physicsDebug = new Sprite();
 		CitruxEngine.getInstance().addChild(physicsDebug);
 
-		world = new B2World(new B2Vec2(0, 0), true);
+		_world = new B2World(new B2Vec2(0, 0), true);
 
 		var debugDraw = new B2DebugDraw();
 		debugDraw.setSprite(physicsDebug);
-		debugDraw.setDrawScale(scale);
+		debugDraw.setDrawScale(_scale);
 		debugDraw.setFlags(B2DebugDraw.e_shapeBit);
 
 		world.setDebugDraw(debugDraw);
@@ -62,16 +69,16 @@ class Box2D extends CitruxObject, implements ISpriteView {
 
 		super.update(timeDelta);
 
-		world.step(1 / 20, 8, 8);
-		world.drawDebugData();
+		_world.step(1 / 20, 8, 8);
+		_world.drawDebugData();
 	}
 
 	public function getWorld():B2World {
-		return world;
+		return _world;
 	}
 
 	public function getScale():Int {
-		return scale;
+		return _scale;
 	}
 
 	public function getX():Float {
@@ -91,27 +98,27 @@ class Box2D extends CitruxObject, implements ISpriteView {
 	}
 
 	public function getGroup():Int {
-		return group;
+		return _group;
 	}
 
 	public function setGroup(value:Int):Int {
-		return group = value;
+		return _group = value;
 	}
 
 	public function getVisible():Bool {
-		return visible;
+		return _visible;
 	}
 
 	public function setVisible(value:Bool):Bool {
-		return visible = value;
+		return _visible = value;
 	}
 
 	public function getView():Dynamic {
-		return view;
+		return _view;
 	}
 
 	public function setView(value:Dynamic):Dynamic {
-		return view = value;
+		return _view = value;
 	}
 
 	public function getAnimation():String {
