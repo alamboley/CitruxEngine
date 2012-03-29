@@ -6,11 +6,7 @@ import com.citruxengine.objects.PhysicsObject;
 
 class Platform extends PhysicsObject {
 
-	private var _oneWay:Bool;
-
 	public function new(name:String, params:Dynamic = null) {
-
-		_oneWay = false;
 
 		super(name, params);
 	}

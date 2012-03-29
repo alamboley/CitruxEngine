@@ -684,13 +684,11 @@ com.citruxengine.objects.PhysicsObject.__interfaces__ = [com.citruxengine.view.I
 if(!com.citruxengine.objects.platformer) com.citruxengine.objects.platformer = {}
 com.citruxengine.objects.platformer.Platform = function(name,params) {
 	if( name === $_ ) return;
-	this._oneWay = false;
 	com.citruxengine.objects.PhysicsObject.call(this,name,params);
 }
 com.citruxengine.objects.platformer.Platform.__name__ = ["com","citruxengine","objects","platformer","Platform"];
 com.citruxengine.objects.platformer.Platform.__super__ = com.citruxengine.objects.PhysicsObject;
 for(var k in com.citruxengine.objects.PhysicsObject.prototype ) com.citruxengine.objects.platformer.Platform.prototype[k] = com.citruxengine.objects.PhysicsObject.prototype[k];
-com.citruxengine.objects.platformer.Platform.prototype._oneWay = null;
 com.citruxengine.objects.platformer.Platform.prototype.destroy = function() {
 	com.citruxengine.objects.PhysicsObject.prototype.destroy.call(this);
 }
@@ -4552,6 +4550,29 @@ jeash.display.GraphicsDataType.GRADIENT.__enum__ = jeash.display.GraphicsDataTyp
 jeash.display.GraphicsDataType.PATH = ["PATH",3];
 jeash.display.GraphicsDataType.PATH.toString = $estr;
 jeash.display.GraphicsDataType.PATH.__enum__ = jeash.display.GraphicsDataType;
+com.citruxengine.objects.platformer.Baddy = function(name,params) {
+	if( name === $_ ) return;
+	this.speed = 1.3;
+	com.citruxengine.objects.PhysicsObject.call(this,name,params);
+}
+com.citruxengine.objects.platformer.Baddy.__name__ = ["com","citruxengine","objects","platformer","Baddy"];
+com.citruxengine.objects.platformer.Baddy.__super__ = com.citruxengine.objects.PhysicsObject;
+for(var k in com.citruxengine.objects.PhysicsObject.prototype ) com.citruxengine.objects.platformer.Baddy.prototype[k] = com.citruxengine.objects.PhysicsObject.prototype[k];
+com.citruxengine.objects.platformer.Baddy.prototype.speed = null;
+com.citruxengine.objects.platformer.Baddy.prototype.destroy = function() {
+	com.citruxengine.objects.PhysicsObject.prototype.destroy.call(this);
+}
+com.citruxengine.objects.platformer.Baddy.prototype.update = function(timeDelta) {
+	com.citruxengine.objects.PhysicsObject.prototype.update.call(this,timeDelta);
+	var velocity = this._body.getLinearVelocity();
+	velocity.x = this.speed;
+	this._body.setLinearVelocity(velocity);
+}
+com.citruxengine.objects.platformer.Baddy.prototype.createBody = function() {
+	com.citruxengine.objects.PhysicsObject.prototype.createBody.call(this);
+	this._body.setFixedRotation(true);
+}
+com.citruxengine.objects.platformer.Baddy.prototype.__class__ = com.citruxengine.objects.platformer.Baddy;
 if(!jeash.media) jeash.media = {}
 jeash.media.SoundChannel = function(p) {
 	if( p === $_ ) return;
@@ -9133,6 +9154,7 @@ fr.aymericlamboley.test.GameState = function(p) {
 fr.aymericlamboley.test.GameState.__name__ = ["fr","aymericlamboley","test","GameState"];
 fr.aymericlamboley.test.GameState.__super__ = com.citruxengine.core.State;
 for(var k in com.citruxengine.core.State.prototype ) fr.aymericlamboley.test.GameState.prototype[k] = com.citruxengine.core.State.prototype[k];
+fr.aymericlamboley.test.GameState.prototype.timer = null;
 fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	com.citruxengine.core.State.prototype.initialize.call(this);
 	var box2d = new com.citruxengine.physics.Box2D("Box2D");
@@ -9140,8 +9162,16 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	this.add(box2d);
 	var citruxObject = new com.citruxengine.objects.PhysicsObject("monCitruxObject",{ x : 250, y : 200, width : 30, height : 30});
 	this.add(citruxObject);
+	var baddy = new com.citruxengine.objects.platformer.Baddy("baddy",{ x : 340, y : 200, width : 30, height : 60});
+	this.add(baddy);
+	baddy.speed = 5;
 	var platformBot = new com.citruxengine.objects.platformer.Platform("platformBot",{ x : 260, y : 450, width : 500, height : 30});
 	this.add(platformBot);
+	this.timer = new haxe.Timer(1000);
+	this.timer.run = $closure(this,"ok");
+}
+fr.aymericlamboley.test.GameState.prototype.ok = function() {
+	this._ce.setPlaying(!this._ce.getPlaying());
 }
 fr.aymericlamboley.test.GameState.prototype.__class__ = fr.aymericlamboley.test.GameState;
 jeash.geom.Transform = function(inParent) {
@@ -15120,6 +15150,7 @@ com.citruxengine.core.CitruxEngine = function(p) {
 	jeash.display.Sprite.call(this);
 	com.citruxengine.core.CitruxEngine._instance = this;
 	this._stateDisplayIndex = 0;
+	this._playing = true;
 	this._startTime = Date.now().getTime();
 	this._gameTime = this._startTime;
 	this.addEventListener(jeash.events.Event.ENTER_FRAME,$closure(this,"_handleEnterFrame"));
@@ -15132,9 +15163,11 @@ com.citruxengine.core.CitruxEngine.getInstance = function() {
 	return com.citruxengine.core.CitruxEngine._instance;
 }
 com.citruxengine.core.CitruxEngine.prototype.state = null;
+com.citruxengine.core.CitruxEngine.prototype.playing = null;
 com.citruxengine.core.CitruxEngine.prototype._state = null;
 com.citruxengine.core.CitruxEngine.prototype._newState = null;
 com.citruxengine.core.CitruxEngine.prototype._stateDisplayIndex = null;
+com.citruxengine.core.CitruxEngine.prototype._playing = null;
 com.citruxengine.core.CitruxEngine.prototype._startTime = null;
 com.citruxengine.core.CitruxEngine.prototype._gameTime = null;
 com.citruxengine.core.CitruxEngine.prototype._handleEnterFrame = function(evt) {
@@ -15145,7 +15178,7 @@ com.citruxengine.core.CitruxEngine.prototype._handleEnterFrame = function(evt) {
 		this.addChildAt(this._state,this._stateDisplayIndex);
 		this._state.initialize();
 	}
-	if(this._state != null) {
+	if(this._state != null && this._playing) {
 		var nowTime = Date.now().getTime();
 		var timeSinceLastFrame = nowTime - this._gameTime;
 		var timeDelta = timeSinceLastFrame * 0.001;
@@ -15158,6 +15191,14 @@ com.citruxengine.core.CitruxEngine.prototype.getState = function() {
 }
 com.citruxengine.core.CitruxEngine.prototype.setState = function(value) {
 	return this._newState = value;
+}
+com.citruxengine.core.CitruxEngine.prototype.getPlaying = function() {
+	return this._playing;
+}
+com.citruxengine.core.CitruxEngine.prototype.setPlaying = function(value) {
+	this._playing = value;
+	if(this._playing) this._gameTime = Date.now().getTime();
+	return this._playing;
 }
 com.citruxengine.core.CitruxEngine.prototype.__class__ = com.citruxengine.core.CitruxEngine;
 NMEPreloader = function(p) {
