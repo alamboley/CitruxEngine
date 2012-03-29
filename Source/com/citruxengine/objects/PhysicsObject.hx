@@ -18,6 +18,12 @@ import com.citruxengine.view.ISpriteView;
 
 import nme.display.MovieClip;
 
+/**
+ * You should extend this class to take advantage of Box2D. This class provides template methods for defining
+ * and creating Box2D bodies, fixtures, shapes, and joints. If you are not familiar with Box2D, you should first
+ * learn about it via the <a href="http://www.box2d.org/manual.html">Box2D Manual</a>.
+ */
+
 class PhysicsObject extends CitruxObject, implements ISpriteView {
 
 	public var x(getX, setX):Float;
@@ -38,6 +44,9 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 	public var radius(getRadius, setRadius):Float;
 	public var body(getBody, never):B2Body;
 
+	/**
+	 * The speed at which this object will be affected by gravity. 
+	 */
 	public var gravity:Float;
 
 	var _ce:CitruxEngine;
@@ -66,6 +75,15 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 	var _view:Dynamic;
 	var _registration:String;
 
+	/**
+	 * Creates an instance of a PhysicsObject. Natively, this object does not default to any graphical representation,
+	 * so you will need to set the "view" property in the params parameter.
+	 * 
+	 * <p>You'll notice that the PhysicsObject constructor calls a bunch of functions that start with "define" and "create".
+	 * This is how the Box2D objects are created. You should override these methods in your own PhysicsObject implementation
+	 * if you need additional Box2D functionality. Please see provided examples of classes that have overridden
+	 * the PhysicsObject.</p>
+	 */
 	public function new(name:String, params:Dynamic = null) {
 
 		_ce = CitruxEngine.getInstance();
@@ -92,6 +110,7 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 			return ;
 		}
 
+		//Override these to customize your Box2D initialization. Things must be done in this order.
 		defineBody();
 		createBody();
 		createShape();
@@ -111,6 +130,13 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 		super.destroy();
 	}
 
+	/**
+	 * You should override this method to extend the functionality of your physics object. This is where you will 
+	 * want to do any velocity/force logic. By default, this method also updates the gravitatonal effect on the object.
+	 * I have chosen to implement gravity in each individual object instead of globally via Box2D so that it is easy
+	 * to create objects that defy gravity (like birds or bullets). This is difficult to do naturally in Box2D. Instead,
+	 * you can simply set your PhysicsObject's gravity property to 0, and baddabing: no gravity. 
+	 */	
 	override public function update(timeDelta:Float):Void {
 
 		if (_bodyDef.type == B2Body.b2_dynamicBody) {
@@ -121,6 +147,9 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 		}
 	}
 
+	/**
+	 * This method will often need to be overriden to provide additional definition to the Box2D body object. 
+	 */
 	private function defineBody():Void {
 
 		_bodyDef = new B2BodyDef();
@@ -129,12 +158,20 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 		_bodyDef.angle = _rotation;
 	}
 
+	/**
+	 * This method will often need to be overriden to customize the Box2D body object. 
+	 */	
 	private function createBody():Void {
 
 		_body = _box2D.world.createBody(_bodyDef);
 		_body.setUserData(this);
 	}
 
+	/**
+	 * This method will often need to be overriden to customize the Box2D shape object.
+	 * The PhysicsObject creates a rectangle by default if the radius is not defined, but you can replace this method's
+	 * definition and instead create a custom shape, such as a line or circle.
+	 */	
 	private function createShape():Void {
 
 		if (_radius != 0) {
@@ -146,6 +183,9 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 		}
 	}
 
+	/**
+	 * This method will often need to be overriden to provide additional definition to the Box2D fixture object. 
+	 */
 	private function defineFixture():Void {
 
 		_fixtureDef = new B2FixtureDef();
@@ -157,15 +197,30 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 		//_fixtureDef.filter.maskBits -> à faire
 	}
 
+	/**
+	 * This method will often need to be overriden to customize the Box2D fixture object. 
+	 */	
 	private function createFixture():Void {
 
 		_fixture = _body.createFixture(_fixtureDef);
 	}
 
+	/**
+	 * This method will often need to be overriden to provide additional definition to the Box2D joint object.
+	 * A joint is not automatically created, because joints require two bodies. Therefore, if you need to create a joint,
+	 * you will also need to create additional bodies, fixtures and shapes, and then also instantiate a new b2JointDef
+	 * and b2Joint object.
+	 */
 	private function defineJoint():Void {
 
 	}
 
+	/**
+	 * This method will often need to be overriden to customize the Box2D joint object. 
+	 * A joint is not automatically created, because joints require two bodies. Therefore, if you need to create a joint,
+	 * you will also need to create additional bodies, fixtures and shapes, and then also instantiate a new b2JointDef
+	 * and b2Joint object.
+	 */
 	private function createJoint():Void {
 
 	}
@@ -219,6 +274,10 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 	}
 
 	public function setWidth(value:Float):Float {
+
+		if (_initialized)
+			trace("Warning: You cannot set width on object : " + name + ", type : " + this + ", after it has been created . Please set it in the constructor.");
+
 		return _width = value / _box2D.scale;
 	}
 
@@ -227,6 +286,10 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 	}
 
 	public function setHeight(value:Float):Float {
+
+		if (_initialized)
+			trace("Warning: You cannot set height on object : " + name + ", type : " + this + ", after it has been created . Please set it in the constructor.");
+
 		return _height = value / _box2D.scale;
 	}
 
@@ -235,6 +298,10 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 	}
 
 	public function setRadius(value:Float):Float {
+
+		if (_initialized)
+			trace("Warning: You cannot set radius on object : " + name + ", type : " + this + ", after it has been created . Please set it in the constructor.");
+
 		return _radius = value / _box2D.scale;
 	}
 
