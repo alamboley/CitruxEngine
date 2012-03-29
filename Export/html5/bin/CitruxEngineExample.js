@@ -471,7 +471,7 @@ com.citruxengine.objects.PhysicsObject = function(name,params) {
 	this.setRegistration("center");
 	com.citruxengine.core.CitruxObject.call(this,name,params);
 	if(this._box2D == null) {
-		haxe.Log.trace("Cannot create PhysicsObject when a Box2D object has not been added to the state.",{ fileName : "PhysicsObject.hx", lineNumber : 73, className : "com.citruxengine.objects.PhysicsObject", methodName : "new"});
+		haxe.Log.trace("Cannot create PhysicsObject when a Box2D object has not been added to the state.",{ fileName : "PhysicsObject.hx", lineNumber : 79, className : "com.citruxengine.objects.PhysicsObject", methodName : "new"});
 		return;
 	}
 	this.defineBody();
@@ -600,7 +600,7 @@ com.citruxengine.objects.PhysicsObject.prototype.getRadius = function() {
 	return this.radius;
 }
 com.citruxengine.objects.PhysicsObject.prototype.setRadius = function(value) {
-	return this.radius = value / this._box2D.getScale();
+	return this.radius = value;
 }
 com.citruxengine.objects.PhysicsObject.prototype.getParallax = function() {
 	return this.parallax;
@@ -9115,7 +9115,7 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	var box2d = new com.citruxengine.physics.Box2D("Box2D");
 	box2d.setVisible(true);
 	this.add(box2d);
-	var citruxObject = new com.citruxengine.objects.PhysicsObject("monCitruxObject",{ x : 100, y : 20, width : 30, height : 30});
+	var citruxObject = new com.citruxengine.objects.PhysicsObject("monCitruxObject",{ x : 100, y : 20});
 	this.add(citruxObject);
 	var platformBot = new com.citruxengine.objects.platformer.Platform("platformBot",{ x : 260, y : 450, width : 500, height : 30});
 	this.add(platformBot);

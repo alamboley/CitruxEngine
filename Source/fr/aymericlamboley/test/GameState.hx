@@ -21,7 +21,7 @@ class GameState extends State {
 		box2d.visible = true;
 		add(box2d);
 
-		var citruxObject:PhysicsObject = new PhysicsObject("monCitruxObject", {x:450, y:400, width:30, height:30});
+		var citruxObject:PhysicsObject = new PhysicsObject("monCitruxObject", {x:250, y:200, width:30, height:30});
 		//var citruxObject:PhysicsObject = new PhysicsObject("monCitruxObject", {x:100, y:20});
 		add(citruxObject);
 
