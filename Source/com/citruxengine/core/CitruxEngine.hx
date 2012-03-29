@@ -3,7 +3,10 @@ package com.citruxengine.core;
 import com.citruxengine.core.State;
 
 import nme.display.Sprite;
+import nme.display.StageAlign;
+import nme.display.StageScaleMode;
 import nme.events.Event;
+import nme.Lib;
 
 /**
  * CitruxEngine is the top-most class in the library. When you start your project, you should make your
@@ -43,6 +46,9 @@ class CitruxEngine extends Sprite {
 
 		_startTime = Date.now().getTime();
 		_gameTime = _startTime;
+
+		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		Lib.current.stage.align = StageAlign.TOP_LEFT;
 
 		this.addEventListener(Event.ENTER_FRAME, _handleEnterFrame);
 	}

@@ -4552,25 +4552,32 @@ jeash.display.GraphicsDataType.PATH.toString = $estr;
 jeash.display.GraphicsDataType.PATH.__enum__ = jeash.display.GraphicsDataType;
 com.citruxengine.objects.platformer.Baddy = function(name,params) {
 	if( name === $_ ) return;
-	this.speed = 1.3;
+	this._speed = 1.3;
 	com.citruxengine.objects.PhysicsObject.call(this,name,params);
 }
 com.citruxengine.objects.platformer.Baddy.__name__ = ["com","citruxengine","objects","platformer","Baddy"];
 com.citruxengine.objects.platformer.Baddy.__super__ = com.citruxengine.objects.PhysicsObject;
 for(var k in com.citruxengine.objects.PhysicsObject.prototype ) com.citruxengine.objects.platformer.Baddy.prototype[k] = com.citruxengine.objects.PhysicsObject.prototype[k];
 com.citruxengine.objects.platformer.Baddy.prototype.speed = null;
+com.citruxengine.objects.platformer.Baddy.prototype._speed = null;
 com.citruxengine.objects.platformer.Baddy.prototype.destroy = function() {
 	com.citruxengine.objects.PhysicsObject.prototype.destroy.call(this);
 }
 com.citruxengine.objects.platformer.Baddy.prototype.update = function(timeDelta) {
 	com.citruxengine.objects.PhysicsObject.prototype.update.call(this,timeDelta);
 	var velocity = this._body.getLinearVelocity();
-	velocity.x = this.speed;
+	velocity.x = this.getSpeed();
 	this._body.setLinearVelocity(velocity);
 }
 com.citruxengine.objects.platformer.Baddy.prototype.createBody = function() {
 	com.citruxengine.objects.PhysicsObject.prototype.createBody.call(this);
 	this._body.setFixedRotation(true);
+}
+com.citruxengine.objects.platformer.Baddy.prototype.getSpeed = function() {
+	return this._speed;
+}
+com.citruxengine.objects.platformer.Baddy.prototype.setSpeed = function(value) {
+	return this._speed = value;
 }
 com.citruxengine.objects.platformer.Baddy.prototype.__class__ = com.citruxengine.objects.platformer.Baddy;
 if(!jeash.media) jeash.media = {}
@@ -9154,7 +9161,6 @@ fr.aymericlamboley.test.GameState = function(p) {
 fr.aymericlamboley.test.GameState.__name__ = ["fr","aymericlamboley","test","GameState"];
 fr.aymericlamboley.test.GameState.__super__ = com.citruxengine.core.State;
 for(var k in com.citruxengine.core.State.prototype ) fr.aymericlamboley.test.GameState.prototype[k] = com.citruxengine.core.State.prototype[k];
-fr.aymericlamboley.test.GameState.prototype.timer = null;
 fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	com.citruxengine.core.State.prototype.initialize.call(this);
 	var box2d = new com.citruxengine.physics.Box2D("Box2D");
@@ -9164,14 +9170,10 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	this.add(citruxObject);
 	var baddy = new com.citruxengine.objects.platformer.Baddy("baddy",{ x : 340, y : 200, width : 30, height : 60});
 	this.add(baddy);
-	baddy.speed = 5;
+	var sensor = new com.citruxengine.objects.platformer.Sensor("sensor",{ x : 400, y : 420, width : 20, height : 20});
+	this.add(sensor);
 	var platformBot = new com.citruxengine.objects.platformer.Platform("platformBot",{ x : 260, y : 450, width : 500, height : 30});
 	this.add(platformBot);
-	this.timer = new haxe.Timer(1000);
-	this.timer.run = $closure(this,"ok");
-}
-fr.aymericlamboley.test.GameState.prototype.ok = function() {
-	this._ce.setPlaying(!this._ce.getPlaying());
 }
 fr.aymericlamboley.test.GameState.prototype.__class__ = fr.aymericlamboley.test.GameState;
 jeash.geom.Transform = function(inParent) {
@@ -15153,6 +15155,8 @@ com.citruxengine.core.CitruxEngine = function(p) {
 	this._playing = true;
 	this._startTime = Date.now().getTime();
 	this._gameTime = this._startTime;
+	jeash.Lib.jeashGetCurrent().GetStage().scaleMode = jeash.display.StageScaleMode.NO_SCALE;
+	jeash.Lib.jeashGetCurrent().GetStage().align = jeash.display.StageAlign.TOP_LEFT;
 	this.addEventListener(jeash.events.Event.ENTER_FRAME,$closure(this,"_handleEnterFrame"));
 }
 com.citruxengine.core.CitruxEngine.__name__ = ["com","citruxengine","core","CitruxEngine"];
@@ -16821,6 +16825,28 @@ box2D.dynamics.contacts.B2ContactConstraint.prototype.__class__ = box2D.dynamics
 jeash.display.BitmapDataChannel = function() { }
 jeash.display.BitmapDataChannel.__name__ = ["jeash","display","BitmapDataChannel"];
 jeash.display.BitmapDataChannel.prototype.__class__ = jeash.display.BitmapDataChannel;
+com.citruxengine.objects.platformer.Sensor = function(name,params) {
+	if( name === $_ ) return;
+	com.citruxengine.objects.PhysicsObject.call(this,name,params);
+}
+com.citruxengine.objects.platformer.Sensor.__name__ = ["com","citruxengine","objects","platformer","Sensor"];
+com.citruxengine.objects.platformer.Sensor.__super__ = com.citruxengine.objects.PhysicsObject;
+for(var k in com.citruxengine.objects.PhysicsObject.prototype ) com.citruxengine.objects.platformer.Sensor.prototype[k] = com.citruxengine.objects.PhysicsObject.prototype[k];
+com.citruxengine.objects.platformer.Sensor.prototype.destroy = function() {
+	com.citruxengine.objects.PhysicsObject.prototype.destroy.call(this);
+}
+com.citruxengine.objects.platformer.Sensor.prototype.defineBody = function() {
+	com.citruxengine.objects.PhysicsObject.prototype.defineBody.call(this);
+	this._bodyDef.type = box2D.dynamics.B2Body.b2_staticBody;
+}
+com.citruxengine.objects.platformer.Sensor.prototype.defineFixture = function() {
+	com.citruxengine.objects.PhysicsObject.prototype.defineFixture.call(this);
+	this._fixtureDef.isSensor = true;
+}
+com.citruxengine.objects.platformer.Sensor.prototype.createFixture = function() {
+	com.citruxengine.objects.PhysicsObject.prototype.createFixture.call(this);
+}
+com.citruxengine.objects.platformer.Sensor.prototype.__class__ = com.citruxengine.objects.platformer.Sensor;
 js.Lib = function() { }
 js.Lib.__name__ = ["js","Lib"];
 js.Lib.isIE = null;
@@ -17303,8 +17329,6 @@ box2D.collision.B2DistanceProxy.prototype.__class__ = box2D.collision.B2Distance
 fr.aymericlamboley.test.Main = function(p) {
 	if( p === $_ ) return;
 	com.citruxengine.core.CitruxEngine.call(this);
-	jeash.Lib.jeashGetCurrent().GetStage().scaleMode = jeash.display.StageScaleMode.NO_SCALE;
-	jeash.Lib.jeashGetCurrent().GetStage().align = jeash.display.StageAlign.TOP_LEFT;
 	this.setState(new fr.aymericlamboley.test.GameState());
 }
 fr.aymericlamboley.test.Main.__name__ = ["fr","aymericlamboley","test","Main"];
