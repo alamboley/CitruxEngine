@@ -121,6 +121,9 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 
 	override public function destroy():Void {
 
+		_body.DestroyFixture(_fixture);
+		_box2D.world.destroyBody(_body);
+
 		//_body.destroy(); -> doesn't exist, why ??
 		//_fixtureDef.destroy(); -> doesn't exist, why ??
 		//_shape.destroy(); -> doesn't exist, why ??
