@@ -23,6 +23,7 @@ class GameState extends State {
 
 		var citruxObject:PhysicsObject = new PhysicsObject("monCitruxObject", {x:250, y:200, width:30, height:30});
 		//var citruxObject:PhysicsObject = new PhysicsObject("monCitruxObject", {x:100, y:20});
+		//var citruxObject:PhysicsObject = new PhysicsObject("monCitruxObject", {x:100, y:20, radius:20});
 		add(citruxObject);
 
 		var platformBot:Platform = new Platform("platformBot", {x:260, y:450, width:500, height:30});

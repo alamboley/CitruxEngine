@@ -30,14 +30,7 @@ class CitruxObject {
 
 			try {
 
-				if (Reflect.field(object, param) == "true")
-					Reflect.setField(this, param, true);
-
-				else if (Reflect.field(object, param) == "false")
-					Reflect.setField(this, param, false);
-					
-				else
-					Reflect.setField(this, param, Reflect.field(object, param));
+				Reflect.callMethod(this, Reflect.field(this, "set" + param.charAt(0).toUpperCase() + param.substr(1)), [Reflect.field(object, param)]);
 			
 			} catch (e:Dynamic) {
 
