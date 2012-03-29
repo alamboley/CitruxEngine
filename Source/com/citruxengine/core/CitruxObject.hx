@@ -6,8 +6,7 @@ package com.citruxengine.core;
  * CitruxObject is basically an abstract class that gets added to a State instance.
  * The current State calls update on all CitruxObjects. Also, CitruxObjects are useful because they can be
  * initialized with a params object, which can be created via an object parser/factory. 
- */	
-
+ */
 class CitruxObject {
 
 	public var name:String;

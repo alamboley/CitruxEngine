@@ -10,6 +10,11 @@ import com.citruxengine.view.ISpriteView;
 
 import nme.display.Sprite;
 
+/**
+ * This is a simple wrapper class that allows you to add a Box2D world to your game's state.
+ * Add an instance of this class to your State before you create any phyiscs bodies. It will need to 
+ * exist first, or your physics bodies will throw an error when they try to create themselves.
+ */
 class Box2D extends CitruxObject, implements ISpriteView {
 
 	public var world(getWorld, null):B2World;
@@ -55,6 +60,8 @@ class Box2D extends CitruxObject, implements ISpriteView {
 		debugDraw.setDrawScale(_scale);
 		debugDraw.setFlags(B2DebugDraw.e_shapeBit);
 
+		//TODO : remove debug view here.
+
 		world.setDebugDraw(debugDraw);
 	}
 
@@ -77,6 +84,12 @@ class Box2D extends CitruxObject, implements ISpriteView {
 		return _world;
 	}
 
+	/**
+	 * This is hard to grasp, but Box2D does not use pixels for its physics values. Cutely, it uses meters
+	 * and forces us to convert those meter values to pixels by multiplying by 30. If you don't multiple Box2D
+	 * values by 30, your objecs will look very small and will appear to move very slowly, if at all.
+	 * This is a reference to the scale number by which you must multiply your values to properly display physics objects. 
+	 */	
 	public function getScale():Int {
 		return _scale;
 	}

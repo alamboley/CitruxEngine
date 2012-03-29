@@ -416,7 +416,7 @@ com.citruxengine.core.CitruxObject.prototype.setParams = function(object) {
 		try {
 			Reflect.field(this,"set" + param.charAt(0).toUpperCase() + param.substr(1)).apply(this,[Reflect.field(object,param)]);
 		} catch( e ) {
-			haxe.Log.trace("Warning: The parameter " + param + " does not exist on object : " + this.name + ", with type : " + this,{ fileName : "CitruxObject.hx", lineNumber : 69, className : "com.citruxengine.core.CitruxObject", methodName : "setParams"});
+			haxe.Log.trace("Warning: The parameter " + param + " does not exist on object : " + this.name + ", with type : " + this,{ fileName : "CitruxObject.hx", lineNumber : 68, className : "com.citruxengine.core.CitruxObject", methodName : "setParams"});
 		}
 	}
 	this._initialized = true;
@@ -473,7 +473,7 @@ com.citruxengine.objects.PhysicsObject = function(name,params) {
 	this._registration = "center";
 	com.citruxengine.core.CitruxObject.call(this,name,params);
 	if(this._box2D == null) {
-		haxe.Log.trace("Cannot create PhysicsObject when a Box2D object has not been added to the state.",{ fileName : "PhysicsObject.hx", lineNumber : 109, className : "com.citruxengine.objects.PhysicsObject", methodName : "new"});
+		haxe.Log.trace("Cannot create PhysicsObject when a Box2D object has not been added to the state.",{ fileName : "PhysicsObject.hx", lineNumber : 108, className : "com.citruxengine.objects.PhysicsObject", methodName : "new"});
 		return;
 	}
 	this.defineBody();
@@ -603,21 +603,21 @@ com.citruxengine.objects.PhysicsObject.prototype.getWidth = function() {
 	return this._width * this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.setWidth = function(value) {
-	if(this._initialized) haxe.Log.trace("Warning: You cannot set width on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 279, className : "com.citruxengine.objects.PhysicsObject", methodName : "setWidth"});
+	if(this._initialized) haxe.Log.trace("Warning: You cannot set width on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 278, className : "com.citruxengine.objects.PhysicsObject", methodName : "setWidth"});
 	return this._width = value / this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.getHeight = function() {
 	return this._height * this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.setHeight = function(value) {
-	if(this._initialized) haxe.Log.trace("Warning: You cannot set height on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 291, className : "com.citruxengine.objects.PhysicsObject", methodName : "setHeight"});
+	if(this._initialized) haxe.Log.trace("Warning: You cannot set height on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 290, className : "com.citruxengine.objects.PhysicsObject", methodName : "setHeight"});
 	return this._height = value / this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.getRadius = function() {
 	return this._radius * this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.setRadius = function(value) {
-	if(this._initialized) haxe.Log.trace("Warning: You cannot set radius on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 303, className : "com.citruxengine.objects.PhysicsObject", methodName : "setRadius"});
+	if(this._initialized) haxe.Log.trace("Warning: You cannot set radius on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 302, className : "com.citruxengine.objects.PhysicsObject", methodName : "setRadius"});
 	return this._radius = value / this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.getParallax = function() {
@@ -2595,6 +2595,12 @@ for(var k in jeash.display.Sprite.prototype ) com.citruxengine.core.State.protot
 com.citruxengine.core.State.prototype._ce = null;
 com.citruxengine.core.State.prototype._objects = null;
 com.citruxengine.core.State.prototype.destroy = function() {
+	var n = this._objects.length;
+	while(n-- > 0) {
+		var object = this._objects[n];
+		object.destroy();
+	}
+	this._objects = [];
 }
 com.citruxengine.core.State.prototype.initialize = function() {
 }

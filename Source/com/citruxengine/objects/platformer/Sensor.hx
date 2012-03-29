@@ -12,8 +12,7 @@ import com.citruxengine.objects.PhysicsObject;
  * Remember that signals dispatch events when ANY Box2D object collides with them, so you will want
  * your collision handler to ignore collisions with objects that it is not interested in, or extend
  * the sensor and use maskBits to ignore collisions altogether.  
- */	
-
+ */
 class Sensor extends PhysicsObject {
 
 	public function new(name:String, params:Dynamic = null) {

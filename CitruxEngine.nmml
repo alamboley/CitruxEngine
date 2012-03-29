@@ -12,9 +12,9 @@
 	<haxelib name="nme" />
 	<haxelib name="box2d" />
 
-	<assets path="Assets" rename="assets" include="*" exclude="nme.svg" />
+	<assets path="Assets" rename="assets" include="*" exclude="CitruxEngine.png" />
 
-	<icon path="Assets/nme.svg" />
+	<icon path="Assets/CitruxEngine.png" width="32" height="32" />
 	
 	<ndll name="std" />
 	<ndll name="regexp" />

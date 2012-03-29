@@ -23,7 +23,6 @@ import nme.display.MovieClip;
  * and creating Box2D bodies, fixtures, shapes, and joints. If you are not familiar with Box2D, you should first
  * learn about it via the <a href="http://www.box2d.org/manual.html">Box2D Manual</a>.
  */
-
 class PhysicsObject extends CitruxObject, implements ISpriteView {
 
 	public var x(getX, setX):Float;

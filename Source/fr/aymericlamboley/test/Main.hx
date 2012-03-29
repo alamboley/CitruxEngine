@@ -22,5 +22,4 @@ class Main extends CitruxEngine {
 
 		state = new GameState();
 	}
-	
 }

@@ -11,7 +11,6 @@ import com.citruxengine.objects.PhysicsObject;
  * There are two ways of adding graphics for your platform. You can give your platform a graphic just like you would any other object (by passing a graphical
  * class into the view property) or you can leave your platform invisible and line it up with your backgrounds for a more custom look.
  */
-
 class Platform extends PhysicsObject {
 
 	public function new(name:String, params:Dynamic = null) {
