@@ -76,7 +76,8 @@ class Box2D extends CitruxObject, implements ISpriteView {
 
 		super.update(timeDelta);
 
-		_world.step(1 / 20, 8, 8);
+		// 0.05 = 1 / 20
+		_world.step(0.05, 8, 8);
 		_world.drawDebugData();
 	}
 

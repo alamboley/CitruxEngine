@@ -416,7 +416,7 @@ com.citruxengine.core.CitruxObject.prototype.setParams = function(object) {
 		try {
 			Reflect.field(this,"set" + param.charAt(0).toUpperCase() + param.substr(1)).apply(this,[Reflect.field(object,param)]);
 		} catch( e ) {
-			haxe.Log.trace("Warning: The parameter " + param + " does not exist on object : " + this.name + ", with type : " + this,{ fileName : "CitruxObject.hx", lineNumber : 68, className : "com.citruxengine.core.CitruxObject", methodName : "setParams"});
+			haxe.Log.trace("Warning: The parameter " + param + " does not exist on object : " + this.name + ", with type : " + this,{ fileName : "CitruxObject.hx", lineNumber : 71, className : "com.citruxengine.core.CitruxObject", methodName : "setParams"});
 		}
 	}
 	this._initialized = true;
@@ -4559,21 +4559,52 @@ jeash.display.GraphicsDataType.PATH.__enum__ = jeash.display.GraphicsDataType;
 com.citruxengine.objects.platformer.Baddy = function(name,params) {
 	if( name === $_ ) return;
 	this._speed = 1.3;
+	this._startingDirection = "left";
+	this._leftBound = -10000;
+	this._rightBound = 10000;
 	com.citruxengine.objects.PhysicsObject.call(this,name,params);
+	if(this._startingDirection == "left") this._inverted = true;
+	this._hurt = false;
+	this._lastTimeTurnedAround = 0;
 }
 com.citruxengine.objects.platformer.Baddy.__name__ = ["com","citruxengine","objects","platformer","Baddy"];
 com.citruxengine.objects.platformer.Baddy.__super__ = com.citruxengine.objects.PhysicsObject;
 for(var k in com.citruxengine.objects.PhysicsObject.prototype ) com.citruxengine.objects.platformer.Baddy.prototype[k] = com.citruxengine.objects.PhysicsObject.prototype[k];
 com.citruxengine.objects.platformer.Baddy.prototype.speed = null;
+com.citruxengine.objects.platformer.Baddy.prototype.startingDirection = null;
+com.citruxengine.objects.platformer.Baddy.prototype.leftBound = null;
+com.citruxengine.objects.platformer.Baddy.prototype.rightBound = null;
+com.citruxengine.objects.platformer.Baddy.prototype._hurt = null;
+com.citruxengine.objects.platformer.Baddy.prototype._lastTimeTurnedAround = null;
 com.citruxengine.objects.platformer.Baddy.prototype._speed = null;
+com.citruxengine.objects.platformer.Baddy.prototype._startingDirection = null;
+com.citruxengine.objects.platformer.Baddy.prototype._leftBound = null;
+com.citruxengine.objects.platformer.Baddy.prototype._rightBound = null;
 com.citruxengine.objects.platformer.Baddy.prototype.destroy = function() {
 	com.citruxengine.objects.PhysicsObject.prototype.destroy.call(this);
 }
 com.citruxengine.objects.platformer.Baddy.prototype.update = function(timeDelta) {
 	com.citruxengine.objects.PhysicsObject.prototype.update.call(this,timeDelta);
+	var position = this._body.getPosition();
+	if(this._inverted && position.x * 30 < this._leftBound || !this._inverted && position.x * 30 > this._rightBound) this.turnAround();
 	var velocity = this._body.getLinearVelocity();
-	velocity.x = this.getSpeed();
+	if(!this._hurt) velocity.x = this._inverted?-this.getSpeed():this.getSpeed();
 	this._body.setLinearVelocity(velocity);
+	this.updateAnimation();
+}
+com.citruxengine.objects.platformer.Baddy.prototype.hurt = function() {
+	this._hurt = true;
+}
+com.citruxengine.objects.platformer.Baddy.prototype.turnAround = function() {
+	this._inverted = !this._inverted;
+	this._lastTimeTurnedAround = Date.now().getTime();
+}
+com.citruxengine.objects.platformer.Baddy.prototype.updateAnimation = function() {
+	this._animation = this._hurt?"die":"walk";
+}
+com.citruxengine.objects.platformer.Baddy.prototype.endHurtState = function() {
+	this._hurt = false;
+	this.kill = true;
 }
 com.citruxengine.objects.platformer.Baddy.prototype.createBody = function() {
 	com.citruxengine.objects.PhysicsObject.prototype.createBody.call(this);
@@ -4584,6 +4615,24 @@ com.citruxengine.objects.platformer.Baddy.prototype.getSpeed = function() {
 }
 com.citruxengine.objects.platformer.Baddy.prototype.setSpeed = function(value) {
 	return this._speed = value;
+}
+com.citruxengine.objects.platformer.Baddy.prototype.getStartingDirection = function() {
+	return this._startingDirection;
+}
+com.citruxengine.objects.platformer.Baddy.prototype.setStartingDirection = function(value) {
+	return this._startingDirection = value;
+}
+com.citruxengine.objects.platformer.Baddy.prototype.getLeftBound = function() {
+	return this._leftBound;
+}
+com.citruxengine.objects.platformer.Baddy.prototype.setLeftBound = function(value) {
+	return this._leftBound = value;
+}
+com.citruxengine.objects.platformer.Baddy.prototype.getRightBound = function() {
+	return this._rightBound;
+}
+com.citruxengine.objects.platformer.Baddy.prototype.setRightBound = function(value) {
+	return this._rightBound = value;
 }
 com.citruxengine.objects.platformer.Baddy.prototype.__class__ = com.citruxengine.objects.platformer.Baddy;
 if(!jeash.media) jeash.media = {}
@@ -5611,7 +5660,7 @@ com.citruxengine.physics.Box2D.prototype.destroy = function() {
 }
 com.citruxengine.physics.Box2D.prototype.update = function(timeDelta) {
 	com.citruxengine.core.CitruxObject.prototype.update.call(this,timeDelta);
-	this._world.step(1 / 20,8,8);
+	this._world.step(0.05,8,8);
 	this._world.drawDebugData();
 }
 com.citruxengine.physics.Box2D.prototype.getWorld = function() {
@@ -15197,7 +15246,7 @@ com.citruxengine.core.CitruxEngine.prototype._handleEnterFrame = function(evt) {
 	}
 }
 com.citruxengine.core.CitruxEngine.prototype.getState = function() {
-	if(this._newState != null) return this._newState; else return this._state;
+	return this._newState != null?this._newState:this._state;
 }
 com.citruxengine.core.CitruxEngine.prototype.setState = function(value) {
 	return this._newState = value;

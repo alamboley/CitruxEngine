@@ -95,11 +95,7 @@ class CitruxEngine extends Sprite {
 	 * That way you don't end up changing states in the middle of a state's tick, effectively fucking stuff up. 
 	 */	
 	public function getState():State {
-
-		if (_newState != null)
-			return _newState;
-		else
-			return _state;
+		return (_newState != null) ? _newState : _state;
 	}
 	
 	/**

@@ -53,7 +53,10 @@ class CitruxObject {
 	}
 
 	/**
-	 * The constructor usually calls this.
+	 * The constructor usually calls this. Your params must have a getter/setter written like this two examples :
+	 * public var x(getX, setX):Float;
+	 * public var width(getWidth, setWidth):Float;
+	 * The first character is always written with an upper case!
 	 */	
 	private function setParams(object:Dynamic):Void {
 
