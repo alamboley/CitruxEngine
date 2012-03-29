@@ -61,8 +61,16 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 		_animation = "";
 		visible = true;
 		x = y = radius = rotation = offsetX = offsetY = 0;
+		#if cpp
+		width = 30;
+		#else
 		width = 30 * _box2D.scale;
+		#end
+		#if cpp
+		height = 30;
+		#else
 		height = 30 * _box2D.scale;
+		#end
 		group = 0;
 		view = MovieClip;
 		registration = "center";
@@ -157,7 +165,12 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 		if (_body != null)
 			return _body.getPosition().x * _box2D.scale;
 		else
+			
+			#if cpp
+			return x;
+			#else
 			return x / _box2D.scale;
+			#end
 	}
 
 	public function setX(value:Float):Float {
@@ -184,7 +197,11 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 
 	public function setY(value:Float):Float {
 
+		#if cpp
+		y = value;
+		#else
 		y = value / _box2D.scale;
+		#end
 
 		if(_body != null) {
 
@@ -201,7 +218,11 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 	}
 
 	public function setWidth(value:Float):Float {
+		#if cpp
+		return width = value ;
+		#else
 		return width = value / _box2D.scale;
+		#end
 	}
 
 	public function getHeight():Float {
@@ -209,7 +230,11 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 	}
 
 	public function setHeight(value:Float):Float {
+		#if cpp
+		return height = value;
+		#else
 		return height = value / _box2D.scale;
+		#end
 	}
 
 	public function getRadius():Float {
@@ -217,7 +242,7 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 	}
 
 	public function setRadius(value:Float):Float {
-		return radius = value / _box2D.scale;
+		return radius = value ;
 	}
 
 	public function getParallax():Float {
