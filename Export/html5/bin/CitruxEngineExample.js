@@ -9229,6 +9229,8 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	this.add(baddy);
 	var sensor = new com.citruxengine.objects.platformer.Sensor("sensor",{ x : 400, y : 420, width : 20, height : 20});
 	this.add(sensor);
+	var movingPlatform = new com.citruxengine.objects.platformer.MovingPlatform("movingPlatform",{ x : 430, y : 120, width : 50, height : 20, endX : 430, startY : 20, endY : 300});
+	this.add(movingPlatform);
 	var platformBot = new com.citruxengine.objects.platformer.Platform("platformBot",{ x : 260, y : 450, width : 500, height : 30});
 	this.add(platformBot);
 }
@@ -15204,6 +15206,71 @@ jeash.display.PixelSnapping.AUTO.__enum__ = jeash.display.PixelSnapping;
 jeash.display.PixelSnapping.ALWAYS = ["ALWAYS",2];
 jeash.display.PixelSnapping.ALWAYS.toString = $estr;
 jeash.display.PixelSnapping.ALWAYS.__enum__ = jeash.display.PixelSnapping;
+if(!com.citruxengine.utils) com.citruxengine.utils = {}
+com.citruxengine.utils.MathVector = function(x,y) {
+	if( x === $_ ) return;
+	if(y == null) y = 0;
+	if(x == null) x = 0;
+	this.x = x;
+	this.y = y;
+}
+com.citruxengine.utils.MathVector.__name__ = ["com","citruxengine","utils","MathVector"];
+com.citruxengine.utils.MathVector.prototype.x = null;
+com.citruxengine.utils.MathVector.prototype.y = null;
+com.citruxengine.utils.MathVector.prototype.normal = null;
+com.citruxengine.utils.MathVector.prototype.length = null;
+com.citruxengine.utils.MathVector.prototype._length = null;
+com.citruxengine.utils.MathVector.prototype.copy = function() {
+	return new com.citruxengine.utils.MathVector(this.x,this.y);
+}
+com.citruxengine.utils.MathVector.prototype.getAngle = function() {
+	return Math.atan2(this.y,this.x);
+}
+com.citruxengine.utils.MathVector.prototype.setAngle = function(value) {
+	this.x = this._length * Math.cos(value);
+	this.y = this._length * Math.sin(value);
+}
+com.citruxengine.utils.MathVector.prototype.rotate = function(angle) {
+	var ca = Math.cos(angle);
+	var sa = Math.sin(angle);
+	this.x = this.x * ca - this.y * sa;
+	this.y = this.x * sa + this.y * ca;
+}
+com.citruxengine.utils.MathVector.prototype.scaleEquals = function(value) {
+	this.x *= value;
+	this.y *= value;
+}
+com.citruxengine.utils.MathVector.prototype.scale = function(value) {
+	return new com.citruxengine.utils.MathVector(this.x * value,this.y * value);
+}
+com.citruxengine.utils.MathVector.prototype.getNormal = function() {
+	return new com.citruxengine.utils.MathVector(-this.y,this.x);
+}
+com.citruxengine.utils.MathVector.prototype.getLength = function() {
+	return Math.sqrt(this.x * this.x + this.y * this.y);
+}
+com.citruxengine.utils.MathVector.prototype.setLength = function(value) {
+	this.scaleEquals(value / this._length);
+	return 0;
+}
+com.citruxengine.utils.MathVector.prototype.plusEquals = function(vector) {
+	this.x += vector.x;
+	this.y += vector.y;
+}
+com.citruxengine.utils.MathVector.prototype.plus = function(vector) {
+	return new com.citruxengine.utils.MathVector(this.x + vector.x,this.y + vector.y);
+}
+com.citruxengine.utils.MathVector.prototype.minusEquals = function(vector) {
+	this.x -= vector.x;
+	this.y -= vector.y;
+}
+com.citruxengine.utils.MathVector.prototype.minus = function(vector) {
+	return new com.citruxengine.utils.MathVector(this.x - vector.x,this.y - vector.y);
+}
+com.citruxengine.utils.MathVector.prototype.toString = function() {
+	return "[" + this.x + ", " + this.y + "]";
+}
+com.citruxengine.utils.MathVector.prototype.__class__ = com.citruxengine.utils.MathVector;
 com.citruxengine.core.CitruxEngine = function(p) {
 	if( p === $_ ) return;
 	jeash.display.Sprite.call(this);
@@ -17551,6 +17618,106 @@ Reflect.makeVarArgs = function(f) {
 	};
 }
 Reflect.prototype.__class__ = Reflect;
+com.citruxengine.objects.platformer.MovingPlatform = function(name,params) {
+	if( name === $_ ) return;
+	this._start = new com.citruxengine.utils.MathVector();
+	this._end = new com.citruxengine.utils.MathVector();
+	this._forward = true;
+	this._passengers = [];
+	this._speed = 1;
+	this._enabled = true;
+	this._waitForPassenger = false;
+	com.citruxengine.objects.platformer.Platform.call(this,name,params);
+}
+com.citruxengine.objects.platformer.MovingPlatform.__name__ = ["com","citruxengine","objects","platformer","MovingPlatform"];
+com.citruxengine.objects.platformer.MovingPlatform.__super__ = com.citruxengine.objects.platformer.Platform;
+for(var k in com.citruxengine.objects.platformer.Platform.prototype ) com.citruxengine.objects.platformer.MovingPlatform.prototype[k] = com.citruxengine.objects.platformer.Platform.prototype[k];
+com.citruxengine.objects.platformer.MovingPlatform.prototype.speed = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype.enabled = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype.waitForPassenger = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype.startX = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype.startY = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype.endX = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype.endY = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype._start = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype._end = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype._forward = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype._passengers = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype._speed = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype._enabled = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype._waitForPassenger = null;
+com.citruxengine.objects.platformer.MovingPlatform.prototype.destroy = function() {
+	this._passengers = [];
+	com.citruxengine.objects.platformer.Platform.prototype.destroy.call(this);
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.update = function(timeDelta) {
+	com.citruxengine.objects.platformer.Platform.prototype.update.call(this,timeDelta);
+	var velocity = this._body.getLinearVelocity();
+	if(this._waitForPassenger && this._passengers.length == 0 || !this._enabled) velocity.setZero(); else {
+		var destination = new box2D.common.math.B2Vec2(this._end.x,this._end.y);
+		if(!this._forward) destination = new box2D.common.math.B2Vec2(this._start.x,this._start.y);
+		destination.subtract(this._body.getPosition());
+		velocity = destination;
+		if(velocity.length() > this._speed / 30) velocity.normalize(); else this._forward = !this._forward;
+	}
+	this._body.setLinearVelocity(velocity);
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.defineBody = function() {
+	com.citruxengine.objects.platformer.Platform.prototype.defineBody.call(this);
+	this._bodyDef.type = box2D.dynamics.B2Body.b2_kinematicBody;
+	this._bodyDef.allowSleep = false;
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.setX = function(value) {
+	com.citruxengine.objects.platformer.Platform.prototype.setX.call(this,value);
+	return this._start.x = value / this._box2D.getScale();
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.setY = function(value) {
+	com.citruxengine.objects.platformer.Platform.prototype.setY.call(this,value);
+	return this._start.y = value / this._box2D.getScale();
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.getStartX = function() {
+	return this._start.x * this._box2D.getScale();
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.setStartX = function(value) {
+	return this._start.x = value / this._box2D.getScale();
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.getStartY = function() {
+	return this._start.y * this._box2D.getScale();
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.setStartY = function(value) {
+	return this._start.y = value / this._box2D.getScale();
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.getEndX = function() {
+	return this._end.x * this._box2D.getScale();
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.setEndX = function(value) {
+	return this._end.x = value / this._box2D.getScale();
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.getEndY = function() {
+	return this._end.y * this._box2D.getScale();
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.setEndY = function(value) {
+	return this._end.y = value / this._box2D.getScale();
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.getSpeed = function() {
+	return this._speed;
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.setSpeed = function(value) {
+	return this._speed = value;
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.getEnabled = function() {
+	return this._enabled;
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.setEnabled = function(value) {
+	return this._enabled = value;
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.getWaitForPassenger = function() {
+	return this._waitForPassenger;
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.setWaitForPassenger = function(value) {
+	return this._waitForPassenger = value;
+}
+com.citruxengine.objects.platformer.MovingPlatform.prototype.__class__ = com.citruxengine.objects.platformer.MovingPlatform;
 jeash.text.FontType = { __ename__ : ["jeash","text","FontType"], __constructs__ : ["EMBEDDED","DEVICE"] }
 jeash.text.FontType.EMBEDDED = ["EMBEDDED",0];
 jeash.text.FontType.EMBEDDED.toString = $estr;

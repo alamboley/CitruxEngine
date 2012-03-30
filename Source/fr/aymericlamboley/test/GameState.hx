@@ -4,6 +4,7 @@ import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.core.State;
 import com.citruxengine.objects.PhysicsObject;
 import com.citruxengine.objects.platformer.Baddy;
+import com.citruxengine.objects.platformer.MovingPlatform;
 import com.citruxengine.objects.platformer.Platform;
 import com.citruxengine.objects.platformer.Sensor;
 import com.citruxengine.physics.Box2D;
@@ -33,6 +34,9 @@ class GameState extends State {
 
 		var sensor:Sensor = new Sensor("sensor", {x:400, y:420, width:20, height:20});
 		add(sensor);
+
+		var movingPlatform:MovingPlatform = new MovingPlatform("movingPlatform", {x:430, y:120, width:50, height:20, endX:430, startY:20, endY:300});
+		add(movingPlatform);
 
 		var platformBot:Platform = new Platform("platformBot", {x:260, y:450, width:500, height:30});
 		add(platformBot);
