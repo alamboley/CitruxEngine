@@ -2,6 +2,7 @@ package com.citruxengine.core;
 
 import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.core.CitruxObject;
+import com.citruxengine.core.Input;
 
 import nme.display.Sprite;
 
@@ -17,6 +18,8 @@ class State extends Sprite {
 	private var _ce:CitruxEngine;
 
 	private var _objects:Array<CitruxObject>;
+
+	private var _input:Input;
 
 	public function new() {
 
@@ -49,6 +52,7 @@ class State extends Sprite {
 	 */
 	public function initialize():Void {
 		
+		_input = _ce.input;
 	}
 
 	/**
@@ -80,6 +84,9 @@ class State extends Sprite {
 			_objects.splice(Lambda.indexOf(_objects,garbageObject), 1);
 			garbageObject.destroy();
 		}
+
+		//Update the input object
+		_input.update();
 	}
 
 	/**

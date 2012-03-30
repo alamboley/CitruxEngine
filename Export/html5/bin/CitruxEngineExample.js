@@ -2596,6 +2596,7 @@ com.citruxengine.core.State.__super__ = jeash.display.Sprite;
 for(var k in jeash.display.Sprite.prototype ) com.citruxengine.core.State.prototype[k] = jeash.display.Sprite.prototype[k];
 com.citruxengine.core.State.prototype._ce = null;
 com.citruxengine.core.State.prototype._objects = null;
+com.citruxengine.core.State.prototype._input = null;
 com.citruxengine.core.State.prototype.destroy = function() {
 	var n = this._objects.length;
 	while(n-- > 0) {
@@ -2605,6 +2606,7 @@ com.citruxengine.core.State.prototype.destroy = function() {
 	this._objects = [];
 }
 com.citruxengine.core.State.prototype.initialize = function() {
+	this._input = this._ce.getInput();
 }
 com.citruxengine.core.State.prototype.update = function(timeDelta) {
 	var garbage = [];
@@ -2623,6 +2625,7 @@ com.citruxengine.core.State.prototype.update = function(timeDelta) {
 		this._objects.splice(Lambda.indexOf(this._objects,garbageObject),1);
 		garbageObject.destroy();
 	}
+	this._input.update();
 }
 com.citruxengine.core.State.prototype.add = function(object) {
 	this._objects.push(object);
@@ -2686,6 +2689,14 @@ box2D.dynamics.joints.B2Jacobian.prototype.compute = function(x1,a1,x2,a2) {
 	return this.linearA.x * x1.x + this.linearA.y * x1.y + this.angularA * a1 + (this.linearB.x * x2.x + this.linearB.y * x2.y) + this.angularB * a2;
 }
 box2D.dynamics.joints.B2Jacobian.prototype.__class__ = box2D.dynamics.joints.B2Jacobian;
+com.citruxengine.core.Input = function(p) {
+}
+com.citruxengine.core.Input.__name__ = ["com","citruxengine","core","Input"];
+com.citruxengine.core.Input.prototype.initialize = function() {
+}
+com.citruxengine.core.Input.prototype.update = function() {
+}
+com.citruxengine.core.Input.prototype.__class__ = com.citruxengine.core.Input;
 jeash.events.Listener = function(inListener,inUseCapture,inPriority) {
 	if( inListener === $_ ) return;
 	this.mListner = inListener;
@@ -15279,9 +15290,9 @@ com.citruxengine.core.CitruxEngine = function(p) {
 	this._playing = true;
 	this._startTime = Date.now().getTime();
 	this._gameTime = this._startTime;
-	jeash.Lib.jeashGetCurrent().GetStage().scaleMode = jeash.display.StageScaleMode.NO_SCALE;
-	jeash.Lib.jeashGetCurrent().GetStage().align = jeash.display.StageAlign.TOP_LEFT;
+	this._input = new com.citruxengine.core.Input();
 	this.addEventListener(jeash.events.Event.ENTER_FRAME,$closure(this,"_handleEnterFrame"));
+	this.addEventListener(jeash.events.Event.ADDED_TO_STAGE,$closure(this,"_handleAddedToStage"));
 }
 com.citruxengine.core.CitruxEngine.__name__ = ["com","citruxengine","core","CitruxEngine"];
 com.citruxengine.core.CitruxEngine.__super__ = jeash.display.Sprite;
@@ -15292,10 +15303,12 @@ com.citruxengine.core.CitruxEngine.getInstance = function() {
 }
 com.citruxengine.core.CitruxEngine.prototype.state = null;
 com.citruxengine.core.CitruxEngine.prototype.playing = null;
+com.citruxengine.core.CitruxEngine.prototype.input = null;
 com.citruxengine.core.CitruxEngine.prototype._state = null;
 com.citruxengine.core.CitruxEngine.prototype._newState = null;
 com.citruxengine.core.CitruxEngine.prototype._stateDisplayIndex = null;
 com.citruxengine.core.CitruxEngine.prototype._playing = null;
+com.citruxengine.core.CitruxEngine.prototype._input = null;
 com.citruxengine.core.CitruxEngine.prototype._startTime = null;
 com.citruxengine.core.CitruxEngine.prototype._gameTime = null;
 com.citruxengine.core.CitruxEngine.prototype._handleEnterFrame = function(evt) {
@@ -15327,6 +15340,26 @@ com.citruxengine.core.CitruxEngine.prototype.setPlaying = function(value) {
 	this._playing = value;
 	if(this._playing) this._gameTime = Date.now().getTime();
 	return this._playing;
+}
+com.citruxengine.core.CitruxEngine.prototype.getInput = function() {
+	return this._input;
+}
+com.citruxengine.core.CitruxEngine.prototype._handleAddedToStage = function(evt) {
+	this.removeEventListener(jeash.events.Event.ADDED_TO_STAGE,$closure(this,"_handleAddedToStage"));
+	jeash.Lib.jeashGetCurrent().GetStage().scaleMode = jeash.display.StageScaleMode.NO_SCALE;
+	jeash.Lib.jeashGetCurrent().GetStage().align = jeash.display.StageAlign.TOP_LEFT;
+	jeash.Lib.jeashGetCurrent().GetStage().addEventListener(jeash.events.Event.DEACTIVATE,$closure(this,"_handleStageDeactivated"));
+	this._input.initialize();
+}
+com.citruxengine.core.CitruxEngine.prototype._handleStageDeactivated = function(evt) {
+	if(this._playing) {
+		this._playing = false;
+		jeash.Lib.jeashGetCurrent().GetStage().addEventListener(jeash.events.Event.ACTIVATE,$closure(this,"_handleStageActivated"));
+	}
+}
+com.citruxengine.core.CitruxEngine.prototype._handleStageActivated = function(evt) {
+	this._playing = true;
+	jeash.Lib.jeashGetCurrent().GetStage().removeEventListener(jeash.events.Event.ACTIVATE,$closure(this,"_handleStageActivated"));
 }
 com.citruxengine.core.CitruxEngine.prototype.__class__ = com.citruxengine.core.CitruxEngine;
 NMEPreloader = function(p) {

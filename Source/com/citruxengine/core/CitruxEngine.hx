@@ -1,5 +1,6 @@
 package com.citruxengine.core;
 
+import com.citruxengine.core.Input;
 import com.citruxengine.core.State;
 
 import nme.display.Sprite;
@@ -21,12 +22,15 @@ class CitruxEngine extends Sprite {
 
 	public var state(getState, setState):State;
 	public var playing(getPlaying, setPlaying):Bool;
+	public var input(getInput, never):Input;
 
 	var _state:State;
 	var _newState:State;
 	var _stateDisplayIndex:Int;
 
 	var _playing:Bool;
+
+	var _input:Input;
 
 	var _startTime:Float;
 	var _gameTime:Float;
@@ -47,10 +51,11 @@ class CitruxEngine extends Sprite {
 		_startTime = Date.now().getTime();
 		_gameTime = _startTime;
 
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-		Lib.current.stage.align = StageAlign.TOP_LEFT;
+		//Set up input
+		_input = new Input();
 
 		this.addEventListener(Event.ENTER_FRAME, _handleEnterFrame);
+		this.addEventListener(Event.ADDED_TO_STAGE, _handleAddedToStage);
 	}
 
 	static public function getInstance():CitruxEngine {
@@ -123,5 +128,40 @@ class CitruxEngine extends Sprite {
 
 		return _playing;
 	}
-	
+
+	/**
+	 * You can get to my Input manager object from this reference so that you can see which keys are pressed and stuff. 
+	 */		
+	public function getInput():Input {
+		return _input;
+	}
+
+	/**
+	 * Set up things that need the stage access.
+	 */
+	 private function _handleAddedToStage(evt:Event):Void {
+
+	 	this.removeEventListener(Event.ADDED_TO_STAGE, _handleAddedToStage);
+
+	 	Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		Lib.current.stage.align = StageAlign.TOP_LEFT;
+		Lib.current.stage.addEventListener(Event.DEACTIVATE, _handleStageDeactivated);
+
+		_input.initialize();
+	 }
+
+	 private function _handleStageDeactivated(evt:Event):Void {
+
+	 	if (_playing) {
+
+	 		_playing = false;
+	 		Lib.current.stage.addEventListener(Event.ACTIVATE, _handleStageActivated);
+	 	}
+	 }
+
+	 private function _handleStageActivated(evt:Event):Void {
+
+	 	_playing = true;
+	 	Lib.current.stage.removeEventListener(Event.ACTIVATE, _handleStageActivated);
+	 }
 }
