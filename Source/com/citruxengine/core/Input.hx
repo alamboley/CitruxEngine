@@ -51,9 +51,7 @@ class Input {
 		if (!_enabled)
 			return;
 
-		for (value in _keys) {
-
-			var key:Int = _keys.keys().next();
+		for (key in _keys.keys()) {
 
 			if (_keys.get(key) == JUST_PRESSED) {
 				_keys.set(key, DOWN);

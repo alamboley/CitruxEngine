@@ -21,14 +21,17 @@ class Hero extends PhysicsObject {
 	public var maxVelocity(getMaxVelocity, setMaxVelocity):Float;
 	public var jumpHeight(getJumpHeight, setJumpHeight):Float;
 	public var jumpAcceleration(getJumpAcceleration, setJumpAcceleration):Float;
+	public var controlsEnabled(getControlsEnabled, setControlsEnabled):Bool;
+	public var friction(getFriction, setFriction):Float;
 
 	private var _playerMovingHero:Bool;
-	private var _controlsEnabled:Bool;
 
 	var _acceleration:Float;
 	var _maxVelocity:Float;
 	var _jumpHeight:Float;
 	var _jumpAcceleration:Float;
+	var _controlsEnabled:Bool;
+	var _friction:Float;
 
 	public function new(name:String, params:Dynamic = null) {
 
@@ -36,11 +39,12 @@ class Hero extends PhysicsObject {
 		_maxVelocity = 8;
 		_jumpHeight = 14;
 		_jumpAcceleration = 0.9;
+		_friction = 0.75;
+		_controlsEnabled = true;
 
 		super(name, params);
 
 		_playerMovingHero = false;
-		_controlsEnabled = true;
 	}
 
 	override public function destroy():Void {
@@ -58,11 +62,33 @@ class Hero extends PhysicsObject {
 			
 			var moveKeyPressed:Bool = false;
 
-			if (_ce.input.isDown(Keyboard.RIGHT))
-				velocity.add(new B2Vec2(5, 0));
+			if (_ce.input.isDown(Keyboard.RIGHT)) {
 
-			if (_ce.input.isDown(Keyboard.LEFT))
+				velocity.add(new B2Vec2(5, 0));
+				moveKeyPressed = true;
+			}
+
+			if (_ce.input.isDown(Keyboard.LEFT)) {
 				velocity.subtract(new B2Vec2(5, 0));
+				moveKeyPressed = true;
+			}
+
+			//If player just started moving the hero this tick.
+			if (moveKeyPressed && !_playerMovingHero) {
+
+				_playerMovingHero = true;
+
+				//Take away friction so he can accelerate.
+				_fixture.setFriction(0);
+
+			} else if (!moveKeyPressed && _playerMovingHero) {
+
+				//Player just stopped moving the hero this tick.
+				_playerMovingHero = false;
+
+				//Add friction so that he stops running
+				_fixture.setFriction(_friction);
+			}
 
 			if (_ce.input.justPressed(Keyboard.SPACE))
 				velocity.y = -_jumpHeight;
@@ -124,5 +150,40 @@ class Hero extends PhysicsObject {
 
 	public function setJumpAcceleration(value:Float):Float {
 		return _jumpAcceleration = value;
+	}
+
+	/**
+	 * Whether or not the player can move and jump with the hero. 
+	 */
+	public function getControlsEnabled():Bool {
+		return _controlsEnabled;
+	}
+
+	public function setControlsEnabled(value:Bool):Bool {
+
+		_controlsEnabled = value;
+
+		if (!_controlsEnabled)
+			_fixture.setFriction(_friction);
+
+		return _controlsEnabled;
+	}
+
+	/**
+	 * This is the amount of friction that the hero will have. Its value is multiplied against the
+	 * friction value of other physics objects.
+	 */
+	public function getFriction():Float {
+		return _friction;
+	}
+
+	public function setFriction(value:Float):Float {
+
+		_friction = value;
+
+		if (_fixture != null)
+			_fixture.setFriction(_friction);
+
+		return _friction;
 	}
 }

@@ -2710,10 +2710,9 @@ com.citruxengine.core.Input.prototype.initialize = function() {
 }
 com.citruxengine.core.Input.prototype.update = function() {
 	if(!this._enabled) return;
-	var $it0 = this._keys.iterator();
+	var $it0 = this._keys.keys();
 	while( $it0.hasNext() ) {
-		var value = $it0.next();
-		var key = this._keys.keys().next();
+		var key = $it0.next();
 		if(this._keys.get(key) == 0) this._keys.set(key,1);
 	}
 	this._keysReleased = [];
@@ -17107,9 +17106,10 @@ com.citruxengine.objects.platformer.Hero = function(name,params) {
 	this._maxVelocity = 8;
 	this._jumpHeight = 14;
 	this._jumpAcceleration = 0.9;
+	this._friction = 0.75;
+	this._controlsEnabled = true;
 	com.citruxengine.objects.PhysicsObject.call(this,name,params);
 	this._playerMovingHero = false;
-	this._controlsEnabled = true;
 }
 com.citruxengine.objects.platformer.Hero.__name__ = ["com","citruxengine","objects","platformer","Hero"];
 com.citruxengine.objects.platformer.Hero.__super__ = com.citruxengine.objects.PhysicsObject;
@@ -17118,12 +17118,15 @@ com.citruxengine.objects.platformer.Hero.prototype.acceleration = null;
 com.citruxengine.objects.platformer.Hero.prototype.maxVelocity = null;
 com.citruxengine.objects.platformer.Hero.prototype.jumpHeight = null;
 com.citruxengine.objects.platformer.Hero.prototype.jumpAcceleration = null;
+com.citruxengine.objects.platformer.Hero.prototype.controlsEnabled = null;
+com.citruxengine.objects.platformer.Hero.prototype.friction = null;
 com.citruxengine.objects.platformer.Hero.prototype._playerMovingHero = null;
-com.citruxengine.objects.platformer.Hero.prototype._controlsEnabled = null;
 com.citruxengine.objects.platformer.Hero.prototype._acceleration = null;
 com.citruxengine.objects.platformer.Hero.prototype._maxVelocity = null;
 com.citruxengine.objects.platformer.Hero.prototype._jumpHeight = null;
 com.citruxengine.objects.platformer.Hero.prototype._jumpAcceleration = null;
+com.citruxengine.objects.platformer.Hero.prototype._controlsEnabled = null;
+com.citruxengine.objects.platformer.Hero.prototype._friction = null;
 com.citruxengine.objects.platformer.Hero.prototype.destroy = function() {
 	com.citruxengine.objects.PhysicsObject.prototype.destroy.call(this);
 }
@@ -17132,8 +17135,21 @@ com.citruxengine.objects.platformer.Hero.prototype.update = function(timeDelta) 
 	var velocity = this._body.getLinearVelocity();
 	if(this._controlsEnabled) {
 		var moveKeyPressed = false;
-		if(this._ce.getInput().isDown(jeash.ui.Keyboard.RIGHT)) velocity.add(new box2D.common.math.B2Vec2(5,0));
-		if(this._ce.getInput().isDown(jeash.ui.Keyboard.LEFT)) velocity.subtract(new box2D.common.math.B2Vec2(5,0));
+		if(this._ce.getInput().isDown(jeash.ui.Keyboard.RIGHT)) {
+			velocity.add(new box2D.common.math.B2Vec2(5,0));
+			moveKeyPressed = true;
+		}
+		if(this._ce.getInput().isDown(jeash.ui.Keyboard.LEFT)) {
+			velocity.subtract(new box2D.common.math.B2Vec2(5,0));
+			moveKeyPressed = true;
+		}
+		if(moveKeyPressed && !this._playerMovingHero) {
+			this._playerMovingHero = true;
+			this._fixture.setFriction(0);
+		} else if(!moveKeyPressed && this._playerMovingHero) {
+			this._playerMovingHero = false;
+			this._fixture.setFriction(this._friction);
+		}
 		if(this._ce.getInput().justPressed(jeash.ui.Keyboard.SPACE)) velocity.y = -this._jumpHeight;
 		if(this._ce.getInput().isDown(jeash.ui.Keyboard.SPACE)) velocity.y -= this._jumpAcceleration;
 		if(velocity.x > this._maxVelocity) velocity.x = this._maxVelocity; else if(velocity.x < -this._maxVelocity) velocity.x = -this._maxVelocity;
@@ -17170,6 +17186,22 @@ com.citruxengine.objects.platformer.Hero.prototype.getJumpAcceleration = functio
 }
 com.citruxengine.objects.platformer.Hero.prototype.setJumpAcceleration = function(value) {
 	return this._jumpAcceleration = value;
+}
+com.citruxengine.objects.platformer.Hero.prototype.getControlsEnabled = function() {
+	return this._controlsEnabled;
+}
+com.citruxengine.objects.platformer.Hero.prototype.setControlsEnabled = function(value) {
+	this._controlsEnabled = value;
+	if(!this._controlsEnabled) this._fixture.setFriction(this._friction);
+	return this._controlsEnabled;
+}
+com.citruxengine.objects.platformer.Hero.prototype.getFriction = function() {
+	return this._friction;
+}
+com.citruxengine.objects.platformer.Hero.prototype.setFriction = function(value) {
+	this._friction = value;
+	if(this._fixture != null) this._fixture.setFriction(this._friction);
+	return this._friction;
 }
 com.citruxengine.objects.platformer.Hero.prototype.__class__ = com.citruxengine.objects.platformer.Hero;
 haxe.Log = function() { }
