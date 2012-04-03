@@ -4,6 +4,7 @@ import com.citruxengine.core.CitruxEngine;
 
 import fr.aymericlamboley.test.GameState;
 
+import nme.display.FPS;
 import nme.Lib;
 
 /**
@@ -21,5 +22,7 @@ class Main extends CitruxEngine {
 		super ();
 
 		state = new GameState();
+
+		Lib.current.addChild(new FPS(0, 0, 0xFF6600));
 	}
 }

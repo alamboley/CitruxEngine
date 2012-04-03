@@ -81,7 +81,7 @@ class State extends Sprite {
 		for (i in 0...n) {
 
 			var garbageObject:CitruxObject = garbage[i];
-			_objects.splice(Lambda.indexOf(_objects,garbageObject), 1);
+			_objects.splice(Lambda.indexOf(_objects, garbageObject), 1);
 			garbageObject.destroy();
 		}
 
@@ -112,7 +112,7 @@ class State extends Sprite {
 
 	/**
 	 * Gets a reference to a CitruxObject by passing that object's name in.
-	 * Often the name property will be set via a level editor such as the Flash IDE. 
+	 * Often the name property will be set via a level editor such as the Flash IDE.
 	 * @param name The name property of the object you want to get a reference to.
 	 */
 	public function getObjectByName(name:String):CitruxObject {
@@ -126,7 +126,7 @@ class State extends Sprite {
 	}
 
 	/**
-	 * Returns the first instance of a CitruxObject that is of the class that you pass in. 
+	 * Returns the first instance of a CitruxObject that is of the class that you pass in.
 	 * This is useful if you know that there is only one object of a certain time in your state (such as a "Hero").
 	 * @param type The class of the object you want to get a reference to.
 	 */
@@ -143,7 +143,7 @@ class State extends Sprite {
 	/**
 	 * This returns an array of all objects of a particular type. This is useful for adding an event handler
 	 * to all similar objects. For instance, if you want to track the collection of coins, you can get all objects
-	 * of type "Coin" via this method. Then you'd loop through the returned array to add your listener to the coins' event. 
+	 * of type "Coin" via this method. Then you'd loop through the returned array to add your listener to the coins' event.
 	 */
 	public function getObjectsByType(type:Class<Dynamic>):Array<CitruxObject> {
 

@@ -2690,11 +2690,64 @@ box2D.dynamics.joints.B2Jacobian.prototype.compute = function(x1,a1,x2,a2) {
 }
 box2D.dynamics.joints.B2Jacobian.prototype.__class__ = box2D.dynamics.joints.B2Jacobian;
 com.citruxengine.core.Input = function(p) {
+	if( p === $_ ) return;
+	this._keys = new IntHash();
+	this._keysReleased = new Array();
+	this._initialized = false;
+	this._enabled = true;
 }
 com.citruxengine.core.Input.__name__ = ["com","citruxengine","core","Input"];
+com.citruxengine.core.Input.prototype.enabled = null;
+com.citruxengine.core.Input.prototype._keys = null;
+com.citruxengine.core.Input.prototype._keysReleased = null;
+com.citruxengine.core.Input.prototype._initialized = null;
+com.citruxengine.core.Input.prototype._enabled = null;
 com.citruxengine.core.Input.prototype.initialize = function() {
+	if(this._initialized) return;
+	this._initialized = true;
+	jeash.Lib.jeashGetCurrent().GetStage().addEventListener(jeash.events.KeyboardEvent.KEY_DOWN,$closure(this,"_onKeyDown"));
+	jeash.Lib.jeashGetCurrent().GetStage().addEventListener(jeash.events.KeyboardEvent.KEY_UP,$closure(this,"_onKeyUp"));
 }
 com.citruxengine.core.Input.prototype.update = function() {
+	if(!this._enabled) return;
+	var $it0 = this._keys.iterator();
+	while( $it0.hasNext() ) {
+		var value = $it0.next();
+		var key = this._keys.keys().next();
+		if(this._keys.get(key) == 0) this._keys.set(key,1);
+	}
+	this._keysReleased = [];
+}
+com.citruxengine.core.Input.prototype.isDown = function(keyCode) {
+	return this._keys.get(keyCode) == 1;
+}
+com.citruxengine.core.Input.prototype.justPressed = function(keyCode) {
+	return this._keys.get(keyCode) == 0;
+}
+com.citruxengine.core.Input.prototype.justReleased = function(keyCode) {
+	return Lambda.indexOf(this._keysReleased,keyCode) != 1;
+}
+com.citruxengine.core.Input.prototype._onKeyDown = function(kEvt) {
+	if(this._keys.get(kEvt.keyCode) == null) this._keys.set(kEvt.keyCode,0);
+}
+com.citruxengine.core.Input.prototype._onKeyUp = function(kEvt) {
+	this._keys.remove(kEvt.keyCode);
+	this._keysReleased.push(kEvt.keyCode);
+}
+com.citruxengine.core.Input.prototype.getEnabled = function() {
+	return this._enabled;
+}
+com.citruxengine.core.Input.prototype.setEnabled = function(value) {
+	if(this._enabled == value) return this._enabled;
+	this._enabled = value;
+	if(this._enabled) {
+		jeash.Lib.jeashGetCurrent().GetStage().addEventListener(jeash.events.KeyboardEvent.KEY_DOWN,$closure(this,"_onKeyDown"));
+		jeash.Lib.jeashGetCurrent().GetStage().addEventListener(jeash.events.KeyboardEvent.KEY_UP,$closure(this,"_onKeyUp"));
+	} else {
+		jeash.Lib.jeashGetCurrent().GetStage().removeEventListener(jeash.events.KeyboardEvent.KEY_DOWN,$closure(this,"_onKeyDown"));
+		jeash.Lib.jeashGetCurrent().GetStage().removeEventListener(jeash.events.KeyboardEvent.KEY_UP,$closure(this,"_onKeyUp"));
+	}
+	return this._enabled;
 }
 com.citruxengine.core.Input.prototype.__class__ = com.citruxengine.core.Input;
 jeash.events.Listener = function(inListener,inUseCapture,inPriority) {
@@ -4075,6 +4128,675 @@ jeash.events.IOErrorEvent.__super__ = jeash.events.Event;
 for(var k in jeash.events.Event.prototype ) jeash.events.IOErrorEvent.prototype[k] = jeash.events.Event.prototype[k];
 jeash.events.IOErrorEvent.prototype.text = null;
 jeash.events.IOErrorEvent.prototype.__class__ = jeash.events.IOErrorEvent;
+jeash.text.TextField = function(p) {
+	if( p === $_ ) return;
+	jeash.display.InteractiveObject.call(this);
+	this.mWidth = 40;
+	this.mHeight = 20;
+	this.mHTMLMode = false;
+	this.multiline = false;
+	this.jeashGraphics = new jeash.display.Graphics();
+	this.jeashGraphics.jeashExtentBuffer = 0;
+	this.mCaretGfx = new jeash.display.Graphics();
+	this.mFace = jeash.text.TextField.mDefaultFont;
+	this.mAlign = jeash.text.TextFormatAlign.LEFT;
+	this.mParagraphs = new Array();
+	this.mSelStart = -1;
+	this.mSelEnd = -1;
+	this.mScrollH = 0;
+	this.mScrollV = 1;
+	this.mType = jeash.text.TextFieldType.DYNAMIC;
+	this.SetAutoSize(jeash.text.TextFieldAutoSize.NONE);
+	this.mTextHeight = 12;
+	this.mMaxHeight = this.mTextHeight;
+	this.mHTMLText = " ";
+	this.mText = " ";
+	this.mTextColour = 0;
+	this.tabEnabled = false;
+	this.mTryFreeType = true;
+	this.selectable = true;
+	this.mInsertPos = 0;
+	this.mInput = false;
+	this.mDownChar = 0;
+	this.mSelectDrag = -1;
+	this.mLineInfo = [];
+	this.name = "TextField " + jeash.display.DisplayObject.mNameID++;
+	this.jeashGraphics.jeashSurface.id = this.name;
+	this.SetBorderColor(0);
+	this.SetBorder(false);
+	this.SetBackgroundColor(16777215);
+	this.SetBackground(false);
+}
+jeash.text.TextField.__name__ = ["jeash","text","TextField"];
+jeash.text.TextField.__super__ = jeash.display.InteractiveObject;
+for(var k in jeash.display.InteractiveObject.prototype ) jeash.text.TextField.prototype[k] = jeash.display.InteractiveObject.prototype[k];
+jeash.text.TextField.prototype.htmlText = null;
+jeash.text.TextField.prototype.text = null;
+jeash.text.TextField.prototype.textColor = null;
+jeash.text.TextField.prototype.textWidth = null;
+jeash.text.TextField.prototype.textHeight = null;
+jeash.text.TextField.prototype.defaultTextFormat = null;
+jeash.text.TextField.prototype.mHTMLText = null;
+jeash.text.TextField.prototype.mText = null;
+jeash.text.TextField.prototype.mTextColour = null;
+jeash.text.TextField.prototype.mType = null;
+jeash.text.TextField.prototype.autoSize = null;
+jeash.text.TextField.prototype.selectable = null;
+jeash.text.TextField.prototype.multiline = null;
+jeash.text.TextField.prototype.embedFonts = null;
+jeash.text.TextField.prototype.borderColor = null;
+jeash.text.TextField.prototype.background = null;
+jeash.text.TextField.prototype.backgroundColor = null;
+jeash.text.TextField.prototype.caretPos = null;
+jeash.text.TextField.prototype.displayAsPassword = null;
+jeash.text.TextField.prototype.border = null;
+jeash.text.TextField.prototype.wordWrap = null;
+jeash.text.TextField.prototype.maxChars = null;
+jeash.text.TextField.prototype.restrict = null;
+jeash.text.TextField.prototype.type = null;
+jeash.text.TextField.prototype.antiAliasType = null;
+jeash.text.TextField.prototype.sharpness = null;
+jeash.text.TextField.prototype.gridFitType = null;
+jeash.text.TextField.prototype.length = null;
+jeash.text.TextField.prototype.mTextHeight = null;
+jeash.text.TextField.prototype.mFace = null;
+jeash.text.TextField.prototype.mDownChar = null;
+jeash.text.TextField.prototype.selectionBeginIndex = null;
+jeash.text.TextField.prototype.selectionEndIndex = null;
+jeash.text.TextField.prototype.caretIndex = null;
+jeash.text.TextField.prototype.mParagraphs = null;
+jeash.text.TextField.prototype.mTryFreeType = null;
+jeash.text.TextField.prototype.mLineInfo = null;
+jeash.text.TextField.prototype.mAlign = null;
+jeash.text.TextField.prototype.mHTMLMode = null;
+jeash.text.TextField.prototype.mSelStart = null;
+jeash.text.TextField.prototype.mSelEnd = null;
+jeash.text.TextField.prototype.mInsertPos = null;
+jeash.text.TextField.prototype.mSelectDrag = null;
+jeash.text.TextField.prototype.mInput = null;
+jeash.text.TextField.prototype.mWidth = null;
+jeash.text.TextField.prototype.mHeight = null;
+jeash.text.TextField.prototype.mSelectionAnchored = null;
+jeash.text.TextField.prototype.mSelectionAnchor = null;
+jeash.text.TextField.prototype.mScrollH = null;
+jeash.text.TextField.prototype.mScrollV = null;
+jeash.text.TextField.prototype.jeashGraphics = null;
+jeash.text.TextField.prototype.mCaretGfx = null;
+jeash.text.TextField.prototype.ClearSelection = function() {
+	this.mSelStart = this.mSelEnd = -1;
+	this.mSelectionAnchored = false;
+	this.Rebuild();
+}
+jeash.text.TextField.prototype.DeleteSelection = function() {
+	if(this.mSelEnd > this.mSelStart && this.mSelStart >= 0) {
+		this.mText = this.mText.substr(0,this.mSelStart) + this.mText.substr(this.mSelEnd);
+		this.mInsertPos = this.mSelStart;
+		this.mSelStart = this.mSelEnd = -1;
+		this.mSelectionAnchored = false;
+	}
+}
+jeash.text.TextField.prototype.OnMoveKeyStart = function(inShift) {
+	if(inShift && this.selectable) {
+		if(!this.mSelectionAnchored) {
+			this.mSelectionAnchored = true;
+			this.mSelectionAnchor = this.mInsertPos;
+			if(jeash.text.TextField.sSelectionOwner != this) {
+				if(jeash.text.TextField.sSelectionOwner != null) jeash.text.TextField.sSelectionOwner.ClearSelection();
+				jeash.text.TextField.sSelectionOwner = this;
+			}
+		}
+	} else this.ClearSelection();
+}
+jeash.text.TextField.prototype.OnMoveKeyEnd = function() {
+	if(this.mSelectionAnchored) {
+		if(this.mInsertPos < this.mSelectionAnchor) {
+			this.mSelStart = this.mInsertPos;
+			this.mSelEnd = this.mSelectionAnchor;
+		} else {
+			this.mSelStart = this.mSelectionAnchor;
+			this.mSelEnd = this.mInsertPos;
+		}
+	}
+}
+jeash.text.TextField.prototype.OnKey = function(inKey) {
+	if(inKey.type != jeash.events.KeyboardEvent.KEY_DOWN) return;
+	var key = inKey.keyCode;
+	var ascii = inKey.charCode;
+	var shift = inKey.shiftKey;
+	if(ascii == 3) {
+		if(this.mSelEnd > this.mSelStart && this.mSelStart >= 0) throw "To implement setClipboardString. TextField.OnKey";
+		return;
+	}
+	if(this.mInput) {
+		if(key == jeash.ui.Keyboard.LEFT) {
+			this.OnMoveKeyStart(shift);
+			this.mInsertPos--;
+			this.OnMoveKeyEnd();
+		} else if(key == jeash.ui.Keyboard.RIGHT) {
+			this.OnMoveKeyStart(shift);
+			this.mInsertPos++;
+			this.OnMoveKeyEnd();
+		} else if(key == jeash.ui.Keyboard.HOME) {
+			this.OnMoveKeyStart(shift);
+			this.mInsertPos = 0;
+			this.OnMoveKeyEnd();
+		} else if(key == jeash.ui.Keyboard.END) {
+			this.OnMoveKeyStart(shift);
+			this.mInsertPos = this.mText.length;
+			this.OnMoveKeyEnd();
+		} else if(key == jeash.ui.Keyboard.DELETE || key == jeash.ui.Keyboard.BACKSPACE) {
+			if(this.mSelEnd > this.mSelStart && this.mSelStart >= 0) this.DeleteSelection(); else {
+				if(key == jeash.ui.Keyboard.BACKSPACE && this.mInsertPos > 0) this.mInsertPos--;
+				var l = this.mText.length;
+				if(this.mInsertPos > l) {
+					if(l > 0) this.mText = this.mText.substr(0,l - 1);
+				} else this.mText = this.mText.substr(0,this.mInsertPos) + this.mText.substr(this.mInsertPos + 1);
+			}
+		} else if(ascii >= 32 && ascii < 128) {
+			if(this.mSelEnd > this.mSelStart && this.mSelStart >= 0) this.DeleteSelection();
+			this.mText = this.mText.substr(0,this.mInsertPos) + String.fromCharCode(ascii) + this.mText.substr(this.mInsertPos);
+			this.mInsertPos++;
+		}
+		if(this.mInsertPos < 0) this.mInsertPos = 0;
+		var l = this.mText.length;
+		if(this.mInsertPos > l) this.mInsertPos = l;
+		this.RebuildText();
+	}
+}
+jeash.text.TextField.prototype.OnFocusIn = function(inMouse) {
+	if(this.mInput && this.selectable && !inMouse) {
+		this.mSelStart = 0;
+		this.mSelEnd = this.mText.length;
+		this.RebuildText();
+	}
+}
+jeash.text.TextField.prototype.jeashGetWidth = function() {
+	return this.mWidth;
+}
+jeash.text.TextField.prototype.jeashGetHeight = function() {
+	return this.mHeight;
+}
+jeash.text.TextField.prototype.jeashSetWidth = function(inWidth) {
+	if(inWidth != this.mWidth) {
+		this.mWidth = inWidth;
+		this.jeashGraphics.jeashSurface.width = Math.round(inWidth);
+		this.Rebuild();
+	}
+	return this.mWidth;
+}
+jeash.text.TextField.prototype.jeashSetHeight = function(inHeight) {
+	if(inHeight != this.mHeight) {
+		this.mHeight = inHeight;
+		this.jeashGraphics.jeashSurface.height = Math.round(inHeight);
+		this.Rebuild();
+	}
+	return this.mHeight;
+}
+jeash.text.TextField.prototype.GetType = function() {
+	return this.mType;
+}
+jeash.text.TextField.prototype.SetType = function(inType) {
+	this.mType = inType;
+	this.mInput = this.mType == jeash.text.TextFieldType.INPUT;
+	if(this.mInput && this.mHTMLMode) this.ConvertHTMLToText(true);
+	this.tabEnabled = this.GetType() == jeash.text.TextFieldType.INPUT;
+	this.Rebuild();
+	return inType;
+}
+jeash.text.TextField.prototype.GetCaret = function() {
+	return this.mInsertPos;
+}
+jeash.text.TextField.prototype.jeashGetGraphics = function() {
+	return this.jeashGraphics;
+}
+jeash.text.TextField.prototype.getLineIndexAtPoint = function(inX,inY) {
+	if(this.mLineInfo.length < 1) return -1;
+	if(inY <= 0) return 0;
+	var _g1 = 0, _g = this.mLineInfo.length;
+	while(_g1 < _g) {
+		var l = _g1++;
+		if(this.mLineInfo[l].mY0 > inY) return l == 0?0:l - 1;
+	}
+	return this.mLineInfo.length - 1;
+}
+jeash.text.TextField.prototype.getCharIndexAtPoint = function(inX,inY) {
+	var li = this.getLineIndexAtPoint(inX,inY);
+	if(li < 0) return -1;
+	var line = this.mLineInfo[li];
+	var idx = line.mIndex;
+	var _g = 0, _g1 = line.mX;
+	while(_g < _g1.length) {
+		var x = _g1[_g];
+		++_g;
+		if(x > inX) return idx;
+		idx++;
+	}
+	return idx;
+}
+jeash.text.TextField.prototype.getCharBoundaries = function(a) {
+	return null;
+}
+jeash.text.TextField.prototype.OnMouseDown = function(inX,inY) {
+	if(this.tabEnabled || this.selectable) {
+		if(jeash.text.TextField.sSelectionOwner != null) jeash.text.TextField.sSelectionOwner.ClearSelection();
+		jeash.text.TextField.sSelectionOwner = this;
+		this.GetStage().SetFocus(this);
+		var gx = inX / this.GetStage().jeashGetScaleX();
+		var gy = inY / this.GetStage().jeashGetScaleY();
+		var pos = this.globalToLocal(new jeash.geom.Point(gx,gy));
+		this.mSelectDrag = this.getCharIndexAtPoint(pos.x,pos.y);
+		if(this.tabEnabled) this.mInsertPos = this.mSelectDrag;
+		this.mSelStart = this.mSelEnd = -1;
+		this.RebuildText();
+	}
+}
+jeash.text.TextField.prototype.OnMouseDrag = function(inX,inY) {
+	if((this.tabEnabled || this.selectable) && this.mSelectDrag >= 0) {
+		var gx = inX / this.GetStage().jeashGetScaleX();
+		var gy = inY / this.GetStage().jeashGetScaleY();
+		var pos = this.globalToLocal(new jeash.geom.Point(gx,gy));
+		var idx = this.getCharIndexAtPoint(pos.x,pos.y);
+		if(jeash.text.TextField.sSelectionOwner != this) {
+			if(jeash.text.TextField.sSelectionOwner != null) jeash.text.TextField.sSelectionOwner.ClearSelection();
+			jeash.text.TextField.sSelectionOwner = this;
+		}
+		if(idx < this.mSelectDrag) {
+			this.mSelStart = idx;
+			this.mSelEnd = this.mSelectDrag;
+		} else if(idx > this.mSelectDrag) {
+			this.mSelStart = this.mSelectDrag;
+			this.mSelEnd = idx;
+		} else this.mSelStart = this.mSelEnd = -1;
+		if(this.tabEnabled) this.mInsertPos = idx;
+		this.RebuildText();
+	}
+}
+jeash.text.TextField.prototype.OnMouseUp = function(inX,inY) {
+	this.mSelectDrag = -1;
+}
+jeash.text.TextField.prototype.mMaxWidth = null;
+jeash.text.TextField.prototype.mMaxHeight = null;
+jeash.text.TextField.prototype.mLimitRenderX = null;
+jeash.text.TextField.prototype.RenderRow = function(inRow,inY,inCharIdx,inAlign,inInsert) {
+	var h = 0;
+	var w = 0;
+	var _g = 0;
+	while(_g < inRow.length) {
+		var chr = inRow[_g];
+		++_g;
+		if(chr.fh > h) h = chr.fh;
+		w += chr.adv;
+	}
+	if(w > this.mMaxWidth) this.mMaxWidth = w;
+	var full_height = Std["int"](h * 1.2);
+	var align_x = 0;
+	var insert_x = 0;
+	if(inInsert != null) {
+		if(this.autoSize != jeash.text.TextFieldAutoSize.NONE) {
+			this.mScrollH = 0;
+			insert_x = inInsert;
+		} else {
+			insert_x = inInsert - this.mScrollH;
+			if(insert_x < 0) this.mScrollH -= (this.mLimitRenderX * 3 >> 2) - insert_x; else if(insert_x > this.mLimitRenderX) this.mScrollH += insert_x - (this.mLimitRenderX * 3 >> 2);
+			if(this.mScrollH < 0) this.mScrollH = 0;
+		}
+	}
+	if(this.autoSize == jeash.text.TextFieldAutoSize.NONE && w <= this.mLimitRenderX) {
+		if(inAlign == jeash.text.TextFormatAlign.CENTER) align_x = this.mLimitRenderX - w >> 1; else if(inAlign == jeash.text.TextFormatAlign.RIGHT) align_x = this.mLimitRenderX - w;
+	}
+	var x_list = new Array();
+	this.mLineInfo.push({ mY0 : inY, mIndex : inCharIdx, mX : x_list});
+	var cache_sel_font = null;
+	var cache_normal_font = null;
+	var x = align_x - this.mScrollH;
+	var x0 = x;
+	var _g = 0;
+	while(_g < inRow.length) {
+		var chr = inRow[_g];
+		++_g;
+		var adv = chr.adv;
+		if(x + adv > this.mLimitRenderX) break;
+		x_list.push(x);
+		if(x >= 0) {
+			var font = chr.font;
+			if(chr.sel) {
+				this.jeashGraphics.lineStyle();
+				this.jeashGraphics.beginFill(2105440);
+				this.jeashGraphics.drawRect(x,inY,adv,full_height);
+				this.jeashGraphics.endFill();
+				if(cache_normal_font == chr.font) font = cache_sel_font; else {
+					font = jeash.text.FontInstance.CreateSolid(chr.font.GetFace(),chr.fh,16777215,1.0);
+					cache_sel_font = font;
+					cache_normal_font = chr.font;
+				}
+			}
+			font.RenderChar(this.jeashGraphics,chr.chr,x,Std["int"](inY + (h - chr.fh)));
+		}
+		x += adv;
+	}
+	x += this.mScrollH;
+	if(inInsert != null) {
+		this.mCaretGfx.lineStyle(1,this.mTextColour);
+		this.mCaretGfx.moveTo(inInsert + align_x - this.mScrollH,inY);
+		this.mCaretGfx.lineTo(inInsert + align_x - this.mScrollH,inY + full_height);
+	}
+	return full_height;
+}
+jeash.text.TextField.prototype.Rebuild = function() {
+	this.mLineInfo = [];
+	this.jeashGraphics.clear();
+	this.mCaretGfx.clear();
+	if(this.background) {
+		this.jeashGraphics.beginFill(this.backgroundColor);
+		this.jeashGraphics.drawRect(-2,-2,this.jeashGetWidth() + 4,this.jeashGetHeight() + 4);
+		this.jeashGraphics.endFill();
+	}
+	this.jeashGraphics.lineStyle(this.mTextColour);
+	var insert_x = null;
+	this.mMaxWidth = 0;
+	var wrap = this.mLimitRenderX = this.wordWrap && !this.mInput?Std["int"](this.jeashGetWidth()):999999;
+	var char_idx = 0;
+	var h = 0;
+	var s0 = this.mSelStart;
+	var s1 = this.mSelEnd;
+	var _g = 0, _g1 = this.mParagraphs;
+	while(_g < _g1.length) {
+		var paragraph = _g1[_g];
+		++_g;
+		var row = [];
+		var row_width = 0;
+		var last_word_break = 0;
+		var last_word_break_width = 0;
+		var last_word_char_idx = 0;
+		var start_idx = char_idx;
+		var tx = 0;
+		var _g2 = 0, _g3 = paragraph.spans;
+		while(_g2 < _g3.length) {
+			var span = _g3[_g2];
+			++_g2;
+			var text = span.text;
+			var font = span.font;
+			var fh = font.jeashGetHeight();
+			last_word_break = row.length;
+			last_word_break_width = row_width;
+			last_word_char_idx = char_idx;
+			var _g5 = 0, _g4 = text.length;
+			while(_g5 < _g4) {
+				var ch = _g5++;
+				if(char_idx == this.mInsertPos && this.mInput) insert_x = tx;
+				var g = text.charCodeAt(ch);
+				var adv = font.jeashGetAdvance(g);
+				if(g == 32) {
+					last_word_break = row.length;
+					last_word_break_width = tx;
+					last_word_char_idx = char_idx;
+				}
+				if(tx + adv > wrap) {
+					if(last_word_break > 0) {
+						var row_end = row.splice(last_word_break,row.length - last_word_break);
+						h += this.RenderRow(row,h,start_idx,paragraph.align);
+						row = row_end;
+						tx -= last_word_break_width;
+						start_idx = last_word_char_idx;
+						last_word_break = 0;
+						last_word_break_width = 0;
+						last_word_char_idx = 0;
+						if(row_end.length > 0 && row_end[0].chr == 32) {
+							row_end.shift();
+							start_idx++;
+						}
+					} else {
+						h += this.RenderRow(row,h,char_idx,paragraph.align);
+						row = [];
+						tx = 0;
+						start_idx = char_idx;
+					}
+				}
+				row.push({ font : font, chr : g, x : tx, fh : fh, sel : char_idx >= s0 && char_idx < s1, adv : adv});
+				tx += adv;
+				char_idx++;
+			}
+		}
+		if(row.length > 0) {
+			var pos = this.mInput && insert_x == null?tx:insert_x == null?0:insert_x;
+			h += this.RenderRow(row,h,start_idx,paragraph.align,pos);
+		}
+	}
+	var w = this.mMaxWidth;
+	if(h < this.mTextHeight) h = this.mTextHeight;
+	this.mMaxHeight = h;
+	switch(this.autoSize) {
+	case jeash.text.TextFieldAutoSize.LEFT:
+		this.jeashSetWidth(w);
+		this.jeashSetHeight(h);
+		break;
+	case jeash.text.TextFieldAutoSize.RIGHT:
+		var x0 = this.jeashGetX() + this.jeashGetWidth();
+		this.jeashSetWidth(w);
+		this.jeashSetHeight(h);
+		this.jeashSetX(x0 - w);
+		break;
+	case jeash.text.TextFieldAutoSize.CENTER:
+		var x0 = this.jeashGetX() + this.jeashGetWidth() / 2;
+		this.jeashSetWidth(w);
+		this.jeashSetHeight(h);
+		this.jeashSetX(x0 - w / 2);
+		break;
+	default:
+		if(this.wordWrap) this.jeashSetHeight(h);
+	}
+	if(char_idx == 0 && this.mInput) {
+		var x = 0;
+		if(this.mAlign == jeash.text.TextFormatAlign.CENTER) x = Std["int"](this.jeashGetWidth() / 2); else if(this.mAlign == jeash.text.TextFormatAlign.RIGHT) x = Std["int"](this.jeashGetWidth()) - 1;
+		this.mCaretGfx.lineStyle(1,this.mTextColour);
+		this.mCaretGfx.moveTo(x,0);
+		this.mCaretGfx.lineTo(x,this.mTextHeight);
+	}
+	if(this.border) {
+		this.jeashGraphics.endFill();
+		this.jeashGraphics.lineStyle(1,this.borderColor);
+		this.jeashGraphics.drawRect(-2,-2,this.jeashGetWidth() + 4,this.jeashGetHeight() + 4);
+	}
+}
+jeash.text.TextField.prototype.GetObj = function(inX,inY,inObj) {
+	var inv = this.mFullMatrix.clone();
+	inv.invert();
+	var px = inv.a * inX + inv.c * inY + inv.tx;
+	var py = inv.b * inX + inv.d * inY + inv.ty;
+	if(px > 0 && px < this.jeashGetWidth() && py > 0 && py < this.jeashGetHeight()) return this;
+	return null;
+}
+jeash.text.TextField.prototype.GetBackgroundRect = function() {
+	if(this.border) return new jeash.geom.Rectangle(-2,-2,this.jeashGetWidth() + 4,this.jeashGetHeight() + 4); else return new jeash.geom.Rectangle(0,0,this.jeashGetWidth(),this.jeashGetHeight());
+}
+jeash.text.TextField.prototype.GetTextWidth = function() {
+	return this.mMaxWidth;
+}
+jeash.text.TextField.prototype.GetTextHeight = function() {
+	return this.mMaxHeight;
+}
+jeash.text.TextField.prototype.GetTextColour = function() {
+	return this.mTextColour;
+}
+jeash.text.TextField.prototype.SetTextColour = function(inCol) {
+	this.mTextColour = inCol;
+	this.RebuildText();
+	return inCol;
+}
+jeash.text.TextField.prototype.GetText = function() {
+	if(this.mHTMLMode) this.ConvertHTMLToText(false);
+	return this.mText;
+}
+jeash.text.TextField.prototype.SetText = function(inText) {
+	this.mText = inText;
+	this.mHTMLText = inText;
+	this.mHTMLMode = false;
+	this.RebuildText();
+	return this.mText;
+}
+jeash.text.TextField.prototype.ConvertHTMLToText = function(inUnSetHTML) {
+	this.mText = "";
+	var _g = 0, _g1 = this.mParagraphs;
+	while(_g < _g1.length) {
+		var paragraph = _g1[_g];
+		++_g;
+		var _g2 = 0, _g3 = paragraph.spans;
+		while(_g2 < _g3.length) {
+			var span = _g3[_g2];
+			++_g2;
+			this.mText += span.text;
+		}
+	}
+	if(inUnSetHTML) {
+		this.mHTMLMode = false;
+		this.RebuildText();
+	}
+}
+jeash.text.TextField.prototype.GetFocusObjects = function(outObjs) {
+	if(this.mInput) outObjs.push(this);
+}
+jeash.text.TextField.prototype.SetAutoSize = function(inAutoSize) {
+	this.autoSize = inAutoSize;
+	this.Rebuild();
+	return inAutoSize;
+}
+jeash.text.TextField.prototype.SetWordWrap = function(inWordWrap) {
+	this.wordWrap = inWordWrap;
+	this.Rebuild();
+	return this.wordWrap;
+}
+jeash.text.TextField.prototype.SetBorder = function(inBorder) {
+	this.border = inBorder;
+	this.Rebuild();
+	return inBorder;
+}
+jeash.text.TextField.prototype.SetBorderColor = function(inBorderCol) {
+	this.borderColor = inBorderCol;
+	this.Rebuild();
+	return inBorderCol;
+}
+jeash.text.TextField.prototype.SetBackgroundColor = function(inCol) {
+	this.backgroundColor = inCol;
+	this.Rebuild();
+	return inCol;
+}
+jeash.text.TextField.prototype.SetBackground = function(inBack) {
+	this.background = inBack;
+	this.Rebuild();
+	return inBack;
+}
+jeash.text.TextField.prototype.GetHTMLText = function() {
+	return this.mHTMLText;
+}
+jeash.text.TextField.prototype.DecodeColour = function(col) {
+	return Std.parseInt("0x" + col.substr(1));
+}
+jeash.text.TextField.prototype.AddXML = function(x,a) {
+	var type = x.nodeType;
+	if(type == Xml.Document || type == Xml.Element) {
+		if(type == Xml.Element) {
+			a = { face : a.face, height : a.height, colour : a.colour, align : a.align};
+			switch(x.getNodeName()) {
+			case "p":
+				var l = this.mParagraphs.length;
+				var align = x.get("align");
+				if(align != null) a.align = Type.createEnum(jeash.text.TextFormatAlign,align);
+				if(l > 0 && this.mParagraphs[l - 1].spans.length > 0 && this.multiline) this.mParagraphs.push({ align : a.align, spans : []});
+				break;
+			case "font":
+				var face = x.get("face");
+				if(face != null) a.face = face;
+				var height = x.get("size");
+				if(height != null) a.height = Std["int"](Std.parseFloat(height));
+				var col = x.get("color");
+				if(col != null) a.colour = this.DecodeColour(col);
+				break;
+			}
+		}
+		var $it0 = x.iterator();
+		while( $it0.hasNext() ) {
+			var child = $it0.next();
+			this.AddXML(child,a);
+		}
+	} else {
+		var text = x.getNodeValue();
+		var font = jeash.text.FontInstance.CreateSolid(a.face,a.height,a.colour,1.0);
+		if(font != null && text != "") {
+			var span = { text : text, font : font};
+			var l = this.mParagraphs.length;
+			if(this.mParagraphs.length < 1) this.mParagraphs.push({ align : a.align, spans : [span]}); else this.mParagraphs[l - 1].spans.push(span);
+		}
+	}
+}
+jeash.text.TextField.prototype.RebuildText = function() {
+	this.mParagraphs = [];
+	if(this.mHTMLMode) {
+		var xml = Xml.parse(this.mHTMLText);
+		var a = { face : this.mFace, height : this.mTextHeight, colour : this.mTextColour, align : this.mAlign};
+		this.AddXML(xml,a);
+	} else {
+		var font = jeash.text.FontInstance.CreateSolid(this.mFace,this.mTextHeight,this.mTextColour,1.0);
+		var paras = this.mText.split("\n");
+		var _g = 0;
+		while(_g < paras.length) {
+			var paragraph = paras[_g];
+			++_g;
+			this.mParagraphs.push({ align : this.mAlign, spans : [{ font : font, text : paragraph}]});
+		}
+	}
+	this.Rebuild();
+}
+jeash.text.TextField.prototype.SetHTMLText = function(inHTMLText) {
+	this.mParagraphs = new Array();
+	this.mHTMLText = inHTMLText;
+	this.mHTMLMode = true;
+	this.RebuildText();
+	if(this.mInput) this.ConvertHTMLToText(true);
+	return this.mHTMLText;
+}
+jeash.text.TextField.prototype.setSelection = function(beginIndex,endIndex) {
+}
+jeash.text.TextField.prototype.getTextFormat = function(beginIndex,endIndex) {
+	return new jeash.text.TextFormat();
+}
+jeash.text.TextField.prototype.getDefaultTextFormat = function() {
+	return new jeash.text.TextFormat();
+}
+jeash.text.TextField.prototype.setTextFormat = function(inFmt) {
+	if(inFmt.font != null) this.mFace = inFmt.font;
+	if(inFmt.size != null) this.mTextHeight = Std["int"](inFmt.size);
+	if(inFmt.align != null) this.mAlign = inFmt.align;
+	if(inFmt.color != null) this.mTextColour = inFmt.color;
+	this.RebuildText();
+	return this.getTextFormat();
+}
+jeash.text.TextField.prototype.__class__ = jeash.text.TextField;
+if(!nme.display) nme.display = {}
+nme.display.FPS = function(inX,inY,inCol) {
+	if( inX === $_ ) return;
+	if(inCol == null) inCol = 0;
+	if(inY == null) inY = 10.0;
+	if(inX == null) inX = 10.0;
+	jeash.text.TextField.call(this);
+	this.jeashSetX(inX);
+	this.jeashSetY(inY);
+	this.selectable = false;
+	this.setTextFormat(new jeash.text.TextFormat("_sans",12,inCol));
+	this.SetText("FPS: ");
+	this.times = [];
+	this.addEventListener(jeash.events.Event.ENTER_FRAME,$closure(this,"onEnter"));
+}
+nme.display.FPS.__name__ = ["nme","display","FPS"];
+nme.display.FPS.__super__ = jeash.text.TextField;
+for(var k in jeash.text.TextField.prototype ) nme.display.FPS.prototype[k] = jeash.text.TextField.prototype[k];
+nme.display.FPS.prototype.times = null;
+nme.display.FPS.prototype.onEnter = function(_) {
+	var now = haxe.Timer.stamp();
+	this.times.push(now);
+	while(this.times[0] < now - 1) this.times.shift();
+	if(this.jeashGetVisible()) this.SetText("FPS: " + this.times.length);
+}
+nme.display.FPS.prototype.__class__ = nme.display.FPS;
 jeash.display.CapsStyle = { __ename__ : ["jeash","display","CapsStyle"], __constructs__ : ["NONE","ROUND","SQUARE"] }
 jeash.display.CapsStyle.NONE = ["NONE",0];
 jeash.display.CapsStyle.NONE.toString = $estr;
@@ -9244,6 +9966,8 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	this.add(movingPlatform);
 	var platformBot = new com.citruxengine.objects.platformer.Platform("platformBot",{ x : 260, y : 450, width : 500, height : 30});
 	this.add(platformBot);
+	var hero = new com.citruxengine.objects.platformer.Hero("hero",{ x : 100, y : 20, width : 30, height : 60});
+	this.add(hero);
 }
 fr.aymericlamboley.test.GameState.prototype.__class__ = fr.aymericlamboley.test.GameState;
 jeash.geom.Transform = function(inParent) {
@@ -13955,649 +14679,6 @@ box2D.dynamics.contacts.B2ContactConstraintPoint.prototype.tangentMass = null;
 box2D.dynamics.contacts.B2ContactConstraintPoint.prototype.equalizedMass = null;
 box2D.dynamics.contacts.B2ContactConstraintPoint.prototype.velocityBias = null;
 box2D.dynamics.contacts.B2ContactConstraintPoint.prototype.__class__ = box2D.dynamics.contacts.B2ContactConstraintPoint;
-jeash.text.TextField = function(p) {
-	if( p === $_ ) return;
-	jeash.display.InteractiveObject.call(this);
-	this.mWidth = 40;
-	this.mHeight = 20;
-	this.mHTMLMode = false;
-	this.multiline = false;
-	this.jeashGraphics = new jeash.display.Graphics();
-	this.jeashGraphics.jeashExtentBuffer = 0;
-	this.mCaretGfx = new jeash.display.Graphics();
-	this.mFace = jeash.text.TextField.mDefaultFont;
-	this.mAlign = jeash.text.TextFormatAlign.LEFT;
-	this.mParagraphs = new Array();
-	this.mSelStart = -1;
-	this.mSelEnd = -1;
-	this.mScrollH = 0;
-	this.mScrollV = 1;
-	this.mType = jeash.text.TextFieldType.DYNAMIC;
-	this.SetAutoSize(jeash.text.TextFieldAutoSize.NONE);
-	this.mTextHeight = 12;
-	this.mMaxHeight = this.mTextHeight;
-	this.mHTMLText = " ";
-	this.mText = " ";
-	this.mTextColour = 0;
-	this.tabEnabled = false;
-	this.mTryFreeType = true;
-	this.selectable = true;
-	this.mInsertPos = 0;
-	this.mInput = false;
-	this.mDownChar = 0;
-	this.mSelectDrag = -1;
-	this.mLineInfo = [];
-	this.name = "TextField " + jeash.display.DisplayObject.mNameID++;
-	this.jeashGraphics.jeashSurface.id = this.name;
-	this.SetBorderColor(0);
-	this.SetBorder(false);
-	this.SetBackgroundColor(16777215);
-	this.SetBackground(false);
-}
-jeash.text.TextField.__name__ = ["jeash","text","TextField"];
-jeash.text.TextField.__super__ = jeash.display.InteractiveObject;
-for(var k in jeash.display.InteractiveObject.prototype ) jeash.text.TextField.prototype[k] = jeash.display.InteractiveObject.prototype[k];
-jeash.text.TextField.prototype.htmlText = null;
-jeash.text.TextField.prototype.text = null;
-jeash.text.TextField.prototype.textColor = null;
-jeash.text.TextField.prototype.textWidth = null;
-jeash.text.TextField.prototype.textHeight = null;
-jeash.text.TextField.prototype.defaultTextFormat = null;
-jeash.text.TextField.prototype.mHTMLText = null;
-jeash.text.TextField.prototype.mText = null;
-jeash.text.TextField.prototype.mTextColour = null;
-jeash.text.TextField.prototype.mType = null;
-jeash.text.TextField.prototype.autoSize = null;
-jeash.text.TextField.prototype.selectable = null;
-jeash.text.TextField.prototype.multiline = null;
-jeash.text.TextField.prototype.embedFonts = null;
-jeash.text.TextField.prototype.borderColor = null;
-jeash.text.TextField.prototype.background = null;
-jeash.text.TextField.prototype.backgroundColor = null;
-jeash.text.TextField.prototype.caretPos = null;
-jeash.text.TextField.prototype.displayAsPassword = null;
-jeash.text.TextField.prototype.border = null;
-jeash.text.TextField.prototype.wordWrap = null;
-jeash.text.TextField.prototype.maxChars = null;
-jeash.text.TextField.prototype.restrict = null;
-jeash.text.TextField.prototype.type = null;
-jeash.text.TextField.prototype.antiAliasType = null;
-jeash.text.TextField.prototype.sharpness = null;
-jeash.text.TextField.prototype.gridFitType = null;
-jeash.text.TextField.prototype.length = null;
-jeash.text.TextField.prototype.mTextHeight = null;
-jeash.text.TextField.prototype.mFace = null;
-jeash.text.TextField.prototype.mDownChar = null;
-jeash.text.TextField.prototype.selectionBeginIndex = null;
-jeash.text.TextField.prototype.selectionEndIndex = null;
-jeash.text.TextField.prototype.caretIndex = null;
-jeash.text.TextField.prototype.mParagraphs = null;
-jeash.text.TextField.prototype.mTryFreeType = null;
-jeash.text.TextField.prototype.mLineInfo = null;
-jeash.text.TextField.prototype.mAlign = null;
-jeash.text.TextField.prototype.mHTMLMode = null;
-jeash.text.TextField.prototype.mSelStart = null;
-jeash.text.TextField.prototype.mSelEnd = null;
-jeash.text.TextField.prototype.mInsertPos = null;
-jeash.text.TextField.prototype.mSelectDrag = null;
-jeash.text.TextField.prototype.mInput = null;
-jeash.text.TextField.prototype.mWidth = null;
-jeash.text.TextField.prototype.mHeight = null;
-jeash.text.TextField.prototype.mSelectionAnchored = null;
-jeash.text.TextField.prototype.mSelectionAnchor = null;
-jeash.text.TextField.prototype.mScrollH = null;
-jeash.text.TextField.prototype.mScrollV = null;
-jeash.text.TextField.prototype.jeashGraphics = null;
-jeash.text.TextField.prototype.mCaretGfx = null;
-jeash.text.TextField.prototype.ClearSelection = function() {
-	this.mSelStart = this.mSelEnd = -1;
-	this.mSelectionAnchored = false;
-	this.Rebuild();
-}
-jeash.text.TextField.prototype.DeleteSelection = function() {
-	if(this.mSelEnd > this.mSelStart && this.mSelStart >= 0) {
-		this.mText = this.mText.substr(0,this.mSelStart) + this.mText.substr(this.mSelEnd);
-		this.mInsertPos = this.mSelStart;
-		this.mSelStart = this.mSelEnd = -1;
-		this.mSelectionAnchored = false;
-	}
-}
-jeash.text.TextField.prototype.OnMoveKeyStart = function(inShift) {
-	if(inShift && this.selectable) {
-		if(!this.mSelectionAnchored) {
-			this.mSelectionAnchored = true;
-			this.mSelectionAnchor = this.mInsertPos;
-			if(jeash.text.TextField.sSelectionOwner != this) {
-				if(jeash.text.TextField.sSelectionOwner != null) jeash.text.TextField.sSelectionOwner.ClearSelection();
-				jeash.text.TextField.sSelectionOwner = this;
-			}
-		}
-	} else this.ClearSelection();
-}
-jeash.text.TextField.prototype.OnMoveKeyEnd = function() {
-	if(this.mSelectionAnchored) {
-		if(this.mInsertPos < this.mSelectionAnchor) {
-			this.mSelStart = this.mInsertPos;
-			this.mSelEnd = this.mSelectionAnchor;
-		} else {
-			this.mSelStart = this.mSelectionAnchor;
-			this.mSelEnd = this.mInsertPos;
-		}
-	}
-}
-jeash.text.TextField.prototype.OnKey = function(inKey) {
-	if(inKey.type != jeash.events.KeyboardEvent.KEY_DOWN) return;
-	var key = inKey.keyCode;
-	var ascii = inKey.charCode;
-	var shift = inKey.shiftKey;
-	if(ascii == 3) {
-		if(this.mSelEnd > this.mSelStart && this.mSelStart >= 0) throw "To implement setClipboardString. TextField.OnKey";
-		return;
-	}
-	if(this.mInput) {
-		if(key == jeash.ui.Keyboard.LEFT) {
-			this.OnMoveKeyStart(shift);
-			this.mInsertPos--;
-			this.OnMoveKeyEnd();
-		} else if(key == jeash.ui.Keyboard.RIGHT) {
-			this.OnMoveKeyStart(shift);
-			this.mInsertPos++;
-			this.OnMoveKeyEnd();
-		} else if(key == jeash.ui.Keyboard.HOME) {
-			this.OnMoveKeyStart(shift);
-			this.mInsertPos = 0;
-			this.OnMoveKeyEnd();
-		} else if(key == jeash.ui.Keyboard.END) {
-			this.OnMoveKeyStart(shift);
-			this.mInsertPos = this.mText.length;
-			this.OnMoveKeyEnd();
-		} else if(key == jeash.ui.Keyboard.DELETE || key == jeash.ui.Keyboard.BACKSPACE) {
-			if(this.mSelEnd > this.mSelStart && this.mSelStart >= 0) this.DeleteSelection(); else {
-				if(key == jeash.ui.Keyboard.BACKSPACE && this.mInsertPos > 0) this.mInsertPos--;
-				var l = this.mText.length;
-				if(this.mInsertPos > l) {
-					if(l > 0) this.mText = this.mText.substr(0,l - 1);
-				} else this.mText = this.mText.substr(0,this.mInsertPos) + this.mText.substr(this.mInsertPos + 1);
-			}
-		} else if(ascii >= 32 && ascii < 128) {
-			if(this.mSelEnd > this.mSelStart && this.mSelStart >= 0) this.DeleteSelection();
-			this.mText = this.mText.substr(0,this.mInsertPos) + String.fromCharCode(ascii) + this.mText.substr(this.mInsertPos);
-			this.mInsertPos++;
-		}
-		if(this.mInsertPos < 0) this.mInsertPos = 0;
-		var l = this.mText.length;
-		if(this.mInsertPos > l) this.mInsertPos = l;
-		this.RebuildText();
-	}
-}
-jeash.text.TextField.prototype.OnFocusIn = function(inMouse) {
-	if(this.mInput && this.selectable && !inMouse) {
-		this.mSelStart = 0;
-		this.mSelEnd = this.mText.length;
-		this.RebuildText();
-	}
-}
-jeash.text.TextField.prototype.jeashGetWidth = function() {
-	return this.mWidth;
-}
-jeash.text.TextField.prototype.jeashGetHeight = function() {
-	return this.mHeight;
-}
-jeash.text.TextField.prototype.jeashSetWidth = function(inWidth) {
-	if(inWidth != this.mWidth) {
-		this.mWidth = inWidth;
-		this.jeashGraphics.jeashSurface.width = Math.round(inWidth);
-		this.Rebuild();
-	}
-	return this.mWidth;
-}
-jeash.text.TextField.prototype.jeashSetHeight = function(inHeight) {
-	if(inHeight != this.mHeight) {
-		this.mHeight = inHeight;
-		this.jeashGraphics.jeashSurface.height = Math.round(inHeight);
-		this.Rebuild();
-	}
-	return this.mHeight;
-}
-jeash.text.TextField.prototype.GetType = function() {
-	return this.mType;
-}
-jeash.text.TextField.prototype.SetType = function(inType) {
-	this.mType = inType;
-	this.mInput = this.mType == jeash.text.TextFieldType.INPUT;
-	if(this.mInput && this.mHTMLMode) this.ConvertHTMLToText(true);
-	this.tabEnabled = this.GetType() == jeash.text.TextFieldType.INPUT;
-	this.Rebuild();
-	return inType;
-}
-jeash.text.TextField.prototype.GetCaret = function() {
-	return this.mInsertPos;
-}
-jeash.text.TextField.prototype.jeashGetGraphics = function() {
-	return this.jeashGraphics;
-}
-jeash.text.TextField.prototype.getLineIndexAtPoint = function(inX,inY) {
-	if(this.mLineInfo.length < 1) return -1;
-	if(inY <= 0) return 0;
-	var _g1 = 0, _g = this.mLineInfo.length;
-	while(_g1 < _g) {
-		var l = _g1++;
-		if(this.mLineInfo[l].mY0 > inY) return l == 0?0:l - 1;
-	}
-	return this.mLineInfo.length - 1;
-}
-jeash.text.TextField.prototype.getCharIndexAtPoint = function(inX,inY) {
-	var li = this.getLineIndexAtPoint(inX,inY);
-	if(li < 0) return -1;
-	var line = this.mLineInfo[li];
-	var idx = line.mIndex;
-	var _g = 0, _g1 = line.mX;
-	while(_g < _g1.length) {
-		var x = _g1[_g];
-		++_g;
-		if(x > inX) return idx;
-		idx++;
-	}
-	return idx;
-}
-jeash.text.TextField.prototype.getCharBoundaries = function(a) {
-	return null;
-}
-jeash.text.TextField.prototype.OnMouseDown = function(inX,inY) {
-	if(this.tabEnabled || this.selectable) {
-		if(jeash.text.TextField.sSelectionOwner != null) jeash.text.TextField.sSelectionOwner.ClearSelection();
-		jeash.text.TextField.sSelectionOwner = this;
-		this.GetStage().SetFocus(this);
-		var gx = inX / this.GetStage().jeashGetScaleX();
-		var gy = inY / this.GetStage().jeashGetScaleY();
-		var pos = this.globalToLocal(new jeash.geom.Point(gx,gy));
-		this.mSelectDrag = this.getCharIndexAtPoint(pos.x,pos.y);
-		if(this.tabEnabled) this.mInsertPos = this.mSelectDrag;
-		this.mSelStart = this.mSelEnd = -1;
-		this.RebuildText();
-	}
-}
-jeash.text.TextField.prototype.OnMouseDrag = function(inX,inY) {
-	if((this.tabEnabled || this.selectable) && this.mSelectDrag >= 0) {
-		var gx = inX / this.GetStage().jeashGetScaleX();
-		var gy = inY / this.GetStage().jeashGetScaleY();
-		var pos = this.globalToLocal(new jeash.geom.Point(gx,gy));
-		var idx = this.getCharIndexAtPoint(pos.x,pos.y);
-		if(jeash.text.TextField.sSelectionOwner != this) {
-			if(jeash.text.TextField.sSelectionOwner != null) jeash.text.TextField.sSelectionOwner.ClearSelection();
-			jeash.text.TextField.sSelectionOwner = this;
-		}
-		if(idx < this.mSelectDrag) {
-			this.mSelStart = idx;
-			this.mSelEnd = this.mSelectDrag;
-		} else if(idx > this.mSelectDrag) {
-			this.mSelStart = this.mSelectDrag;
-			this.mSelEnd = idx;
-		} else this.mSelStart = this.mSelEnd = -1;
-		if(this.tabEnabled) this.mInsertPos = idx;
-		this.RebuildText();
-	}
-}
-jeash.text.TextField.prototype.OnMouseUp = function(inX,inY) {
-	this.mSelectDrag = -1;
-}
-jeash.text.TextField.prototype.mMaxWidth = null;
-jeash.text.TextField.prototype.mMaxHeight = null;
-jeash.text.TextField.prototype.mLimitRenderX = null;
-jeash.text.TextField.prototype.RenderRow = function(inRow,inY,inCharIdx,inAlign,inInsert) {
-	var h = 0;
-	var w = 0;
-	var _g = 0;
-	while(_g < inRow.length) {
-		var chr = inRow[_g];
-		++_g;
-		if(chr.fh > h) h = chr.fh;
-		w += chr.adv;
-	}
-	if(w > this.mMaxWidth) this.mMaxWidth = w;
-	var full_height = Std["int"](h * 1.2);
-	var align_x = 0;
-	var insert_x = 0;
-	if(inInsert != null) {
-		if(this.autoSize != jeash.text.TextFieldAutoSize.NONE) {
-			this.mScrollH = 0;
-			insert_x = inInsert;
-		} else {
-			insert_x = inInsert - this.mScrollH;
-			if(insert_x < 0) this.mScrollH -= (this.mLimitRenderX * 3 >> 2) - insert_x; else if(insert_x > this.mLimitRenderX) this.mScrollH += insert_x - (this.mLimitRenderX * 3 >> 2);
-			if(this.mScrollH < 0) this.mScrollH = 0;
-		}
-	}
-	if(this.autoSize == jeash.text.TextFieldAutoSize.NONE && w <= this.mLimitRenderX) {
-		if(inAlign == jeash.text.TextFormatAlign.CENTER) align_x = this.mLimitRenderX - w >> 1; else if(inAlign == jeash.text.TextFormatAlign.RIGHT) align_x = this.mLimitRenderX - w;
-	}
-	var x_list = new Array();
-	this.mLineInfo.push({ mY0 : inY, mIndex : inCharIdx, mX : x_list});
-	var cache_sel_font = null;
-	var cache_normal_font = null;
-	var x = align_x - this.mScrollH;
-	var x0 = x;
-	var _g = 0;
-	while(_g < inRow.length) {
-		var chr = inRow[_g];
-		++_g;
-		var adv = chr.adv;
-		if(x + adv > this.mLimitRenderX) break;
-		x_list.push(x);
-		if(x >= 0) {
-			var font = chr.font;
-			if(chr.sel) {
-				this.jeashGraphics.lineStyle();
-				this.jeashGraphics.beginFill(2105440);
-				this.jeashGraphics.drawRect(x,inY,adv,full_height);
-				this.jeashGraphics.endFill();
-				if(cache_normal_font == chr.font) font = cache_sel_font; else {
-					font = jeash.text.FontInstance.CreateSolid(chr.font.GetFace(),chr.fh,16777215,1.0);
-					cache_sel_font = font;
-					cache_normal_font = chr.font;
-				}
-			}
-			font.RenderChar(this.jeashGraphics,chr.chr,x,Std["int"](inY + (h - chr.fh)));
-		}
-		x += adv;
-	}
-	x += this.mScrollH;
-	if(inInsert != null) {
-		this.mCaretGfx.lineStyle(1,this.mTextColour);
-		this.mCaretGfx.moveTo(inInsert + align_x - this.mScrollH,inY);
-		this.mCaretGfx.lineTo(inInsert + align_x - this.mScrollH,inY + full_height);
-	}
-	return full_height;
-}
-jeash.text.TextField.prototype.Rebuild = function() {
-	this.mLineInfo = [];
-	this.jeashGraphics.clear();
-	this.mCaretGfx.clear();
-	if(this.background) {
-		this.jeashGraphics.beginFill(this.backgroundColor);
-		this.jeashGraphics.drawRect(-2,-2,this.jeashGetWidth() + 4,this.jeashGetHeight() + 4);
-		this.jeashGraphics.endFill();
-	}
-	this.jeashGraphics.lineStyle(this.mTextColour);
-	var insert_x = null;
-	this.mMaxWidth = 0;
-	var wrap = this.mLimitRenderX = this.wordWrap && !this.mInput?Std["int"](this.jeashGetWidth()):999999;
-	var char_idx = 0;
-	var h = 0;
-	var s0 = this.mSelStart;
-	var s1 = this.mSelEnd;
-	var _g = 0, _g1 = this.mParagraphs;
-	while(_g < _g1.length) {
-		var paragraph = _g1[_g];
-		++_g;
-		var row = [];
-		var row_width = 0;
-		var last_word_break = 0;
-		var last_word_break_width = 0;
-		var last_word_char_idx = 0;
-		var start_idx = char_idx;
-		var tx = 0;
-		var _g2 = 0, _g3 = paragraph.spans;
-		while(_g2 < _g3.length) {
-			var span = _g3[_g2];
-			++_g2;
-			var text = span.text;
-			var font = span.font;
-			var fh = font.jeashGetHeight();
-			last_word_break = row.length;
-			last_word_break_width = row_width;
-			last_word_char_idx = char_idx;
-			var _g5 = 0, _g4 = text.length;
-			while(_g5 < _g4) {
-				var ch = _g5++;
-				if(char_idx == this.mInsertPos && this.mInput) insert_x = tx;
-				var g = text.charCodeAt(ch);
-				var adv = font.jeashGetAdvance(g);
-				if(g == 32) {
-					last_word_break = row.length;
-					last_word_break_width = tx;
-					last_word_char_idx = char_idx;
-				}
-				if(tx + adv > wrap) {
-					if(last_word_break > 0) {
-						var row_end = row.splice(last_word_break,row.length - last_word_break);
-						h += this.RenderRow(row,h,start_idx,paragraph.align);
-						row = row_end;
-						tx -= last_word_break_width;
-						start_idx = last_word_char_idx;
-						last_word_break = 0;
-						last_word_break_width = 0;
-						last_word_char_idx = 0;
-						if(row_end.length > 0 && row_end[0].chr == 32) {
-							row_end.shift();
-							start_idx++;
-						}
-					} else {
-						h += this.RenderRow(row,h,char_idx,paragraph.align);
-						row = [];
-						tx = 0;
-						start_idx = char_idx;
-					}
-				}
-				row.push({ font : font, chr : g, x : tx, fh : fh, sel : char_idx >= s0 && char_idx < s1, adv : adv});
-				tx += adv;
-				char_idx++;
-			}
-		}
-		if(row.length > 0) {
-			var pos = this.mInput && insert_x == null?tx:insert_x == null?0:insert_x;
-			h += this.RenderRow(row,h,start_idx,paragraph.align,pos);
-		}
-	}
-	var w = this.mMaxWidth;
-	if(h < this.mTextHeight) h = this.mTextHeight;
-	this.mMaxHeight = h;
-	switch(this.autoSize) {
-	case jeash.text.TextFieldAutoSize.LEFT:
-		this.jeashSetWidth(w);
-		this.jeashSetHeight(h);
-		break;
-	case jeash.text.TextFieldAutoSize.RIGHT:
-		var x0 = this.jeashGetX() + this.jeashGetWidth();
-		this.jeashSetWidth(w);
-		this.jeashSetHeight(h);
-		this.jeashSetX(x0 - w);
-		break;
-	case jeash.text.TextFieldAutoSize.CENTER:
-		var x0 = this.jeashGetX() + this.jeashGetWidth() / 2;
-		this.jeashSetWidth(w);
-		this.jeashSetHeight(h);
-		this.jeashSetX(x0 - w / 2);
-		break;
-	default:
-		if(this.wordWrap) this.jeashSetHeight(h);
-	}
-	if(char_idx == 0 && this.mInput) {
-		var x = 0;
-		if(this.mAlign == jeash.text.TextFormatAlign.CENTER) x = Std["int"](this.jeashGetWidth() / 2); else if(this.mAlign == jeash.text.TextFormatAlign.RIGHT) x = Std["int"](this.jeashGetWidth()) - 1;
-		this.mCaretGfx.lineStyle(1,this.mTextColour);
-		this.mCaretGfx.moveTo(x,0);
-		this.mCaretGfx.lineTo(x,this.mTextHeight);
-	}
-	if(this.border) {
-		this.jeashGraphics.endFill();
-		this.jeashGraphics.lineStyle(1,this.borderColor);
-		this.jeashGraphics.drawRect(-2,-2,this.jeashGetWidth() + 4,this.jeashGetHeight() + 4);
-	}
-}
-jeash.text.TextField.prototype.GetObj = function(inX,inY,inObj) {
-	var inv = this.mFullMatrix.clone();
-	inv.invert();
-	var px = inv.a * inX + inv.c * inY + inv.tx;
-	var py = inv.b * inX + inv.d * inY + inv.ty;
-	if(px > 0 && px < this.jeashGetWidth() && py > 0 && py < this.jeashGetHeight()) return this;
-	return null;
-}
-jeash.text.TextField.prototype.GetBackgroundRect = function() {
-	if(this.border) return new jeash.geom.Rectangle(-2,-2,this.jeashGetWidth() + 4,this.jeashGetHeight() + 4); else return new jeash.geom.Rectangle(0,0,this.jeashGetWidth(),this.jeashGetHeight());
-}
-jeash.text.TextField.prototype.GetTextWidth = function() {
-	return this.mMaxWidth;
-}
-jeash.text.TextField.prototype.GetTextHeight = function() {
-	return this.mMaxHeight;
-}
-jeash.text.TextField.prototype.GetTextColour = function() {
-	return this.mTextColour;
-}
-jeash.text.TextField.prototype.SetTextColour = function(inCol) {
-	this.mTextColour = inCol;
-	this.RebuildText();
-	return inCol;
-}
-jeash.text.TextField.prototype.GetText = function() {
-	if(this.mHTMLMode) this.ConvertHTMLToText(false);
-	return this.mText;
-}
-jeash.text.TextField.prototype.SetText = function(inText) {
-	this.mText = inText;
-	this.mHTMLText = inText;
-	this.mHTMLMode = false;
-	this.RebuildText();
-	return this.mText;
-}
-jeash.text.TextField.prototype.ConvertHTMLToText = function(inUnSetHTML) {
-	this.mText = "";
-	var _g = 0, _g1 = this.mParagraphs;
-	while(_g < _g1.length) {
-		var paragraph = _g1[_g];
-		++_g;
-		var _g2 = 0, _g3 = paragraph.spans;
-		while(_g2 < _g3.length) {
-			var span = _g3[_g2];
-			++_g2;
-			this.mText += span.text;
-		}
-	}
-	if(inUnSetHTML) {
-		this.mHTMLMode = false;
-		this.RebuildText();
-	}
-}
-jeash.text.TextField.prototype.GetFocusObjects = function(outObjs) {
-	if(this.mInput) outObjs.push(this);
-}
-jeash.text.TextField.prototype.SetAutoSize = function(inAutoSize) {
-	this.autoSize = inAutoSize;
-	this.Rebuild();
-	return inAutoSize;
-}
-jeash.text.TextField.prototype.SetWordWrap = function(inWordWrap) {
-	this.wordWrap = inWordWrap;
-	this.Rebuild();
-	return this.wordWrap;
-}
-jeash.text.TextField.prototype.SetBorder = function(inBorder) {
-	this.border = inBorder;
-	this.Rebuild();
-	return inBorder;
-}
-jeash.text.TextField.prototype.SetBorderColor = function(inBorderCol) {
-	this.borderColor = inBorderCol;
-	this.Rebuild();
-	return inBorderCol;
-}
-jeash.text.TextField.prototype.SetBackgroundColor = function(inCol) {
-	this.backgroundColor = inCol;
-	this.Rebuild();
-	return inCol;
-}
-jeash.text.TextField.prototype.SetBackground = function(inBack) {
-	this.background = inBack;
-	this.Rebuild();
-	return inBack;
-}
-jeash.text.TextField.prototype.GetHTMLText = function() {
-	return this.mHTMLText;
-}
-jeash.text.TextField.prototype.DecodeColour = function(col) {
-	return Std.parseInt("0x" + col.substr(1));
-}
-jeash.text.TextField.prototype.AddXML = function(x,a) {
-	var type = x.nodeType;
-	if(type == Xml.Document || type == Xml.Element) {
-		if(type == Xml.Element) {
-			a = { face : a.face, height : a.height, colour : a.colour, align : a.align};
-			switch(x.getNodeName()) {
-			case "p":
-				var l = this.mParagraphs.length;
-				var align = x.get("align");
-				if(align != null) a.align = Type.createEnum(jeash.text.TextFormatAlign,align);
-				if(l > 0 && this.mParagraphs[l - 1].spans.length > 0 && this.multiline) this.mParagraphs.push({ align : a.align, spans : []});
-				break;
-			case "font":
-				var face = x.get("face");
-				if(face != null) a.face = face;
-				var height = x.get("size");
-				if(height != null) a.height = Std["int"](Std.parseFloat(height));
-				var col = x.get("color");
-				if(col != null) a.colour = this.DecodeColour(col);
-				break;
-			}
-		}
-		var $it0 = x.iterator();
-		while( $it0.hasNext() ) {
-			var child = $it0.next();
-			this.AddXML(child,a);
-		}
-	} else {
-		var text = x.getNodeValue();
-		var font = jeash.text.FontInstance.CreateSolid(a.face,a.height,a.colour,1.0);
-		if(font != null && text != "") {
-			var span = { text : text, font : font};
-			var l = this.mParagraphs.length;
-			if(this.mParagraphs.length < 1) this.mParagraphs.push({ align : a.align, spans : [span]}); else this.mParagraphs[l - 1].spans.push(span);
-		}
-	}
-}
-jeash.text.TextField.prototype.RebuildText = function() {
-	this.mParagraphs = [];
-	if(this.mHTMLMode) {
-		var xml = Xml.parse(this.mHTMLText);
-		var a = { face : this.mFace, height : this.mTextHeight, colour : this.mTextColour, align : this.mAlign};
-		this.AddXML(xml,a);
-	} else {
-		var font = jeash.text.FontInstance.CreateSolid(this.mFace,this.mTextHeight,this.mTextColour,1.0);
-		var paras = this.mText.split("\n");
-		var _g = 0;
-		while(_g < paras.length) {
-			var paragraph = paras[_g];
-			++_g;
-			this.mParagraphs.push({ align : this.mAlign, spans : [{ font : font, text : paragraph}]});
-		}
-	}
-	this.Rebuild();
-}
-jeash.text.TextField.prototype.SetHTMLText = function(inHTMLText) {
-	this.mParagraphs = new Array();
-	this.mHTMLText = inHTMLText;
-	this.mHTMLMode = true;
-	this.RebuildText();
-	if(this.mInput) this.ConvertHTMLToText(true);
-	return this.mHTMLText;
-}
-jeash.text.TextField.prototype.setSelection = function(beginIndex,endIndex) {
-}
-jeash.text.TextField.prototype.getTextFormat = function(beginIndex,endIndex) {
-	return new jeash.text.TextFormat();
-}
-jeash.text.TextField.prototype.getDefaultTextFormat = function() {
-	return new jeash.text.TextFormat();
-}
-jeash.text.TextField.prototype.setTextFormat = function(inFmt) {
-	if(inFmt.font != null) this.mFace = inFmt.font;
-	if(inFmt.size != null) this.mTextHeight = Std["int"](inFmt.size);
-	if(inFmt.align != null) this.mAlign = inFmt.align;
-	if(inFmt.color != null) this.mTextColour = inFmt.color;
-	this.RebuildText();
-	return this.getTextFormat();
-}
-jeash.text.TextField.prototype.__class__ = jeash.text.TextField;
 jeash.text.FontInstanceMode = { __ename__ : ["jeash","text","FontInstanceMode"], __constructs__ : ["fimSolid"] }
 jeash.text.FontInstanceMode.fimSolid = ["fimSolid",0];
 jeash.text.FontInstanceMode.fimSolid.toString = $estr;
@@ -17020,6 +17101,66 @@ js.Lib.setErrorHandler = function(f) {
 	js.Lib.onerror = f;
 }
 js.Lib.prototype.__class__ = js.Lib;
+com.citruxengine.objects.platformer.Hero = function(name,params) {
+	if( name === $_ ) return;
+	this._acceleration = 1;
+	this._maxVelocity = 8;
+	com.citruxengine.objects.PhysicsObject.call(this,name,params);
+	this._playerMovingHero = false;
+	this._controlsEnabled = true;
+}
+com.citruxengine.objects.platformer.Hero.__name__ = ["com","citruxengine","objects","platformer","Hero"];
+com.citruxengine.objects.platformer.Hero.__super__ = com.citruxengine.objects.PhysicsObject;
+for(var k in com.citruxengine.objects.PhysicsObject.prototype ) com.citruxengine.objects.platformer.Hero.prototype[k] = com.citruxengine.objects.PhysicsObject.prototype[k];
+com.citruxengine.objects.platformer.Hero.prototype.acceleration = null;
+com.citruxengine.objects.platformer.Hero.prototype.maxVelocity = null;
+com.citruxengine.objects.platformer.Hero.prototype._playerMovingHero = null;
+com.citruxengine.objects.platformer.Hero.prototype._controlsEnabled = null;
+com.citruxengine.objects.platformer.Hero.prototype._acceleration = null;
+com.citruxengine.objects.platformer.Hero.prototype._maxVelocity = null;
+com.citruxengine.objects.platformer.Hero.prototype.destroy = function() {
+	com.citruxengine.objects.PhysicsObject.prototype.destroy.call(this);
+}
+com.citruxengine.objects.platformer.Hero.prototype.update = function(timeDelta) {
+	com.citruxengine.objects.PhysicsObject.prototype.update.call(this,timeDelta);
+	var velocity = this._body.getLinearVelocity();
+	if(this._controlsEnabled) {
+		var moveKeyPressed = false;
+		if(this._ce.getInput().isDown(jeash.ui.Keyboard.RIGHT)) velocity.add(new box2D.common.math.B2Vec2(5,0));
+		if(this._ce.getInput().isDown(jeash.ui.Keyboard.LEFT)) velocity.subtract(new box2D.common.math.B2Vec2(5,0));
+		if(velocity.x > this._maxVelocity) velocity.x = this._maxVelocity; else if(velocity.x < -this._maxVelocity) velocity.x = -this._maxVelocity;
+		this._body.setLinearVelocity(velocity);
+	}
+	this.updateAnimation();
+}
+com.citruxengine.objects.platformer.Hero.prototype.updateAnimation = function() {
+}
+com.citruxengine.objects.platformer.Hero.prototype.createBody = function() {
+	com.citruxengine.objects.PhysicsObject.prototype.createBody.call(this);
+	this._body.setFixedRotation(true);
+}
+com.citruxengine.objects.platformer.Hero.prototype.getAcceleration = function() {
+	return this._acceleration;
+}
+com.citruxengine.objects.platformer.Hero.prototype.setAcceleration = function(value) {
+	return this._acceleration = value;
+}
+com.citruxengine.objects.platformer.Hero.prototype.getMaxVelocity = function() {
+	return this._maxVelocity;
+}
+com.citruxengine.objects.platformer.Hero.prototype.setMaxVelocity = function(value) {
+	return this._maxVelocity = value;
+}
+com.citruxengine.objects.platformer.Hero.prototype.__class__ = com.citruxengine.objects.platformer.Hero;
+haxe.Log = function() { }
+haxe.Log.__name__ = ["haxe","Log"];
+haxe.Log.trace = function(v,infos) {
+	js.Boot.__trace(v,infos);
+}
+haxe.Log.clear = function() {
+	js.Boot.__clear_trace();
+}
+haxe.Log.prototype.__class__ = haxe.Log;
 jeash.display.Stage = function(width,height) {
 	if( width === $_ ) return;
 	jeash.display.DisplayObjectContainer.call(this);
@@ -17362,15 +17503,6 @@ jeash.display.Stage.prototype.jeashGetFullScreenHeight = function() {
 	return jeash.Lib.jeashFullScreenHeight();
 }
 jeash.display.Stage.prototype.__class__ = jeash.display.Stage;
-haxe.Log = function() { }
-haxe.Log.__name__ = ["haxe","Log"];
-haxe.Log.trace = function(v,infos) {
-	js.Boot.__trace(v,infos);
-}
-haxe.Log.clear = function() {
-	js.Boot.__clear_trace();
-}
-haxe.Log.prototype.__class__ = haxe.Log;
 jeash.errors.IOError = function(message) {
 	if( message === $_ ) return;
 	if(message == null) message = "";
@@ -17487,6 +17619,7 @@ fr.aymericlamboley.test.Main = function(p) {
 	if( p === $_ ) return;
 	com.citruxengine.core.CitruxEngine.call(this);
 	this.setState(new fr.aymericlamboley.test.GameState());
+	jeash.Lib.jeashGetCurrent().addChild(new nme.display.FPS(0,0,16737792));
 }
 fr.aymericlamboley.test.Main.__name__ = ["fr","aymericlamboley","test","Main"];
 fr.aymericlamboley.test.Main.__super__ = com.citruxengine.core.CitruxEngine;
@@ -18999,13 +19132,6 @@ box2D.collision.shapes.B2CircleShape.prototype.setRadius = function(radius) {
 }
 box2D.collision.shapes.B2CircleShape.prototype.m_p = null;
 box2D.collision.shapes.B2CircleShape.prototype.__class__ = box2D.collision.shapes.B2CircleShape;
-box2D.dynamics.B2DestructionListener = function() { }
-box2D.dynamics.B2DestructionListener.__name__ = ["box2D","dynamics","B2DestructionListener"];
-box2D.dynamics.B2DestructionListener.prototype.sayGoodbyeJoint = function(joint) {
-}
-box2D.dynamics.B2DestructionListener.prototype.sayGoodbyeFixture = function(fixture) {
-}
-box2D.dynamics.B2DestructionListener.prototype.__class__ = box2D.dynamics.B2DestructionListener;
 box2D.dynamics.contacts.B2PolyAndCircleContact = function(p) {
 	if( p === $_ ) return;
 	box2D.dynamics.contacts.B2Contact.call(this);
@@ -19041,6 +19167,13 @@ box2D.dynamics.contacts.B2PolyAndCircleContact.prototype.evaluate = function() {
 	}(this)),bB.m_xf);
 }
 box2D.dynamics.contacts.B2PolyAndCircleContact.prototype.__class__ = box2D.dynamics.contacts.B2PolyAndCircleContact;
+box2D.dynamics.B2DestructionListener = function() { }
+box2D.dynamics.B2DestructionListener.__name__ = ["box2D","dynamics","B2DestructionListener"];
+box2D.dynamics.B2DestructionListener.prototype.sayGoodbyeJoint = function(joint) {
+}
+box2D.dynamics.B2DestructionListener.prototype.sayGoodbyeFixture = function(fixture) {
+}
+box2D.dynamics.B2DestructionListener.prototype.__class__ = box2D.dynamics.B2DestructionListener;
 $_ = {}
 js.Boot.__res = {}
 js.Boot.__init();
@@ -19167,6 +19300,10 @@ jeash.errors.Error.DEFAULT_TO_STRING = "Error";
 box2D.dynamics.B2ContactManager.s_evalCP = new box2D.collision.B2ContactPoint();
 haxe.xml.Check.blanks = new EReg("^[ \r\n\t]*$","");
 jeash.display.DisplayObject.mNameID = 0;
+com.citruxengine.core.Input.JUST_PRESSED = 0;
+com.citruxengine.core.Input.DOWN = 1;
+com.citruxengine.core.Input.JUST_RELEASED = 2;
+com.citruxengine.core.Input.UP = 3;
 jeash.events.Listener.sIDs = 1;
 box2D.dynamics.joints.B2RevoluteJoint.tImpulse = new box2D.common.math.B2Vec2();
 jeash.text.Font.DEFAULT_FONT_SCALE = 9.0;
@@ -19213,6 +19350,8 @@ box2D.collision.B2Manifold.e_circles = 1;
 box2D.collision.B2Manifold.e_faceA = 2;
 box2D.collision.B2Manifold.e_faceB = 4;
 jeash.events.IOErrorEvent.IO_ERROR = "IO_ERROR";
+jeash.text.TextField.mDefaultFont = "Bitstream_Vera_Sans";
+jeash.text.TextField.sSelectionOwner = null;
 box2D.dynamics.B2ContactFilter.b2_defaultFilter = new box2D.dynamics.B2ContactFilter();
 box2D.collision.B2DynamicTreeNode.currentID = 0;
 box2D.dynamics.joints.B2PulleyJoint.b2_minPulleyLength = 2.0;
@@ -19583,8 +19722,6 @@ jeash.events.MouseEvent.ROLL_OVER = "rollOver";
 jeash.events.EventPhase.CAPTURING_PHASE = 0;
 jeash.events.EventPhase.AT_TARGET = 1;
 jeash.events.EventPhase.BUBBLING_PHASE = 2;
-jeash.text.TextField.mDefaultFont = "Bitstream_Vera_Sans";
-jeash.text.TextField.sSelectionOwner = null;
 jeash.text.FontInstance.mSolidFonts = new Hash();
 box2D.dynamics.B2Island.s_impulse = new box2D.dynamics.B2ContactImpulse();
 jeash.display.GraphicsPathCommand.LINE_TO = 2;

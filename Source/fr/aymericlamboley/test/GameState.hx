@@ -4,6 +4,7 @@ import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.core.State;
 import com.citruxengine.objects.PhysicsObject;
 import com.citruxengine.objects.platformer.Baddy;
+import com.citruxengine.objects.platformer.Hero;
 import com.citruxengine.objects.platformer.MovingPlatform;
 import com.citruxengine.objects.platformer.Platform;
 import com.citruxengine.objects.platformer.Sensor;
@@ -40,5 +41,8 @@ class GameState extends State {
 
 		var platformBot:Platform = new Platform("platformBot", {x:260, y:450, width:500, height:30});
 		add(platformBot);
+
+		var hero:Hero = new Hero("hero", {x:100, y:20, width:30, height:60});
+		add(hero);
 	}
 }
