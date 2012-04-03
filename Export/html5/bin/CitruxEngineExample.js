@@ -2725,7 +2725,7 @@ com.citruxengine.core.Input.prototype.justPressed = function(keyCode) {
 	return this._keys.get(keyCode) == 0;
 }
 com.citruxengine.core.Input.prototype.justReleased = function(keyCode) {
-	return Lambda.indexOf(this._keysReleased,keyCode) != 1;
+	return Lambda.indexOf(this._keysReleased,keyCode) != -1;
 }
 com.citruxengine.core.Input.prototype._onKeyDown = function(kEvt) {
 	if(this._keys.get(kEvt.keyCode) == null) this._keys.set(kEvt.keyCode,0);
@@ -17105,6 +17105,8 @@ com.citruxengine.objects.platformer.Hero = function(name,params) {
 	if( name === $_ ) return;
 	this._acceleration = 1;
 	this._maxVelocity = 8;
+	this._jumpHeight = 14;
+	this._jumpAcceleration = 0.9;
 	com.citruxengine.objects.PhysicsObject.call(this,name,params);
 	this._playerMovingHero = false;
 	this._controlsEnabled = true;
@@ -17114,10 +17116,14 @@ com.citruxengine.objects.platformer.Hero.__super__ = com.citruxengine.objects.Ph
 for(var k in com.citruxengine.objects.PhysicsObject.prototype ) com.citruxengine.objects.platformer.Hero.prototype[k] = com.citruxengine.objects.PhysicsObject.prototype[k];
 com.citruxengine.objects.platformer.Hero.prototype.acceleration = null;
 com.citruxengine.objects.platformer.Hero.prototype.maxVelocity = null;
+com.citruxengine.objects.platformer.Hero.prototype.jumpHeight = null;
+com.citruxengine.objects.platformer.Hero.prototype.jumpAcceleration = null;
 com.citruxengine.objects.platformer.Hero.prototype._playerMovingHero = null;
 com.citruxengine.objects.platformer.Hero.prototype._controlsEnabled = null;
 com.citruxengine.objects.platformer.Hero.prototype._acceleration = null;
 com.citruxengine.objects.platformer.Hero.prototype._maxVelocity = null;
+com.citruxengine.objects.platformer.Hero.prototype._jumpHeight = null;
+com.citruxengine.objects.platformer.Hero.prototype._jumpAcceleration = null;
 com.citruxengine.objects.platformer.Hero.prototype.destroy = function() {
 	com.citruxengine.objects.PhysicsObject.prototype.destroy.call(this);
 }
@@ -17128,6 +17134,8 @@ com.citruxengine.objects.platformer.Hero.prototype.update = function(timeDelta) 
 		var moveKeyPressed = false;
 		if(this._ce.getInput().isDown(jeash.ui.Keyboard.RIGHT)) velocity.add(new box2D.common.math.B2Vec2(5,0));
 		if(this._ce.getInput().isDown(jeash.ui.Keyboard.LEFT)) velocity.subtract(new box2D.common.math.B2Vec2(5,0));
+		if(this._ce.getInput().justPressed(jeash.ui.Keyboard.SPACE)) velocity.y = -this._jumpHeight;
+		if(this._ce.getInput().isDown(jeash.ui.Keyboard.SPACE)) velocity.y -= this._jumpAcceleration;
 		if(velocity.x > this._maxVelocity) velocity.x = this._maxVelocity; else if(velocity.x < -this._maxVelocity) velocity.x = -this._maxVelocity;
 		this._body.setLinearVelocity(velocity);
 	}
@@ -17150,6 +17158,18 @@ com.citruxengine.objects.platformer.Hero.prototype.getMaxVelocity = function() {
 }
 com.citruxengine.objects.platformer.Hero.prototype.setMaxVelocity = function(value) {
 	return this._maxVelocity = value;
+}
+com.citruxengine.objects.platformer.Hero.prototype.getJumpHeight = function() {
+	return this._jumpHeight;
+}
+com.citruxengine.objects.platformer.Hero.prototype.setJumpHeight = function(value) {
+	return this._jumpHeight = value;
+}
+com.citruxengine.objects.platformer.Hero.prototype.getJumpAcceleration = function() {
+	return this._jumpAcceleration;
+}
+com.citruxengine.objects.platformer.Hero.prototype.setJumpAcceleration = function(value) {
+	return this._jumpAcceleration = value;
 }
 com.citruxengine.objects.platformer.Hero.prototype.__class__ = com.citruxengine.objects.platformer.Hero;
 haxe.Log = function() { }
