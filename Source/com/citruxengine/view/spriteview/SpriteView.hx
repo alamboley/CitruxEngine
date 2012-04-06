@@ -37,7 +37,7 @@ class SpriteView extends CitruxView {
 			var velocityY:Float = diffY * cameraEasing.y;
 			_viewRoot.x += velocityX;
 			_viewRoot.y += velocityY;
-
+			
 			//Constrain to camera bounds
 			if (cameraBounds != null) {
 
@@ -77,6 +77,12 @@ class SpriteView extends CitruxView {
 		_updateGroupForSprite(art);
 
 		return art;
+	}
+
+	override private function destroyArt(citruxObject:Dynamic):Void {
+
+		var spriteArt:SpriteArt = _viewObjects.get(citruxObject);
+		spriteArt.parent.removeChild(spriteArt);
 	}
 
 	private function _updateGroupForSprite(sprite:SpriteArt):Void {

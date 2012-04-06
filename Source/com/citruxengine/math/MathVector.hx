@@ -1,4 +1,4 @@
-package com.citruxengine.utils;
+package com.citruxengine.math;
 
 class MathVector {
 

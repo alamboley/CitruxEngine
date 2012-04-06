@@ -96,7 +96,7 @@ class State extends Sprite {
 			var garbageObject:CitruxObject = garbage[i];
 			_objects.splice(Lambda.indexOf(_objects, garbageObject), 1);
 			garbageObject.destroy();
-			//_view.removeArt(garbageObject);
+			_view.removeArt(garbageObject);
 		}
 
 		//Update the input object

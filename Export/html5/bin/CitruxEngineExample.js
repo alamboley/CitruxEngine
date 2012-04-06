@@ -2716,6 +2716,7 @@ com.citruxengine.core.State.prototype.update = function(timeDelta) {
 		var garbageObject = garbage[i];
 		this._objects.splice(Lambda.indexOf(this._objects,garbageObject),1);
 		garbageObject.destroy();
+		this._view.removeArt(garbageObject);
 	}
 	this._input.update();
 	this._view.update();
@@ -6357,48 +6358,16 @@ jeash.display.LineScaleMode.NORMAL.__enum__ = jeash.display.LineScaleMode;
 jeash.display.LineScaleMode.VERTICAL = ["VERTICAL",3];
 jeash.display.LineScaleMode.VERTICAL.toString = $estr;
 jeash.display.LineScaleMode.VERTICAL.__enum__ = jeash.display.LineScaleMode;
-jeash.display.MovieClip = function(p) {
-	if( p === $_ ) return;
-	jeash.display.Sprite.call(this);
-	this.enabled = true;
-	this.mCurrentFrame = 0;
-	this.mTotalFrames = 0;
-	this.name = "MovieClip " + jeash.display.DisplayObject.mNameID++;
-}
-jeash.display.MovieClip.__name__ = ["jeash","display","MovieClip"];
-jeash.display.MovieClip.__super__ = jeash.display.Sprite;
-for(var k in jeash.display.Sprite.prototype ) jeash.display.MovieClip.prototype[k] = jeash.display.Sprite.prototype[k];
-jeash.display.MovieClip.prototype.enabled = null;
-jeash.display.MovieClip.prototype.currentFrame = null;
-jeash.display.MovieClip.prototype.framesLoaded = null;
-jeash.display.MovieClip.prototype.totalFrames = null;
-jeash.display.MovieClip.prototype.mCurrentFrame = null;
-jeash.display.MovieClip.prototype.mTotalFrames = null;
-jeash.display.MovieClip.prototype.GetTotalFrames = function() {
-	return this.mTotalFrames;
-}
-jeash.display.MovieClip.prototype.GetCurrentFrame = function() {
-	return this.mCurrentFrame;
-}
-jeash.display.MovieClip.prototype.gotoAndPlay = function(frame,scene) {
-}
-jeash.display.MovieClip.prototype.gotoAndStop = function(frame,scene) {
-}
-jeash.display.MovieClip.prototype.play = function() {
-}
-jeash.display.MovieClip.prototype.stop = function() {
-}
-jeash.display.MovieClip.prototype.__class__ = jeash.display.MovieClip;
 com.citruxengine.view.spriteview.Box2DDebugArt = function(p) {
 	if( p === $_ ) return;
-	jeash.display.MovieClip.call(this);
+	jeash.display.Sprite.call(this);
 	this.addEventListener(jeash.events.Event.ADDED,$closure(this,"_handleAddedToParent"));
 	this.addEventListener(jeash.events.Event.ENTER_FRAME,$closure(this,"_handleEnterFrame"));
 	this.addEventListener(jeash.events.Event.REMOVED,$closure(this,"_destroy"));
 }
 com.citruxengine.view.spriteview.Box2DDebugArt.__name__ = ["com","citruxengine","view","spriteview","Box2DDebugArt"];
-com.citruxengine.view.spriteview.Box2DDebugArt.__super__ = jeash.display.MovieClip;
-for(var k in jeash.display.MovieClip.prototype ) com.citruxengine.view.spriteview.Box2DDebugArt.prototype[k] = jeash.display.MovieClip.prototype[k];
+com.citruxengine.view.spriteview.Box2DDebugArt.__super__ = jeash.display.Sprite;
+for(var k in jeash.display.Sprite.prototype ) com.citruxengine.view.spriteview.Box2DDebugArt.prototype[k] = jeash.display.Sprite.prototype[k];
 com.citruxengine.view.spriteview.Box2DDebugArt.prototype._box2D = null;
 com.citruxengine.view.spriteview.Box2DDebugArt.prototype._debugDraw = null;
 com.citruxengine.view.spriteview.Box2DDebugArt.prototype._handleAddedToParent = function(evt) {
@@ -10109,19 +10078,20 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	var box2d = new com.citruxengine.physics.Box2D("Box2D");
 	box2d.setVisible(true);
 	this.add(box2d);
-	var citruxObject = new com.citruxengine.objects.PhysicsObject("monCitruxObject",{ x : 250, y : 200, width : 30, height : 30});
-	this.add(citruxObject);
+	var physicsObject = new com.citruxengine.objects.PhysicsObject("physicsObject",{ x : 250, y : 200, width : 30, height : 30});
+	this.add(physicsObject);
 	var baddy = new com.citruxengine.objects.platformer.Baddy("baddy",{ x : 340, y : 200, width : 30, height : 60});
 	this.add(baddy);
 	var sensor = new com.citruxengine.objects.platformer.Sensor("sensor",{ x : 400, y : 420, width : 20, height : 20});
 	this.add(sensor);
 	var movingPlatform = new com.citruxengine.objects.platformer.MovingPlatform("movingPlatform",{ x : 430, y : 120, width : 50, height : 20, endX : 430, startY : 20, endY : 300});
 	this.add(movingPlatform);
-	var platformBot = new com.citruxengine.objects.platformer.Platform("platformBot",{ x : 260, y : 450, width : 500, height : 30});
-	this.add(platformBot);
+	this.add(new com.citruxengine.objects.platformer.Platform("platform1",{ x : 260, y : 450, width : 500, height : 30}));
+	this.add(new com.citruxengine.objects.platformer.Platform("platform2",{ x : 700, y : 380, width : 500, height : 30}));
+	this.add(new com.citruxengine.objects.platformer.Platform("platform3",{ x : 850, y : 550, width : 500, height : 30, rotation : 20}));
 	var hero = new com.citruxengine.objects.platformer.Hero("hero",{ x : 100, y : 20, width : 30, height : 60});
 	this.add(hero);
-	this.getView().setupCamera(hero,new com.citruxengine.utils.MathVector(320,240),new jeash.geom.Rectangle(0,0,1550,450),new com.citruxengine.utils.MathVector(.25,.05));
+	this.getView().setupCamera(hero,new com.citruxengine.math.MathVector(320,240),new jeash.geom.Rectangle(0,0,1550,450),new com.citruxengine.math.MathVector(.25,.05));
 }
 fr.aymericlamboley.test.GameState.prototype.__class__ = fr.aymericlamboley.test.GameState;
 jeash.geom.Transform = function(inParent) {
@@ -13748,6 +13718,71 @@ box2D.dynamics.B2BodyDef.prototype.active = null;
 box2D.dynamics.B2BodyDef.prototype.userData = null;
 box2D.dynamics.B2BodyDef.prototype.inertiaScale = null;
 box2D.dynamics.B2BodyDef.prototype.__class__ = box2D.dynamics.B2BodyDef;
+if(!com.citruxengine.math) com.citruxengine.math = {}
+com.citruxengine.math.MathVector = function(x,y) {
+	if( x === $_ ) return;
+	if(y == null) y = 0;
+	if(x == null) x = 0;
+	this.x = x;
+	this.y = y;
+}
+com.citruxengine.math.MathVector.__name__ = ["com","citruxengine","math","MathVector"];
+com.citruxengine.math.MathVector.prototype.x = null;
+com.citruxengine.math.MathVector.prototype.y = null;
+com.citruxengine.math.MathVector.prototype.normal = null;
+com.citruxengine.math.MathVector.prototype.length = null;
+com.citruxengine.math.MathVector.prototype._length = null;
+com.citruxengine.math.MathVector.prototype.copy = function() {
+	return new com.citruxengine.math.MathVector(this.x,this.y);
+}
+com.citruxengine.math.MathVector.prototype.getAngle = function() {
+	return Math.atan2(this.y,this.x);
+}
+com.citruxengine.math.MathVector.prototype.setAngle = function(value) {
+	this.x = this._length * Math.cos(value);
+	this.y = this._length * Math.sin(value);
+}
+com.citruxengine.math.MathVector.prototype.rotate = function(angle) {
+	var ca = Math.cos(angle);
+	var sa = Math.sin(angle);
+	this.x = this.x * ca - this.y * sa;
+	this.y = this.x * sa + this.y * ca;
+}
+com.citruxengine.math.MathVector.prototype.scaleEquals = function(value) {
+	this.x *= value;
+	this.y *= value;
+}
+com.citruxengine.math.MathVector.prototype.scale = function(value) {
+	return new com.citruxengine.math.MathVector(this.x * value,this.y * value);
+}
+com.citruxengine.math.MathVector.prototype.getNormal = function() {
+	return new com.citruxengine.math.MathVector(-this.y,this.x);
+}
+com.citruxengine.math.MathVector.prototype.getLength = function() {
+	return Math.sqrt(this.x * this.x + this.y * this.y);
+}
+com.citruxengine.math.MathVector.prototype.setLength = function(value) {
+	this.scaleEquals(value / this._length);
+	return 0;
+}
+com.citruxengine.math.MathVector.prototype.plusEquals = function(vector) {
+	this.x += vector.x;
+	this.y += vector.y;
+}
+com.citruxengine.math.MathVector.prototype.plus = function(vector) {
+	return new com.citruxengine.math.MathVector(this.x + vector.x,this.y + vector.y);
+}
+com.citruxengine.math.MathVector.prototype.minusEquals = function(vector) {
+	this.x -= vector.x;
+	this.y -= vector.y;
+}
+com.citruxengine.math.MathVector.prototype.minus = function(vector) {
+	return new com.citruxengine.math.MathVector(this.x - vector.x,this.y - vector.y);
+}
+com.citruxengine.math.MathVector.prototype.toString = function() {
+	return "[" + this.x + ", " + this.y + "]";
+}
+com.citruxengine.math.MathVector.prototype.__class__ = com.citruxengine.math.MathVector;
 box2D.collision.B2ContactID = function(p) {
 	if( p === $_ ) return;
 	this.features = new box2D.collision.Features();
@@ -13785,8 +13820,8 @@ com.citruxengine.view.CitruxView = function(root,viewInterface) {
 	var ce = com.citruxengine.core.CitruxEngine.getInstance();
 	this.cameraLensWidth = ce.GetStage().jeashGetWidth();
 	this.cameraLensHeight = ce.GetStage().jeashGetHeight();
-	this.cameraOffset = new com.citruxengine.utils.MathVector();
-	this.cameraEasing = new com.citruxengine.utils.MathVector(0.25,0.05);
+	this.cameraOffset = new com.citruxengine.math.MathVector();
+	this.cameraEasing = new com.citruxengine.math.MathVector(0.25,0.05);
 }
 com.citruxengine.view.CitruxView.__name__ = ["com","citruxengine","view","CitruxView"];
 com.citruxengine.view.CitruxView.prototype.cameraTarget = null;
@@ -13806,6 +13841,26 @@ com.citruxengine.view.CitruxView.prototype.addArt = function(citruxObject) {
 	if(!Std["is"](citruxObject,this._viewInterface)) return;
 	var art = this.createArt(citruxObject);
 	if(art != null) this._viewObjects.set(citruxObject,art);
+}
+com.citruxengine.view.CitruxView.prototype.removeArt = function(citruxObject) {
+	if(!Std["is"](citruxObject,this._viewInterface)) return;
+	this.destroyArt(citruxObject);
+	this._viewObjects.remove(citruxObject);
+}
+com.citruxengine.view.CitruxView.prototype.getArt = function(citruxObject) {
+	if(!Std["is"](citruxObject,this._viewInterface)) {
+		haxe.Log.trace("The object " + citruxObject + " does not have a graphical counterpart because it does not implement " + this._viewInterface + ".",{ fileName : "CitruxView.hx", lineNumber : 132, className : "com.citruxengine.view.CitruxView", methodName : "getArt"});
+		return null;
+	}
+	return this._viewObjects.get(citruxObject);
+}
+com.citruxengine.view.CitruxView.prototype.getObjectFromArt = function(art) {
+	var $it0 = this._viewObjects.keys();
+	while( $it0.hasNext() ) {
+		var object = $it0.next();
+		if(this._viewObjects.get(object) == art) return object;
+	}
+	return null;
 }
 com.citruxengine.view.CitruxView.prototype.setupCamera = function(target,offset,bounds,easing) {
 	this.cameraTarget = target;
@@ -14779,6 +14834,38 @@ jeash.geom.Rectangle.prototype.extendBounds = function(r) {
 	if(r.get_bottom() > this.get_bottom()) this.set_bottom(r.get_bottom());
 }
 jeash.geom.Rectangle.prototype.__class__ = jeash.geom.Rectangle;
+jeash.display.MovieClip = function(p) {
+	if( p === $_ ) return;
+	jeash.display.Sprite.call(this);
+	this.enabled = true;
+	this.mCurrentFrame = 0;
+	this.mTotalFrames = 0;
+	this.name = "MovieClip " + jeash.display.DisplayObject.mNameID++;
+}
+jeash.display.MovieClip.__name__ = ["jeash","display","MovieClip"];
+jeash.display.MovieClip.__super__ = jeash.display.Sprite;
+for(var k in jeash.display.Sprite.prototype ) jeash.display.MovieClip.prototype[k] = jeash.display.Sprite.prototype[k];
+jeash.display.MovieClip.prototype.enabled = null;
+jeash.display.MovieClip.prototype.currentFrame = null;
+jeash.display.MovieClip.prototype.framesLoaded = null;
+jeash.display.MovieClip.prototype.totalFrames = null;
+jeash.display.MovieClip.prototype.mCurrentFrame = null;
+jeash.display.MovieClip.prototype.mTotalFrames = null;
+jeash.display.MovieClip.prototype.GetTotalFrames = function() {
+	return this.mTotalFrames;
+}
+jeash.display.MovieClip.prototype.GetCurrentFrame = function() {
+	return this.mCurrentFrame;
+}
+jeash.display.MovieClip.prototype.gotoAndPlay = function(frame,scene) {
+}
+jeash.display.MovieClip.prototype.gotoAndStop = function(frame,scene) {
+}
+jeash.display.MovieClip.prototype.play = function() {
+}
+jeash.display.MovieClip.prototype.stop = function() {
+}
+jeash.display.MovieClip.prototype.__class__ = jeash.display.MovieClip;
 box2D.dynamics.contacts.B2PolygonContact = function(p) {
 	if( p === $_ ) return;
 	box2D.dynamics.contacts.B2Contact.call(this);
@@ -14868,6 +14955,10 @@ com.citruxengine.view.spriteview.SpriteView.prototype.createArt = function(citru
 	art.update(this);
 	this._updateGroupForSprite(art);
 	return art;
+}
+com.citruxengine.view.spriteview.SpriteView.prototype.destroyArt = function(citruxObject) {
+	var spriteArt = this._viewObjects.get(citruxObject);
+	spriteArt.parent.removeChild(spriteArt);
 }
 com.citruxengine.view.spriteview.SpriteView.prototype._updateGroupForSprite = function(sprite) {
 	while(sprite.getGroup() >= this._viewRoot.jeashGetNumChildren()) this._viewRoot.addChild(new jeash.display.Sprite());
@@ -15532,71 +15623,6 @@ jeash.display.PixelSnapping.AUTO.__enum__ = jeash.display.PixelSnapping;
 jeash.display.PixelSnapping.ALWAYS = ["ALWAYS",2];
 jeash.display.PixelSnapping.ALWAYS.toString = $estr;
 jeash.display.PixelSnapping.ALWAYS.__enum__ = jeash.display.PixelSnapping;
-if(!com.citruxengine.utils) com.citruxengine.utils = {}
-com.citruxengine.utils.MathVector = function(x,y) {
-	if( x === $_ ) return;
-	if(y == null) y = 0;
-	if(x == null) x = 0;
-	this.x = x;
-	this.y = y;
-}
-com.citruxengine.utils.MathVector.__name__ = ["com","citruxengine","utils","MathVector"];
-com.citruxengine.utils.MathVector.prototype.x = null;
-com.citruxengine.utils.MathVector.prototype.y = null;
-com.citruxengine.utils.MathVector.prototype.normal = null;
-com.citruxengine.utils.MathVector.prototype.length = null;
-com.citruxengine.utils.MathVector.prototype._length = null;
-com.citruxengine.utils.MathVector.prototype.copy = function() {
-	return new com.citruxengine.utils.MathVector(this.x,this.y);
-}
-com.citruxengine.utils.MathVector.prototype.getAngle = function() {
-	return Math.atan2(this.y,this.x);
-}
-com.citruxengine.utils.MathVector.prototype.setAngle = function(value) {
-	this.x = this._length * Math.cos(value);
-	this.y = this._length * Math.sin(value);
-}
-com.citruxengine.utils.MathVector.prototype.rotate = function(angle) {
-	var ca = Math.cos(angle);
-	var sa = Math.sin(angle);
-	this.x = this.x * ca - this.y * sa;
-	this.y = this.x * sa + this.y * ca;
-}
-com.citruxengine.utils.MathVector.prototype.scaleEquals = function(value) {
-	this.x *= value;
-	this.y *= value;
-}
-com.citruxengine.utils.MathVector.prototype.scale = function(value) {
-	return new com.citruxengine.utils.MathVector(this.x * value,this.y * value);
-}
-com.citruxengine.utils.MathVector.prototype.getNormal = function() {
-	return new com.citruxengine.utils.MathVector(-this.y,this.x);
-}
-com.citruxengine.utils.MathVector.prototype.getLength = function() {
-	return Math.sqrt(this.x * this.x + this.y * this.y);
-}
-com.citruxengine.utils.MathVector.prototype.setLength = function(value) {
-	this.scaleEquals(value / this._length);
-	return 0;
-}
-com.citruxengine.utils.MathVector.prototype.plusEquals = function(vector) {
-	this.x += vector.x;
-	this.y += vector.y;
-}
-com.citruxengine.utils.MathVector.prototype.plus = function(vector) {
-	return new com.citruxengine.utils.MathVector(this.x + vector.x,this.y + vector.y);
-}
-com.citruxengine.utils.MathVector.prototype.minusEquals = function(vector) {
-	this.x -= vector.x;
-	this.y -= vector.y;
-}
-com.citruxengine.utils.MathVector.prototype.minus = function(vector) {
-	return new com.citruxengine.utils.MathVector(this.x - vector.x,this.y - vector.y);
-}
-com.citruxengine.utils.MathVector.prototype.toString = function() {
-	return "[" + this.x + ", " + this.y + "]";
-}
-com.citruxengine.utils.MathVector.prototype.__class__ = com.citruxengine.utils.MathVector;
 com.citruxengine.core.CitruxEngine = function(p) {
 	if( p === $_ ) return;
 	jeash.display.Sprite.call(this);
@@ -18073,8 +18099,8 @@ Reflect.makeVarArgs = function(f) {
 Reflect.prototype.__class__ = Reflect;
 com.citruxengine.objects.platformer.MovingPlatform = function(name,params) {
 	if( name === $_ ) return;
-	this._start = new com.citruxengine.utils.MathVector();
-	this._end = new com.citruxengine.utils.MathVector();
+	this._start = new com.citruxengine.math.MathVector();
+	this._end = new com.citruxengine.math.MathVector();
 	this._forward = true;
 	this._passengers = [];
 	this._speed = 1;

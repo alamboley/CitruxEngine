@@ -3,8 +3,8 @@ package com.citruxengine.objects.platformer;
 import box2D.common.math.B2Vec2;
 import box2D.dynamics.B2Body;
 
+import com.citruxengine.math.MathVector;
 import com.citruxengine.objects.platformer.Platform;
-import com.citruxengine.utils.MathVector;
 
 /**
  * A platform that moves between two points. The MovingPlatform has several properties that
