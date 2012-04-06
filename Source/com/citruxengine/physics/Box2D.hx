@@ -7,6 +7,7 @@ import box2D.dynamics.B2World;
 import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.core.CitruxObject;
 import com.citruxengine.view.ISpriteView;
+import com.citruxengine.view.spriteview.Box2DDebugArt;
 
 import nme.display.Sprite;
 
@@ -26,14 +27,12 @@ class Box2D extends CitruxObject, implements ISpriteView {
 	public var rotation(getRotation, never):Float;
 	public var group(getGroup, setGroup):Int;
 	public var visible(getVisible, setVisible):Bool;
-	public var view(getView, setView):Dynamic;
+	public var view(getView, never):Dynamic;
 	public var animation(getAnimation, never):String;
 	public var inverted(getInverted, never):Bool;
 	public var offsetX(getOffsetX, never):Float;
 	public var offsetY(getOffsetY, never):Float;
 	public var registration(getRegistration, never):String;
-
-	private var physicsDebug:Sprite;
 
 	var _world:B2World;
 	var _scale:Int;
@@ -44,25 +43,14 @@ class Box2D extends CitruxObject, implements ISpriteView {
 
 	public function new(name:String, params:Dynamic = null) {
 
-		super(name, params);
-
 		_visible = false;
 		_group = 1;
 		_scale = 30;
+		_view = Box2DDebugArt;
 
-		physicsDebug = new Sprite();
-		CitruxEngine.getInstance().addChild(physicsDebug);
+		super(name, params);
 
 		_world = new B2World(new B2Vec2(0, 0), true);
-
-		var debugDraw = new B2DebugDraw();
-		debugDraw.setSprite(physicsDebug);
-		debugDraw.setDrawScale(_scale);
-		debugDraw.setFlags(B2DebugDraw.e_shapeBit);
-
-		//TODO : remove debug view here.
-
-		world.setDebugDraw(debugDraw);
 	}
 
 	override public function destroy():Void {
@@ -78,7 +66,6 @@ class Box2D extends CitruxObject, implements ISpriteView {
 
 		// 0.05 = 1 / 20
 		_world.step(0.05, 8, 8);
-		_world.drawDebugData();
 	}
 
 	public function getWorld():B2World {
@@ -129,10 +116,6 @@ class Box2D extends CitruxObject, implements ISpriteView {
 
 	public function getView():Dynamic {
 		return _view;
-	}
-
-	public function setView(value:Dynamic):Dynamic {
-		return _view = value;
 	}
 
 	public function getAnimation():String {

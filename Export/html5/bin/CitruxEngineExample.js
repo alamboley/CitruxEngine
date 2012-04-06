@@ -719,889 +719,7 @@ box2D.collision.ClipVertex.prototype.set = function(other) {
 box2D.collision.ClipVertex.prototype.v = null;
 box2D.collision.ClipVertex.prototype.id = null;
 box2D.collision.ClipVertex.prototype.__class__ = box2D.collision.ClipVertex;
-if(!box2D.common) box2D.common = {}
-if(!box2D.common.math) box2D.common.math = {}
-box2D.common.math.B2Transform = function(pos,r) {
-	if( pos === $_ ) return;
-	this.position = new box2D.common.math.B2Vec2();
-	this.R = new box2D.common.math.B2Mat22();
-	if(pos != null) {
-		this.position.setV(pos);
-		this.R.setM(r);
-	}
-}
-box2D.common.math.B2Transform.__name__ = ["box2D","common","math","B2Transform"];
-box2D.common.math.B2Transform.prototype.initialize = function(pos,r) {
-	this.position.setV(pos);
-	this.R.setM(r);
-}
-box2D.common.math.B2Transform.prototype.setIdentity = function() {
-	this.position.setZero();
-	this.R.setIdentity();
-}
-box2D.common.math.B2Transform.prototype.set = function(x) {
-	this.position.setV(x.position);
-	this.R.setM(x.R);
-}
-box2D.common.math.B2Transform.prototype.getAngle = function() {
-	return Math.atan2(this.R.col1.y,this.R.col1.x);
-}
-box2D.common.math.B2Transform.prototype.position = null;
-box2D.common.math.B2Transform.prototype.R = null;
-box2D.common.math.B2Transform.prototype.__class__ = box2D.common.math.B2Transform;
 if(typeof jeash=='undefined') jeash = {}
-if(!jeash.errors) jeash.errors = {}
-jeash.errors.Error = function(message,id) {
-	if( message === $_ ) return;
-	if(id == null) id = 0;
-	if(message == null) message = "";
-	this.message = message;
-	this.errorID = id;
-}
-jeash.errors.Error.__name__ = ["jeash","errors","Error"];
-jeash.errors.Error.prototype.errorID = null;
-jeash.errors.Error.prototype.message = null;
-jeash.errors.Error.prototype.name = null;
-jeash.errors.Error.prototype.getStackTrace = function() {
-	return haxe.Stack.toString(haxe.Stack.exceptionStack());
-}
-jeash.errors.Error.prototype.toString = function() {
-	if(this.message != null) return this.message; else return "Error";
-}
-jeash.errors.Error.prototype.__class__ = jeash.errors.Error;
-box2D.dynamics.B2Fixture = function(p) {
-	if( p === $_ ) return;
-	this.m_filter = new box2D.dynamics.B2FilterData();
-	this.m_aabb = new box2D.collision.B2AABB();
-	this.m_userData = null;
-	this.m_body = null;
-	this.m_next = null;
-	this.m_shape = null;
-	this.m_density = 0.0;
-	this.m_friction = 0.0;
-	this.m_restitution = 0.0;
-}
-box2D.dynamics.B2Fixture.__name__ = ["box2D","dynamics","B2Fixture"];
-box2D.dynamics.B2Fixture.prototype.getType = function() {
-	return this.m_shape.getType();
-}
-box2D.dynamics.B2Fixture.prototype.getShape = function() {
-	return this.m_shape;
-}
-box2D.dynamics.B2Fixture.prototype.setSensor = function(sensor) {
-	if(this.m_isSensor == sensor) return;
-	this.m_isSensor = sensor;
-	if(this.m_body == null) return;
-	var edge = this.m_body.getContactList();
-	while(edge != null) {
-		var contact = edge.contact;
-		var fixtureA = contact.getFixtureA();
-		var fixtureB = contact.getFixtureB();
-		if(fixtureA == this || fixtureB == this) contact.setSensor(fixtureA.isSensor() || fixtureB.isSensor());
-		edge = edge.next;
-	}
-}
-box2D.dynamics.B2Fixture.prototype.isSensor = function() {
-	return this.m_isSensor;
-}
-box2D.dynamics.B2Fixture.prototype.setFilterData = function(filter) {
-	this.m_filter = filter.copy();
-	if(this.m_body != null) return;
-	var edge = this.m_body.getContactList();
-	while(edge != null) {
-		var contact = edge.contact;
-		var fixtureA = contact.getFixtureA();
-		var fixtureB = contact.getFixtureB();
-		if(fixtureA == this || fixtureB == this) contact.flagForFiltering();
-		edge = edge.next;
-	}
-}
-box2D.dynamics.B2Fixture.prototype.getFilterData = function() {
-	return this.m_filter.copy();
-}
-box2D.dynamics.B2Fixture.prototype.getBody = function() {
-	return this.m_body;
-}
-box2D.dynamics.B2Fixture.prototype.getNext = function() {
-	return this.m_next;
-}
-box2D.dynamics.B2Fixture.prototype.getUserData = function() {
-	return this.m_userData;
-}
-box2D.dynamics.B2Fixture.prototype.SetUserData = function(data) {
-	this.m_userData = data;
-}
-box2D.dynamics.B2Fixture.prototype.testPoint = function(p) {
-	return this.m_shape.testPoint(this.m_body.getTransform(),p);
-}
-box2D.dynamics.B2Fixture.prototype.rayCast = function(output,input) {
-	return this.m_shape.rayCast(output,input,this.m_body.getTransform());
-}
-box2D.dynamics.B2Fixture.prototype.getMassData = function(massData) {
-	if(massData == null) massData = new box2D.collision.shapes.B2MassData();
-	this.m_shape.computeMass(massData,this.m_density);
-	return massData;
-}
-box2D.dynamics.B2Fixture.prototype.setDensity = function(density) {
-	this.m_density = density;
-}
-box2D.dynamics.B2Fixture.prototype.getDensity = function() {
-	return this.m_density;
-}
-box2D.dynamics.B2Fixture.prototype.getFriction = function() {
-	return this.m_friction;
-}
-box2D.dynamics.B2Fixture.prototype.setFriction = function(friction) {
-	this.m_friction = friction;
-}
-box2D.dynamics.B2Fixture.prototype.getRestitution = function() {
-	return this.m_restitution;
-}
-box2D.dynamics.B2Fixture.prototype.setRestitution = function(restitution) {
-	this.m_restitution = restitution;
-}
-box2D.dynamics.B2Fixture.prototype.getAABB = function() {
-	return this.m_aabb;
-}
-box2D.dynamics.B2Fixture.prototype.create = function(body,xf,def) {
-	this.m_userData = def.userData;
-	this.m_friction = def.friction;
-	this.m_restitution = def.restitution;
-	this.m_body = body;
-	this.m_next = null;
-	this.m_filter = def.filter.copy();
-	this.m_isSensor = def.isSensor;
-	this.m_shape = def.shape.copy();
-	this.m_density = def.density;
-}
-box2D.dynamics.B2Fixture.prototype.destroy = function() {
-	this.m_shape = null;
-}
-box2D.dynamics.B2Fixture.prototype.createProxy = function(broadPhase,xf) {
-	this.m_shape.computeAABB(this.m_aabb,xf);
-	this.m_proxy = broadPhase.createProxy(this.m_aabb,this);
-}
-box2D.dynamics.B2Fixture.prototype.destroyProxy = function(broadPhase) {
-	if(this.m_proxy == null) return;
-	broadPhase.destroyProxy(this.m_proxy);
-	this.m_proxy = null;
-}
-box2D.dynamics.B2Fixture.prototype.synchronize = function(broadPhase,transform1,transform2) {
-	if(this.m_proxy == null) return;
-	var aabb1 = new box2D.collision.B2AABB();
-	var aabb2 = new box2D.collision.B2AABB();
-	this.m_shape.computeAABB(aabb1,transform1);
-	this.m_shape.computeAABB(aabb2,transform2);
-	this.m_aabb.combine(aabb1,aabb2);
-	var displacement = box2D.common.math.B2Math.subtractVV(transform2.position,transform1.position);
-	broadPhase.moveProxy(this.m_proxy,this.m_aabb,displacement);
-}
-box2D.dynamics.B2Fixture.prototype.m_massData = null;
-box2D.dynamics.B2Fixture.prototype.m_aabb = null;
-box2D.dynamics.B2Fixture.prototype.m_density = null;
-box2D.dynamics.B2Fixture.prototype.m_next = null;
-box2D.dynamics.B2Fixture.prototype.m_body = null;
-box2D.dynamics.B2Fixture.prototype.m_shape = null;
-box2D.dynamics.B2Fixture.prototype.m_friction = null;
-box2D.dynamics.B2Fixture.prototype.m_restitution = null;
-box2D.dynamics.B2Fixture.prototype.m_proxy = null;
-box2D.dynamics.B2Fixture.prototype.m_filter = null;
-box2D.dynamics.B2Fixture.prototype.m_isSensor = null;
-box2D.dynamics.B2Fixture.prototype.m_userData = null;
-box2D.dynamics.B2Fixture.prototype.__class__ = box2D.dynamics.B2Fixture;
-if(!jeash.display) jeash.display = {}
-jeash.display.InterpolationMethod = { __ename__ : ["jeash","display","InterpolationMethod"], __constructs__ : ["RGB","LINEAR_RGB"] }
-jeash.display.InterpolationMethod.RGB = ["RGB",0];
-jeash.display.InterpolationMethod.RGB.toString = $estr;
-jeash.display.InterpolationMethod.RGB.__enum__ = jeash.display.InterpolationMethod;
-jeash.display.InterpolationMethod.LINEAR_RGB = ["LINEAR_RGB",1];
-jeash.display.InterpolationMethod.LINEAR_RGB.toString = $estr;
-jeash.display.InterpolationMethod.LINEAR_RGB.__enum__ = jeash.display.InterpolationMethod;
-box2D.common.math.B2Sweep = function(p) {
-	if( p === $_ ) return;
-	this.localCenter = new box2D.common.math.B2Vec2();
-	this.c0 = new box2D.common.math.B2Vec2();
-	this.c = new box2D.common.math.B2Vec2();
-}
-box2D.common.math.B2Sweep.__name__ = ["box2D","common","math","B2Sweep"];
-box2D.common.math.B2Sweep.prototype.set = function(other) {
-	this.localCenter.setV(other.localCenter);
-	this.c0.setV(other.c0);
-	this.c.setV(other.c);
-	this.a0 = other.a0;
-	this.a = other.a;
-	this.t0 = other.t0;
-}
-box2D.common.math.B2Sweep.prototype.copy = function() {
-	var copy = new box2D.common.math.B2Sweep();
-	copy.localCenter.setV(this.localCenter);
-	copy.c0.setV(this.c0);
-	copy.c.setV(this.c);
-	copy.a0 = this.a0;
-	copy.a = this.a;
-	copy.t0 = this.t0;
-	return copy;
-}
-box2D.common.math.B2Sweep.prototype.getTransform = function(xf,alpha) {
-	xf.position.x = (1.0 - alpha) * this.c0.x + alpha * this.c.x;
-	xf.position.y = (1.0 - alpha) * this.c0.y + alpha * this.c.y;
-	var angle = (1.0 - alpha) * this.a0 + alpha * this.a;
-	xf.R.set(angle);
-	var tMat = xf.R;
-	xf.position.x -= tMat.col1.x * this.localCenter.x + tMat.col2.x * this.localCenter.y;
-	xf.position.y -= tMat.col1.y * this.localCenter.x + tMat.col2.y * this.localCenter.y;
-}
-box2D.common.math.B2Sweep.prototype.advance = function(t) {
-	if(this.t0 < t && 1.0 - this.t0 > Number.MIN_VALUE) {
-		var alpha = (t - this.t0) / (1.0 - this.t0);
-		this.c0.x = (1.0 - alpha) * this.c0.x + alpha * this.c.x;
-		this.c0.y = (1.0 - alpha) * this.c0.y + alpha * this.c.y;
-		this.a0 = (1.0 - alpha) * this.a0 + alpha * this.a;
-		this.t0 = t;
-	}
-}
-box2D.common.math.B2Sweep.prototype.localCenter = null;
-box2D.common.math.B2Sweep.prototype.c0 = null;
-box2D.common.math.B2Sweep.prototype.c = null;
-box2D.common.math.B2Sweep.prototype.a0 = null;
-box2D.common.math.B2Sweep.prototype.a = null;
-box2D.common.math.B2Sweep.prototype.t0 = null;
-box2D.common.math.B2Sweep.prototype.__class__ = box2D.common.math.B2Sweep;
-box2D.dynamics.B2ContactManager = function(p) {
-	if( p === $_ ) return;
-	this.m_world = null;
-	this.m_contactCount = 0;
-	this.m_contactFilter = box2D.dynamics.B2ContactFilter.b2_defaultFilter;
-	this.m_contactListener = box2D.dynamics.B2ContactListener.b2_defaultListener;
-	this.m_contactFactory = new box2D.dynamics.contacts.B2ContactFactory(this.m_allocator);
-	this.m_broadPhase = new box2D.collision.B2DynamicTreeBroadPhase();
-}
-box2D.dynamics.B2ContactManager.__name__ = ["box2D","dynamics","B2ContactManager"];
-box2D.dynamics.B2ContactManager.prototype.addPair = function(proxyUserDataA,proxyUserDataB) {
-	var fixtureA = (function($this) {
-		var $r;
-		var $t = proxyUserDataA;
-		if(Std["is"]($t,box2D.dynamics.B2Fixture)) $t; else throw "Class cast error";
-		$r = $t;
-		return $r;
-	}(this));
-	var fixtureB = (function($this) {
-		var $r;
-		var $t = proxyUserDataB;
-		if(Std["is"]($t,box2D.dynamics.B2Fixture)) $t; else throw "Class cast error";
-		$r = $t;
-		return $r;
-	}(this));
-	var bodyA = fixtureA.getBody();
-	var bodyB = fixtureB.getBody();
-	if(bodyA == bodyB) return;
-	var edge = bodyB.getContactList();
-	while(edge != null) {
-		if(edge.other == bodyA) {
-			var fA = edge.contact.getFixtureA();
-			var fB = edge.contact.getFixtureB();
-			if(fA == fixtureA && fB == fixtureB) return;
-			if(fA == fixtureB && fB == fixtureA) return;
-		}
-		edge = edge.next;
-	}
-	if(bodyB.shouldCollide(bodyA) == false) return;
-	if(this.m_contactFilter.shouldCollide(fixtureA,fixtureB) == false) return;
-	var c = this.m_contactFactory.create(fixtureA,fixtureB);
-	fixtureA = c.getFixtureA();
-	fixtureB = c.getFixtureB();
-	bodyA = fixtureA.m_body;
-	bodyB = fixtureB.m_body;
-	c.m_prev = null;
-	c.m_next = this.m_world.m_contactList;
-	if(this.m_world.m_contactList != null) this.m_world.m_contactList.m_prev = c;
-	this.m_world.m_contactList = c;
-	c.m_nodeA.contact = c;
-	c.m_nodeA.other = bodyB;
-	c.m_nodeA.prev = null;
-	c.m_nodeA.next = bodyA.m_contactList;
-	if(bodyA.m_contactList != null) bodyA.m_contactList.prev = c.m_nodeA;
-	bodyA.m_contactList = c.m_nodeA;
-	c.m_nodeB.contact = c;
-	c.m_nodeB.other = bodyA;
-	c.m_nodeB.prev = null;
-	c.m_nodeB.next = bodyB.m_contactList;
-	if(bodyB.m_contactList != null) bodyB.m_contactList.prev = c.m_nodeB;
-	bodyB.m_contactList = c.m_nodeB;
-	++this.m_world.m_contactCount;
-	return;
-}
-box2D.dynamics.B2ContactManager.prototype.findNewContacts = function() {
-	this.m_broadPhase.updatePairs($closure(this,"addPair"));
-}
-box2D.dynamics.B2ContactManager.prototype.destroy = function(c) {
-	var fixtureA = c.getFixtureA();
-	var fixtureB = c.getFixtureB();
-	var bodyA = fixtureA.getBody();
-	var bodyB = fixtureB.getBody();
-	if(c.isTouching()) this.m_contactListener.endContact(c);
-	if(c.m_prev != null) c.m_prev.m_next = c.m_next;
-	if(c.m_next != null) c.m_next.m_prev = c.m_prev;
-	if(c == this.m_world.m_contactList) this.m_world.m_contactList = c.m_next;
-	if(c.m_nodeA.prev != null) c.m_nodeA.prev.next = c.m_nodeA.next;
-	if(c.m_nodeA.next != null) c.m_nodeA.next.prev = c.m_nodeA.prev;
-	if(c.m_nodeA == bodyA.m_contactList) bodyA.m_contactList = c.m_nodeA.next;
-	if(c.m_nodeB.prev != null) c.m_nodeB.prev.next = c.m_nodeB.next;
-	if(c.m_nodeB.next != null) c.m_nodeB.next.prev = c.m_nodeB.prev;
-	if(c.m_nodeB == bodyB.m_contactList) bodyB.m_contactList = c.m_nodeB.next;
-	this.m_contactFactory.destroy(c);
-	--this.m_contactCount;
-}
-box2D.dynamics.B2ContactManager.prototype.collide = function() {
-	var c = this.m_world.m_contactList;
-	while(c != null) {
-		var fixtureA = c.getFixtureA();
-		var fixtureB = c.getFixtureB();
-		var bodyA = fixtureA.getBody();
-		var bodyB = fixtureB.getBody();
-		if(bodyA.isAwake() == false && bodyB.isAwake() == false) {
-			c = c.getNext();
-			continue;
-		}
-		if((c.m_flags & box2D.dynamics.contacts.B2Contact.e_filterFlag) != 0) {
-			if(bodyB.shouldCollide(bodyA) == false) {
-				var cNuke = c;
-				c = cNuke.getNext();
-				this.destroy(cNuke);
-				continue;
-			}
-			if(this.m_contactFilter.shouldCollide(fixtureA,fixtureB) == false) {
-				var cNuke = c;
-				c = cNuke.getNext();
-				this.destroy(cNuke);
-				continue;
-			}
-			c.m_flags &= ~box2D.dynamics.contacts.B2Contact.e_filterFlag;
-		}
-		var proxyA = fixtureA.m_proxy;
-		var proxyB = fixtureB.m_proxy;
-		var overlap = this.m_broadPhase.testOverlap(proxyA,proxyB);
-		if(overlap == false) {
-			var cNuke = c;
-			c = cNuke.getNext();
-			this.destroy(cNuke);
-			continue;
-		}
-		c.update(this.m_contactListener);
-		c = c.getNext();
-	}
-}
-box2D.dynamics.B2ContactManager.prototype.m_world = null;
-box2D.dynamics.B2ContactManager.prototype.m_broadPhase = null;
-box2D.dynamics.B2ContactManager.prototype.m_contactList = null;
-box2D.dynamics.B2ContactManager.prototype.m_contactCount = null;
-box2D.dynamics.B2ContactManager.prototype.m_contactFilter = null;
-box2D.dynamics.B2ContactManager.prototype.m_contactListener = null;
-box2D.dynamics.B2ContactManager.prototype.m_contactFactory = null;
-box2D.dynamics.B2ContactManager.prototype.m_allocator = null;
-box2D.dynamics.B2ContactManager.prototype.__class__ = box2D.dynamics.B2ContactManager;
-if(typeof haxe=='undefined') haxe = {}
-if(!haxe.xml) haxe.xml = {}
-haxe.xml.Filter = { __ename__ : ["haxe","xml","Filter"], __constructs__ : ["FInt","FBool","FEnum","FReg"] }
-haxe.xml.Filter.FInt = ["FInt",0];
-haxe.xml.Filter.FInt.toString = $estr;
-haxe.xml.Filter.FInt.__enum__ = haxe.xml.Filter;
-haxe.xml.Filter.FBool = ["FBool",1];
-haxe.xml.Filter.FBool.toString = $estr;
-haxe.xml.Filter.FBool.__enum__ = haxe.xml.Filter;
-haxe.xml.Filter.FEnum = function(values) { var $x = ["FEnum",2,values]; $x.__enum__ = haxe.xml.Filter; $x.toString = $estr; return $x; }
-haxe.xml.Filter.FReg = function(matcher) { var $x = ["FReg",3,matcher]; $x.__enum__ = haxe.xml.Filter; $x.toString = $estr; return $x; }
-haxe.xml.Attrib = { __ename__ : ["haxe","xml","Attrib"], __constructs__ : ["Att"] }
-haxe.xml.Attrib.Att = function(name,filter,defvalue) { var $x = ["Att",0,name,filter,defvalue]; $x.__enum__ = haxe.xml.Attrib; $x.toString = $estr; return $x; }
-haxe.xml.Rule = { __ename__ : ["haxe","xml","Rule"], __constructs__ : ["RNode","RData","RMulti","RList","RChoice","ROptional"] }
-haxe.xml.Rule.RNode = function(name,attribs,childs) { var $x = ["RNode",0,name,attribs,childs]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
-haxe.xml.Rule.RData = function(filter) { var $x = ["RData",1,filter]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
-haxe.xml.Rule.RMulti = function(rule,atLeastOne) { var $x = ["RMulti",2,rule,atLeastOne]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
-haxe.xml.Rule.RList = function(rules,ordered) { var $x = ["RList",3,rules,ordered]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
-haxe.xml.Rule.RChoice = function(choices) { var $x = ["RChoice",4,choices]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
-haxe.xml.Rule.ROptional = function(rule) { var $x = ["ROptional",5,rule]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
-if(!haxe.xml._Check) haxe.xml._Check = {}
-haxe.xml._Check.CheckResult = { __ename__ : ["haxe","xml","_Check","CheckResult"], __constructs__ : ["CMatch","CMissing","CExtra","CElementExpected","CDataExpected","CExtraAttrib","CMissingAttrib","CInvalidAttrib","CInvalidData","CInElement"] }
-haxe.xml._Check.CheckResult.CMatch = ["CMatch",0];
-haxe.xml._Check.CheckResult.CMatch.toString = $estr;
-haxe.xml._Check.CheckResult.CMatch.__enum__ = haxe.xml._Check.CheckResult;
-haxe.xml._Check.CheckResult.CMissing = function(r) { var $x = ["CMissing",1,r]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
-haxe.xml._Check.CheckResult.CExtra = function(x) { var $x = ["CExtra",2,x]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
-haxe.xml._Check.CheckResult.CElementExpected = function(name,x) { var $x = ["CElementExpected",3,name,x]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
-haxe.xml._Check.CheckResult.CDataExpected = function(x) { var $x = ["CDataExpected",4,x]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
-haxe.xml._Check.CheckResult.CExtraAttrib = function(att,x) { var $x = ["CExtraAttrib",5,att,x]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
-haxe.xml._Check.CheckResult.CMissingAttrib = function(att,x) { var $x = ["CMissingAttrib",6,att,x]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
-haxe.xml._Check.CheckResult.CInvalidAttrib = function(att,x,f) { var $x = ["CInvalidAttrib",7,att,x,f]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
-haxe.xml._Check.CheckResult.CInvalidData = function(x,f) { var $x = ["CInvalidData",8,x,f]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
-haxe.xml._Check.CheckResult.CInElement = function(x,r) { var $x = ["CInElement",9,x,r]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
-EReg = function(r,opt) {
-	if( r === $_ ) return;
-	opt = opt.split("u").join("");
-	this.r = new RegExp(r,opt);
-}
-EReg.__name__ = ["EReg"];
-EReg.prototype.r = null;
-EReg.prototype.match = function(s) {
-	this.r.m = this.r.exec(s);
-	this.r.s = s;
-	this.r.l = RegExp.leftContext;
-	this.r.r = RegExp.rightContext;
-	return this.r.m != null;
-}
-EReg.prototype.matched = function(n) {
-	return this.r.m != null && n >= 0 && n < this.r.m.length?this.r.m[n]:(function($this) {
-		var $r;
-		throw "EReg::matched";
-		return $r;
-	}(this));
-}
-EReg.prototype.matchedLeft = function() {
-	if(this.r.m == null) throw "No string matched";
-	if(this.r.l == null) return this.r.s.substr(0,this.r.m.index);
-	return this.r.l;
-}
-EReg.prototype.matchedRight = function() {
-	if(this.r.m == null) throw "No string matched";
-	if(this.r.r == null) {
-		var sz = this.r.m.index + this.r.m[0].length;
-		return this.r.s.substr(sz,this.r.s.length - sz);
-	}
-	return this.r.r;
-}
-EReg.prototype.matchedPos = function() {
-	if(this.r.m == null) throw "No string matched";
-	return { pos : this.r.m.index, len : this.r.m[0].length};
-}
-EReg.prototype.split = function(s) {
-	var d = "#__delim__#";
-	return s.replace(this.r,d).split(d);
-}
-EReg.prototype.replace = function(s,by) {
-	return s.replace(this.r,by);
-}
-EReg.prototype.customReplace = function(s,f) {
-	var buf = new StringBuf();
-	while(true) {
-		if(!this.match(s)) break;
-		buf.add(this.matchedLeft());
-		buf.add(f(this));
-		s = this.matchedRight();
-	}
-	buf.b[buf.b.length] = s == null?"null":s;
-	return buf.b.join("");
-}
-EReg.prototype.__class__ = EReg;
-haxe.xml.Check = function() { }
-haxe.xml.Check.__name__ = ["haxe","xml","Check"];
-haxe.xml.Check.isBlank = function(x) {
-	return x.nodeType == Xml.PCData && haxe.xml.Check.blanks.match(x.getNodeValue()) || x.nodeType == Xml.Comment;
-}
-haxe.xml.Check.filterMatch = function(s,f) {
-	var $e = (f);
-	switch( $e[1] ) {
-	case 0:
-		return haxe.xml.Check.filterMatch(s,haxe.xml.Filter.FReg(new EReg("[0-9]+","")));
-	case 1:
-		return haxe.xml.Check.filterMatch(s,haxe.xml.Filter.FEnum(["true","false","0","1"]));
-	case 2:
-		var values = $e[2];
-		var _g = 0;
-		while(_g < values.length) {
-			var v = values[_g];
-			++_g;
-			if(s == v) return true;
-		}
-		return false;
-	case 3:
-		var r = $e[2];
-		return r.match(s);
-	}
-}
-haxe.xml.Check.isNullable = function(r) {
-	var $e = (r);
-	switch( $e[1] ) {
-	case 2:
-		var one = $e[3], r1 = $e[2];
-		return one != true || haxe.xml.Check.isNullable(r1);
-	case 3:
-		var rl = $e[2];
-		var _g = 0;
-		while(_g < rl.length) {
-			var r1 = rl[_g];
-			++_g;
-			if(!haxe.xml.Check.isNullable(r1)) return false;
-		}
-		return true;
-	case 4:
-		var rl = $e[2];
-		var _g = 0;
-		while(_g < rl.length) {
-			var r1 = rl[_g];
-			++_g;
-			if(haxe.xml.Check.isNullable(r1)) return true;
-		}
-		return false;
-	case 1:
-		return false;
-	case 0:
-		return false;
-	case 5:
-		return true;
-	}
-}
-haxe.xml.Check.check = function(x,r) {
-	var $e = (r);
-	switch( $e[1] ) {
-	case 0:
-		var childs = $e[4], attribs = $e[3], name = $e[2];
-		if(x.nodeType != Xml.Element || x.getNodeName() != name) return haxe.xml._Check.CheckResult.CElementExpected(name,x);
-		var attribs1 = attribs == null?new Array():attribs.copy();
-		var $it0 = x.attributes();
-		while( $it0.hasNext() ) {
-			var xatt = $it0.next();
-			var found = false;
-			var _g = 0;
-			while(_g < attribs1.length) {
-				var att = attribs1[_g];
-				++_g;
-				var $e = (att);
-				switch( $e[1] ) {
-				case 0:
-					var defvalue = $e[4], filter = $e[3], name1 = $e[2];
-					if(xatt != name1) continue;
-					if(filter != null && !haxe.xml.Check.filterMatch(x.get(xatt),filter)) return haxe.xml._Check.CheckResult.CInvalidAttrib(name1,x,filter);
-					attribs1.remove(att);
-					found = true;
-					break;
-				}
-			}
-			if(!found) return haxe.xml._Check.CheckResult.CExtraAttrib(xatt,x);
-		}
-		var _g = 0;
-		while(_g < attribs1.length) {
-			var att = attribs1[_g];
-			++_g;
-			var $e = (att);
-			switch( $e[1] ) {
-			case 0:
-				var defvalue = $e[4], name1 = $e[2];
-				if(defvalue == null) return haxe.xml._Check.CheckResult.CMissingAttrib(name1,x);
-				break;
-			}
-		}
-		if(childs == null) childs = haxe.xml.Rule.RList([]);
-		var m = haxe.xml.Check.checkList(x.iterator(),childs);
-		if(m != haxe.xml._Check.CheckResult.CMatch) return haxe.xml._Check.CheckResult.CInElement(x,m);
-		var _g = 0;
-		while(_g < attribs1.length) {
-			var att = attribs1[_g];
-			++_g;
-			var $e = (att);
-			switch( $e[1] ) {
-			case 0:
-				var defvalue = $e[4], name1 = $e[2];
-				x.set(name1,defvalue);
-				break;
-			}
-		}
-		return haxe.xml._Check.CheckResult.CMatch;
-	case 1:
-		var filter = $e[2];
-		if(x.nodeType != Xml.PCData && x.nodeType != Xml.CData) return haxe.xml._Check.CheckResult.CDataExpected(x);
-		if(filter != null && !haxe.xml.Check.filterMatch(x.getNodeValue(),filter)) return haxe.xml._Check.CheckResult.CInvalidData(x,filter);
-		return haxe.xml._Check.CheckResult.CMatch;
-	case 4:
-		var choices = $e[2];
-		if(choices.length == 0) throw "No choice possible";
-		var _g = 0;
-		while(_g < choices.length) {
-			var c = choices[_g];
-			++_g;
-			if(haxe.xml.Check.check(x,c) == haxe.xml._Check.CheckResult.CMatch) return haxe.xml._Check.CheckResult.CMatch;
-		}
-		return haxe.xml.Check.check(x,choices[0]);
-	case 5:
-		var r1 = $e[2];
-		return haxe.xml.Check.check(x,r1);
-	default:
-		throw "Unexpected " + Std.string(r);
-	}
-}
-haxe.xml.Check.checkList = function(it,r) {
-	var $e = (r);
-	switch( $e[1] ) {
-	case 3:
-		var ordered = $e[3], rules = $e[2];
-		var rules1 = rules.copy();
-		while( it.hasNext() ) {
-			var x = it.next();
-			if(haxe.xml.Check.isBlank(x)) continue;
-			var found = false;
-			var _g = 0;
-			while(_g < rules1.length) {
-				var r1 = rules1[_g];
-				++_g;
-				var m = haxe.xml.Check.checkList([x].iterator(),r1);
-				if(m == haxe.xml._Check.CheckResult.CMatch) {
-					found = true;
-					var $e = (r1);
-					switch( $e[1] ) {
-					case 2:
-						var one = $e[3], rsub = $e[2];
-						if(one) {
-							var i;
-							var _g2 = 0, _g1 = rules1.length;
-							while(_g2 < _g1) {
-								var i1 = _g2++;
-								if(rules1[i1] == r1) rules1[i1] = haxe.xml.Rule.RMulti(rsub);
-							}
-						}
-						break;
-					default:
-						rules1.remove(r1);
-					}
-					break;
-				} else if(ordered && !haxe.xml.Check.isNullable(r1)) return m;
-			}
-			if(!found) return haxe.xml._Check.CheckResult.CExtra(x);
-		}
-		var _g = 0;
-		while(_g < rules1.length) {
-			var r1 = rules1[_g];
-			++_g;
-			if(!haxe.xml.Check.isNullable(r1)) return haxe.xml._Check.CheckResult.CMissing(r1);
-		}
-		return haxe.xml._Check.CheckResult.CMatch;
-	case 2:
-		var one = $e[3], r1 = $e[2];
-		var found = false;
-		while( it.hasNext() ) {
-			var x = it.next();
-			if(haxe.xml.Check.isBlank(x)) continue;
-			var m = haxe.xml.Check.checkList([x].iterator(),r1);
-			if(m != haxe.xml._Check.CheckResult.CMatch) return m;
-			found = true;
-		}
-		if(one && !found) return haxe.xml._Check.CheckResult.CMissing(r1);
-		return haxe.xml._Check.CheckResult.CMatch;
-	default:
-		var found = false;
-		while( it.hasNext() ) {
-			var x = it.next();
-			if(haxe.xml.Check.isBlank(x)) continue;
-			var m = haxe.xml.Check.check(x,r);
-			if(m != haxe.xml._Check.CheckResult.CMatch) return m;
-			found = true;
-			break;
-		}
-		if(!found) {
-			switch( (r)[1] ) {
-			case 5:
-				break;
-			default:
-				return haxe.xml._Check.CheckResult.CMissing(r);
-			}
-		}
-		while( it.hasNext() ) {
-			var x = it.next();
-			if(haxe.xml.Check.isBlank(x)) continue;
-			return haxe.xml._Check.CheckResult.CExtra(x);
-		}
-		return haxe.xml._Check.CheckResult.CMatch;
-	}
-}
-haxe.xml.Check.makeWhere = function(path) {
-	if(path.length == 0) return "";
-	var s = "In ";
-	var first = true;
-	var _g = 0;
-	while(_g < path.length) {
-		var x = path[_g];
-		++_g;
-		if(first) first = false; else s += ".";
-		s += x.getNodeName();
-	}
-	return s + ": ";
-}
-haxe.xml.Check.makeString = function(x) {
-	if(x.nodeType == Xml.Element) return "element " + x.getNodeName();
-	var s = x.getNodeValue().split("\r").join("\\r").split("\n").join("\\n").split("\t").join("\\t");
-	if(s.length > 20) return s.substr(0,17) + "...";
-	return s;
-}
-haxe.xml.Check.makeRule = function(r) {
-	var $e = (r);
-	switch( $e[1] ) {
-	case 0:
-		var name = $e[2];
-		return "element " + name;
-	case 1:
-		return "data";
-	case 2:
-		var r1 = $e[2];
-		return haxe.xml.Check.makeRule(r1);
-	case 3:
-		var rules = $e[2];
-		return haxe.xml.Check.makeRule(rules[0]);
-	case 4:
-		var choices = $e[2];
-		return haxe.xml.Check.makeRule(choices[0]);
-	case 5:
-		var r1 = $e[2];
-		return haxe.xml.Check.makeRule(r1);
-	}
-}
-haxe.xml.Check.makeError = function(m,path) {
-	if(path == null) path = new Array();
-	var $e = (m);
-	switch( $e[1] ) {
-	case 0:
-		throw "assert";
-		break;
-	case 1:
-		var r = $e[2];
-		return haxe.xml.Check.makeWhere(path) + "Missing " + haxe.xml.Check.makeRule(r);
-	case 2:
-		var x = $e[2];
-		return haxe.xml.Check.makeWhere(path) + "Unexpected " + haxe.xml.Check.makeString(x);
-	case 3:
-		var x = $e[3], name = $e[2];
-		return haxe.xml.Check.makeWhere(path) + haxe.xml.Check.makeString(x) + " while expected element " + name;
-	case 4:
-		var x = $e[2];
-		return haxe.xml.Check.makeWhere(path) + haxe.xml.Check.makeString(x) + " while data expected";
-	case 5:
-		var x = $e[3], att = $e[2];
-		path.push(x);
-		return haxe.xml.Check.makeWhere(path) + "unexpected attribute " + att;
-	case 6:
-		var x = $e[3], att = $e[2];
-		path.push(x);
-		return haxe.xml.Check.makeWhere(path) + "missing required attribute " + att;
-	case 7:
-		var f = $e[4], x = $e[3], att = $e[2];
-		path.push(x);
-		return haxe.xml.Check.makeWhere(path) + "invalid attribute value for " + att;
-	case 8:
-		var f = $e[3], x = $e[2];
-		return haxe.xml.Check.makeWhere(path) + "invalid data format for " + haxe.xml.Check.makeString(x);
-	case 9:
-		var m1 = $e[3], x = $e[2];
-		path.push(x);
-		return haxe.xml.Check.makeError(m1,path);
-	}
-}
-haxe.xml.Check.checkNode = function(x,r) {
-	var m = haxe.xml.Check.checkList([x].iterator(),r);
-	if(m == haxe.xml._Check.CheckResult.CMatch) return;
-	throw haxe.xml.Check.makeError(m);
-}
-haxe.xml.Check.checkDocument = function(x,r) {
-	if(x.nodeType != Xml.Document) throw "Document expected";
-	var m = haxe.xml.Check.checkList(x.iterator(),r);
-	if(m == haxe.xml._Check.CheckResult.CMatch) return;
-	throw haxe.xml.Check.makeError(m);
-}
-haxe.xml.Check.prototype.__class__ = haxe.xml.Check;
-box2D.common.math.B2Vec2 = function(x_,y_) {
-	if( x_ === $_ ) return;
-	if(y_ == null) y_ = 0;
-	if(x_ == null) x_ = 0;
-	this.x = x_;
-	this.y = y_;
-}
-box2D.common.math.B2Vec2.__name__ = ["box2D","common","math","B2Vec2"];
-box2D.common.math.B2Vec2.make = function(x_,y_) {
-	return new box2D.common.math.B2Vec2(x_,y_);
-}
-box2D.common.math.B2Vec2.prototype.setZero = function() {
-	this.x = 0.0;
-	this.y = 0.0;
-}
-box2D.common.math.B2Vec2.prototype.set = function(x_,y_) {
-	if(y_ == null) y_ = 0;
-	if(x_ == null) x_ = 0;
-	this.x = x_;
-	this.y = y_;
-}
-box2D.common.math.B2Vec2.prototype.setV = function(v) {
-	this.x = v.x;
-	this.y = v.y;
-}
-box2D.common.math.B2Vec2.prototype.getNegative = function() {
-	return new box2D.common.math.B2Vec2(-this.x,-this.y);
-}
-box2D.common.math.B2Vec2.prototype.negativeSelf = function() {
-	this.x = -this.x;
-	this.y = -this.y;
-}
-box2D.common.math.B2Vec2.prototype.copy = function() {
-	return new box2D.common.math.B2Vec2(this.x,this.y);
-}
-box2D.common.math.B2Vec2.prototype.add = function(v) {
-	this.x += v.x;
-	this.y += v.y;
-}
-box2D.common.math.B2Vec2.prototype.subtract = function(v) {
-	this.x -= v.x;
-	this.y -= v.y;
-}
-box2D.common.math.B2Vec2.prototype.multiply = function(a) {
-	this.x *= a;
-	this.y *= a;
-}
-box2D.common.math.B2Vec2.prototype.mulM = function(A) {
-	var tX = this.x;
-	this.x = A.col1.x * tX + A.col2.x * this.y;
-	this.y = A.col1.y * tX + A.col2.y * this.y;
-}
-box2D.common.math.B2Vec2.prototype.mulTM = function(A) {
-	var tX = box2D.common.math.B2Math.dot(this,A.col1);
-	this.y = box2D.common.math.B2Math.dot(this,A.col2);
-	this.x = tX;
-}
-box2D.common.math.B2Vec2.prototype.crossVF = function(s) {
-	var tX = this.x;
-	this.x = s * this.y;
-	this.y = -s * tX;
-}
-box2D.common.math.B2Vec2.prototype.crossFV = function(s) {
-	var tX = this.x;
-	this.x = -s * this.y;
-	this.y = s * tX;
-}
-box2D.common.math.B2Vec2.prototype.minV = function(b) {
-	this.x = this.x < b.x?this.x:b.x;
-	this.y = this.y < b.y?this.y:b.y;
-}
-box2D.common.math.B2Vec2.prototype.maxV = function(b) {
-	this.x = this.x > b.x?this.x:b.x;
-	this.y = this.y > b.y?this.y:b.y;
-}
-box2D.common.math.B2Vec2.prototype.abs = function() {
-	if(this.x < 0) this.x = -this.x;
-	if(this.y < 0) this.y = -this.y;
-}
-box2D.common.math.B2Vec2.prototype.length = function() {
-	return Math.sqrt(this.x * this.x + this.y * this.y);
-}
-box2D.common.math.B2Vec2.prototype.lengthSquared = function() {
-	return this.x * this.x + this.y * this.y;
-}
-box2D.common.math.B2Vec2.prototype.normalize = function() {
-	var length = Math.sqrt(this.x * this.x + this.y * this.y);
-	if(length < Number.MIN_VALUE) return 0.0;
-	var invLength = 1.0 / length;
-	this.x *= invLength;
-	this.y *= invLength;
-	return length;
-}
-box2D.common.math.B2Vec2.prototype.isValid = function() {
-	return box2D.common.math.B2Math.isValid(this.x) && box2D.common.math.B2Math.isValid(this.y);
-}
-box2D.common.math.B2Vec2.prototype.x = null;
-box2D.common.math.B2Vec2.prototype.y = null;
-box2D.common.math.B2Vec2.prototype.__class__ = box2D.common.math.B2Vec2;
 if(!jeash.events) jeash.events = {}
 jeash.events.IEventDispatcher = function() { }
 jeash.events.IEventDispatcher.__name__ = ["jeash","events","IEventDispatcher"];
@@ -1686,6 +804,7 @@ jeash.events.EventDispatcher.prototype.willTrigger = function(type) {
 }
 jeash.events.EventDispatcher.prototype.__class__ = jeash.events.EventDispatcher;
 jeash.events.EventDispatcher.__interfaces__ = [jeash.events.IEventDispatcher];
+if(!jeash.display) jeash.display = {}
 jeash.display.IBitmapDrawable = function() { }
 jeash.display.IBitmapDrawable.__name__ = ["jeash","display","IBitmapDrawable"];
 jeash.display.IBitmapDrawable.prototype.drawToSurface = null;
@@ -2585,6 +1704,972 @@ jeash.display.Sprite.prototype.jeashGetDropTarget = function() {
 	return this.jeashDropTarget;
 }
 jeash.display.Sprite.prototype.__class__ = jeash.display.Sprite;
+if(!com.citruxengine.view.spriteview) com.citruxengine.view.spriteview = {}
+com.citruxengine.view.spriteview.SpriteArt = function(object) {
+	if( object === $_ ) return;
+	jeash.display.Sprite.call(this);
+	this._citruxObject = object;
+	this.name = ((function($this) {
+		var $r;
+		var $t = $this._citruxObject;
+		if(Std["is"]($t,com.citruxengine.core.CitruxObject)) $t; else throw "Class cast error";
+		$r = $t;
+		return $r;
+	}(this))).name;
+}
+com.citruxengine.view.spriteview.SpriteArt.__name__ = ["com","citruxengine","view","spriteview","SpriteArt"];
+com.citruxengine.view.spriteview.SpriteArt.__super__ = jeash.display.Sprite;
+for(var k in jeash.display.Sprite.prototype ) com.citruxengine.view.spriteview.SpriteArt.prototype[k] = jeash.display.Sprite.prototype[k];
+com.citruxengine.view.spriteview.SpriteArt.prototype.citruxObject = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype.view = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype.animation = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype.registration = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype.group = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype.content = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype._citruxObject = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype._view = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype._animation = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype._registration = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype._group = null;
+com.citruxengine.view.spriteview.SpriteArt.prototype.update = function(stateView) {
+	this.jeashSetScaleX(this._citruxObject.getInverted()?-1:1);
+	this.jeashSetX(this._citruxObject.getX() + -stateView.getViewRoot().jeashGetX() * (1 - this._citruxObject.getParallax()) + this._citruxObject.getOffsetX() * this.jeashGetScaleX());
+	this.jeashSetY(this._citruxObject.getY() + -stateView.getViewRoot().jeashGetY() * (1 - this._citruxObject.getParallax()) + this._citruxObject.getOffsetY());
+	this.jeashSetRotation(this._citruxObject.getRotation());
+	this.jeashSetVisible(this._citruxObject.getVisible());
+	this.setRegistration(this._citruxObject.getRegistration());
+	this.setView(this._citruxObject.getView());
+	this.setAnimation(this._citruxObject.getAnimation());
+	this.setGroup(this._citruxObject.getGroup());
+}
+com.citruxengine.view.spriteview.SpriteArt.prototype.getCitruxObject = function() {
+	return this._citruxObject;
+}
+com.citruxengine.view.spriteview.SpriteArt.prototype.getView = function() {
+	return this._view;
+}
+com.citruxengine.view.spriteview.SpriteArt.prototype.setView = function(value) {
+	if(this._view == value) return this._view;
+	this._view = value;
+	if(Std["is"](this._view,Class)) {
+		if(this.name == "Box2D") {
+			this.content = new com.citruxengine.view.spriteview.Box2DDebugArt();
+			this.addChild(this.content);
+		}
+	}
+	return this._view;
+}
+com.citruxengine.view.spriteview.SpriteArt.prototype.getAnimation = function() {
+	return this._animation;
+}
+com.citruxengine.view.spriteview.SpriteArt.prototype.setAnimation = function(value) {
+	if(this._animation == value) return this._animation;
+	this._animation = value;
+	return this._animation;
+}
+com.citruxengine.view.spriteview.SpriteArt.prototype.getRegistration = function() {
+	return this._registration;
+}
+com.citruxengine.view.spriteview.SpriteArt.prototype.setRegistration = function(value) {
+	if(this._registration == value || this.content == null) return this._registration;
+	this._registration = value;
+	if(this._registration == "topLeft") {
+		this.content.jeashSetX(0);
+		this.content.jeashSetY(0);
+	} else if(this._registration == "center") {
+		this.content.jeashSetX(-this.content.jeashGetWidth() / 2);
+		this.content.jeashSetY(-this.content.jeashGetHeight() / 2);
+	}
+	return this._registration;
+}
+com.citruxengine.view.spriteview.SpriteArt.prototype.getGroup = function() {
+	return this._group;
+}
+com.citruxengine.view.spriteview.SpriteArt.prototype.setGroup = function(value) {
+	return this._group = value;
+}
+com.citruxengine.view.spriteview.SpriteArt.prototype.__class__ = com.citruxengine.view.spriteview.SpriteArt;
+if(!box2D.common) box2D.common = {}
+if(!box2D.common.math) box2D.common.math = {}
+box2D.common.math.B2Transform = function(pos,r) {
+	if( pos === $_ ) return;
+	this.position = new box2D.common.math.B2Vec2();
+	this.R = new box2D.common.math.B2Mat22();
+	if(pos != null) {
+		this.position.setV(pos);
+		this.R.setM(r);
+	}
+}
+box2D.common.math.B2Transform.__name__ = ["box2D","common","math","B2Transform"];
+box2D.common.math.B2Transform.prototype.initialize = function(pos,r) {
+	this.position.setV(pos);
+	this.R.setM(r);
+}
+box2D.common.math.B2Transform.prototype.setIdentity = function() {
+	this.position.setZero();
+	this.R.setIdentity();
+}
+box2D.common.math.B2Transform.prototype.set = function(x) {
+	this.position.setV(x.position);
+	this.R.setM(x.R);
+}
+box2D.common.math.B2Transform.prototype.getAngle = function() {
+	return Math.atan2(this.R.col1.y,this.R.col1.x);
+}
+box2D.common.math.B2Transform.prototype.position = null;
+box2D.common.math.B2Transform.prototype.R = null;
+box2D.common.math.B2Transform.prototype.__class__ = box2D.common.math.B2Transform;
+if(!jeash.errors) jeash.errors = {}
+jeash.errors.Error = function(message,id) {
+	if( message === $_ ) return;
+	if(id == null) id = 0;
+	if(message == null) message = "";
+	this.message = message;
+	this.errorID = id;
+}
+jeash.errors.Error.__name__ = ["jeash","errors","Error"];
+jeash.errors.Error.prototype.errorID = null;
+jeash.errors.Error.prototype.message = null;
+jeash.errors.Error.prototype.name = null;
+jeash.errors.Error.prototype.getStackTrace = function() {
+	return haxe.Stack.toString(haxe.Stack.exceptionStack());
+}
+jeash.errors.Error.prototype.toString = function() {
+	if(this.message != null) return this.message; else return "Error";
+}
+jeash.errors.Error.prototype.__class__ = jeash.errors.Error;
+box2D.dynamics.B2Fixture = function(p) {
+	if( p === $_ ) return;
+	this.m_filter = new box2D.dynamics.B2FilterData();
+	this.m_aabb = new box2D.collision.B2AABB();
+	this.m_userData = null;
+	this.m_body = null;
+	this.m_next = null;
+	this.m_shape = null;
+	this.m_density = 0.0;
+	this.m_friction = 0.0;
+	this.m_restitution = 0.0;
+}
+box2D.dynamics.B2Fixture.__name__ = ["box2D","dynamics","B2Fixture"];
+box2D.dynamics.B2Fixture.prototype.getType = function() {
+	return this.m_shape.getType();
+}
+box2D.dynamics.B2Fixture.prototype.getShape = function() {
+	return this.m_shape;
+}
+box2D.dynamics.B2Fixture.prototype.setSensor = function(sensor) {
+	if(this.m_isSensor == sensor) return;
+	this.m_isSensor = sensor;
+	if(this.m_body == null) return;
+	var edge = this.m_body.getContactList();
+	while(edge != null) {
+		var contact = edge.contact;
+		var fixtureA = contact.getFixtureA();
+		var fixtureB = contact.getFixtureB();
+		if(fixtureA == this || fixtureB == this) contact.setSensor(fixtureA.isSensor() || fixtureB.isSensor());
+		edge = edge.next;
+	}
+}
+box2D.dynamics.B2Fixture.prototype.isSensor = function() {
+	return this.m_isSensor;
+}
+box2D.dynamics.B2Fixture.prototype.setFilterData = function(filter) {
+	this.m_filter = filter.copy();
+	if(this.m_body != null) return;
+	var edge = this.m_body.getContactList();
+	while(edge != null) {
+		var contact = edge.contact;
+		var fixtureA = contact.getFixtureA();
+		var fixtureB = contact.getFixtureB();
+		if(fixtureA == this || fixtureB == this) contact.flagForFiltering();
+		edge = edge.next;
+	}
+}
+box2D.dynamics.B2Fixture.prototype.getFilterData = function() {
+	return this.m_filter.copy();
+}
+box2D.dynamics.B2Fixture.prototype.getBody = function() {
+	return this.m_body;
+}
+box2D.dynamics.B2Fixture.prototype.getNext = function() {
+	return this.m_next;
+}
+box2D.dynamics.B2Fixture.prototype.getUserData = function() {
+	return this.m_userData;
+}
+box2D.dynamics.B2Fixture.prototype.SetUserData = function(data) {
+	this.m_userData = data;
+}
+box2D.dynamics.B2Fixture.prototype.testPoint = function(p) {
+	return this.m_shape.testPoint(this.m_body.getTransform(),p);
+}
+box2D.dynamics.B2Fixture.prototype.rayCast = function(output,input) {
+	return this.m_shape.rayCast(output,input,this.m_body.getTransform());
+}
+box2D.dynamics.B2Fixture.prototype.getMassData = function(massData) {
+	if(massData == null) massData = new box2D.collision.shapes.B2MassData();
+	this.m_shape.computeMass(massData,this.m_density);
+	return massData;
+}
+box2D.dynamics.B2Fixture.prototype.setDensity = function(density) {
+	this.m_density = density;
+}
+box2D.dynamics.B2Fixture.prototype.getDensity = function() {
+	return this.m_density;
+}
+box2D.dynamics.B2Fixture.prototype.getFriction = function() {
+	return this.m_friction;
+}
+box2D.dynamics.B2Fixture.prototype.setFriction = function(friction) {
+	this.m_friction = friction;
+}
+box2D.dynamics.B2Fixture.prototype.getRestitution = function() {
+	return this.m_restitution;
+}
+box2D.dynamics.B2Fixture.prototype.setRestitution = function(restitution) {
+	this.m_restitution = restitution;
+}
+box2D.dynamics.B2Fixture.prototype.getAABB = function() {
+	return this.m_aabb;
+}
+box2D.dynamics.B2Fixture.prototype.create = function(body,xf,def) {
+	this.m_userData = def.userData;
+	this.m_friction = def.friction;
+	this.m_restitution = def.restitution;
+	this.m_body = body;
+	this.m_next = null;
+	this.m_filter = def.filter.copy();
+	this.m_isSensor = def.isSensor;
+	this.m_shape = def.shape.copy();
+	this.m_density = def.density;
+}
+box2D.dynamics.B2Fixture.prototype.destroy = function() {
+	this.m_shape = null;
+}
+box2D.dynamics.B2Fixture.prototype.createProxy = function(broadPhase,xf) {
+	this.m_shape.computeAABB(this.m_aabb,xf);
+	this.m_proxy = broadPhase.createProxy(this.m_aabb,this);
+}
+box2D.dynamics.B2Fixture.prototype.destroyProxy = function(broadPhase) {
+	if(this.m_proxy == null) return;
+	broadPhase.destroyProxy(this.m_proxy);
+	this.m_proxy = null;
+}
+box2D.dynamics.B2Fixture.prototype.synchronize = function(broadPhase,transform1,transform2) {
+	if(this.m_proxy == null) return;
+	var aabb1 = new box2D.collision.B2AABB();
+	var aabb2 = new box2D.collision.B2AABB();
+	this.m_shape.computeAABB(aabb1,transform1);
+	this.m_shape.computeAABB(aabb2,transform2);
+	this.m_aabb.combine(aabb1,aabb2);
+	var displacement = box2D.common.math.B2Math.subtractVV(transform2.position,transform1.position);
+	broadPhase.moveProxy(this.m_proxy,this.m_aabb,displacement);
+}
+box2D.dynamics.B2Fixture.prototype.m_massData = null;
+box2D.dynamics.B2Fixture.prototype.m_aabb = null;
+box2D.dynamics.B2Fixture.prototype.m_density = null;
+box2D.dynamics.B2Fixture.prototype.m_next = null;
+box2D.dynamics.B2Fixture.prototype.m_body = null;
+box2D.dynamics.B2Fixture.prototype.m_shape = null;
+box2D.dynamics.B2Fixture.prototype.m_friction = null;
+box2D.dynamics.B2Fixture.prototype.m_restitution = null;
+box2D.dynamics.B2Fixture.prototype.m_proxy = null;
+box2D.dynamics.B2Fixture.prototype.m_filter = null;
+box2D.dynamics.B2Fixture.prototype.m_isSensor = null;
+box2D.dynamics.B2Fixture.prototype.m_userData = null;
+box2D.dynamics.B2Fixture.prototype.__class__ = box2D.dynamics.B2Fixture;
+jeash.display.InterpolationMethod = { __ename__ : ["jeash","display","InterpolationMethod"], __constructs__ : ["RGB","LINEAR_RGB"] }
+jeash.display.InterpolationMethod.RGB = ["RGB",0];
+jeash.display.InterpolationMethod.RGB.toString = $estr;
+jeash.display.InterpolationMethod.RGB.__enum__ = jeash.display.InterpolationMethod;
+jeash.display.InterpolationMethod.LINEAR_RGB = ["LINEAR_RGB",1];
+jeash.display.InterpolationMethod.LINEAR_RGB.toString = $estr;
+jeash.display.InterpolationMethod.LINEAR_RGB.__enum__ = jeash.display.InterpolationMethod;
+box2D.common.math.B2Sweep = function(p) {
+	if( p === $_ ) return;
+	this.localCenter = new box2D.common.math.B2Vec2();
+	this.c0 = new box2D.common.math.B2Vec2();
+	this.c = new box2D.common.math.B2Vec2();
+}
+box2D.common.math.B2Sweep.__name__ = ["box2D","common","math","B2Sweep"];
+box2D.common.math.B2Sweep.prototype.set = function(other) {
+	this.localCenter.setV(other.localCenter);
+	this.c0.setV(other.c0);
+	this.c.setV(other.c);
+	this.a0 = other.a0;
+	this.a = other.a;
+	this.t0 = other.t0;
+}
+box2D.common.math.B2Sweep.prototype.copy = function() {
+	var copy = new box2D.common.math.B2Sweep();
+	copy.localCenter.setV(this.localCenter);
+	copy.c0.setV(this.c0);
+	copy.c.setV(this.c);
+	copy.a0 = this.a0;
+	copy.a = this.a;
+	copy.t0 = this.t0;
+	return copy;
+}
+box2D.common.math.B2Sweep.prototype.getTransform = function(xf,alpha) {
+	xf.position.x = (1.0 - alpha) * this.c0.x + alpha * this.c.x;
+	xf.position.y = (1.0 - alpha) * this.c0.y + alpha * this.c.y;
+	var angle = (1.0 - alpha) * this.a0 + alpha * this.a;
+	xf.R.set(angle);
+	var tMat = xf.R;
+	xf.position.x -= tMat.col1.x * this.localCenter.x + tMat.col2.x * this.localCenter.y;
+	xf.position.y -= tMat.col1.y * this.localCenter.x + tMat.col2.y * this.localCenter.y;
+}
+box2D.common.math.B2Sweep.prototype.advance = function(t) {
+	if(this.t0 < t && 1.0 - this.t0 > Number.MIN_VALUE) {
+		var alpha = (t - this.t0) / (1.0 - this.t0);
+		this.c0.x = (1.0 - alpha) * this.c0.x + alpha * this.c.x;
+		this.c0.y = (1.0 - alpha) * this.c0.y + alpha * this.c.y;
+		this.a0 = (1.0 - alpha) * this.a0 + alpha * this.a;
+		this.t0 = t;
+	}
+}
+box2D.common.math.B2Sweep.prototype.localCenter = null;
+box2D.common.math.B2Sweep.prototype.c0 = null;
+box2D.common.math.B2Sweep.prototype.c = null;
+box2D.common.math.B2Sweep.prototype.a0 = null;
+box2D.common.math.B2Sweep.prototype.a = null;
+box2D.common.math.B2Sweep.prototype.t0 = null;
+box2D.common.math.B2Sweep.prototype.__class__ = box2D.common.math.B2Sweep;
+box2D.dynamics.B2ContactManager = function(p) {
+	if( p === $_ ) return;
+	this.m_world = null;
+	this.m_contactCount = 0;
+	this.m_contactFilter = box2D.dynamics.B2ContactFilter.b2_defaultFilter;
+	this.m_contactListener = box2D.dynamics.B2ContactListener.b2_defaultListener;
+	this.m_contactFactory = new box2D.dynamics.contacts.B2ContactFactory(this.m_allocator);
+	this.m_broadPhase = new box2D.collision.B2DynamicTreeBroadPhase();
+}
+box2D.dynamics.B2ContactManager.__name__ = ["box2D","dynamics","B2ContactManager"];
+box2D.dynamics.B2ContactManager.prototype.addPair = function(proxyUserDataA,proxyUserDataB) {
+	var fixtureA = (function($this) {
+		var $r;
+		var $t = proxyUserDataA;
+		if(Std["is"]($t,box2D.dynamics.B2Fixture)) $t; else throw "Class cast error";
+		$r = $t;
+		return $r;
+	}(this));
+	var fixtureB = (function($this) {
+		var $r;
+		var $t = proxyUserDataB;
+		if(Std["is"]($t,box2D.dynamics.B2Fixture)) $t; else throw "Class cast error";
+		$r = $t;
+		return $r;
+	}(this));
+	var bodyA = fixtureA.getBody();
+	var bodyB = fixtureB.getBody();
+	if(bodyA == bodyB) return;
+	var edge = bodyB.getContactList();
+	while(edge != null) {
+		if(edge.other == bodyA) {
+			var fA = edge.contact.getFixtureA();
+			var fB = edge.contact.getFixtureB();
+			if(fA == fixtureA && fB == fixtureB) return;
+			if(fA == fixtureB && fB == fixtureA) return;
+		}
+		edge = edge.next;
+	}
+	if(bodyB.shouldCollide(bodyA) == false) return;
+	if(this.m_contactFilter.shouldCollide(fixtureA,fixtureB) == false) return;
+	var c = this.m_contactFactory.create(fixtureA,fixtureB);
+	fixtureA = c.getFixtureA();
+	fixtureB = c.getFixtureB();
+	bodyA = fixtureA.m_body;
+	bodyB = fixtureB.m_body;
+	c.m_prev = null;
+	c.m_next = this.m_world.m_contactList;
+	if(this.m_world.m_contactList != null) this.m_world.m_contactList.m_prev = c;
+	this.m_world.m_contactList = c;
+	c.m_nodeA.contact = c;
+	c.m_nodeA.other = bodyB;
+	c.m_nodeA.prev = null;
+	c.m_nodeA.next = bodyA.m_contactList;
+	if(bodyA.m_contactList != null) bodyA.m_contactList.prev = c.m_nodeA;
+	bodyA.m_contactList = c.m_nodeA;
+	c.m_nodeB.contact = c;
+	c.m_nodeB.other = bodyA;
+	c.m_nodeB.prev = null;
+	c.m_nodeB.next = bodyB.m_contactList;
+	if(bodyB.m_contactList != null) bodyB.m_contactList.prev = c.m_nodeB;
+	bodyB.m_contactList = c.m_nodeB;
+	++this.m_world.m_contactCount;
+	return;
+}
+box2D.dynamics.B2ContactManager.prototype.findNewContacts = function() {
+	this.m_broadPhase.updatePairs($closure(this,"addPair"));
+}
+box2D.dynamics.B2ContactManager.prototype.destroy = function(c) {
+	var fixtureA = c.getFixtureA();
+	var fixtureB = c.getFixtureB();
+	var bodyA = fixtureA.getBody();
+	var bodyB = fixtureB.getBody();
+	if(c.isTouching()) this.m_contactListener.endContact(c);
+	if(c.m_prev != null) c.m_prev.m_next = c.m_next;
+	if(c.m_next != null) c.m_next.m_prev = c.m_prev;
+	if(c == this.m_world.m_contactList) this.m_world.m_contactList = c.m_next;
+	if(c.m_nodeA.prev != null) c.m_nodeA.prev.next = c.m_nodeA.next;
+	if(c.m_nodeA.next != null) c.m_nodeA.next.prev = c.m_nodeA.prev;
+	if(c.m_nodeA == bodyA.m_contactList) bodyA.m_contactList = c.m_nodeA.next;
+	if(c.m_nodeB.prev != null) c.m_nodeB.prev.next = c.m_nodeB.next;
+	if(c.m_nodeB.next != null) c.m_nodeB.next.prev = c.m_nodeB.prev;
+	if(c.m_nodeB == bodyB.m_contactList) bodyB.m_contactList = c.m_nodeB.next;
+	this.m_contactFactory.destroy(c);
+	--this.m_contactCount;
+}
+box2D.dynamics.B2ContactManager.prototype.collide = function() {
+	var c = this.m_world.m_contactList;
+	while(c != null) {
+		var fixtureA = c.getFixtureA();
+		var fixtureB = c.getFixtureB();
+		var bodyA = fixtureA.getBody();
+		var bodyB = fixtureB.getBody();
+		if(bodyA.isAwake() == false && bodyB.isAwake() == false) {
+			c = c.getNext();
+			continue;
+		}
+		if((c.m_flags & box2D.dynamics.contacts.B2Contact.e_filterFlag) != 0) {
+			if(bodyB.shouldCollide(bodyA) == false) {
+				var cNuke = c;
+				c = cNuke.getNext();
+				this.destroy(cNuke);
+				continue;
+			}
+			if(this.m_contactFilter.shouldCollide(fixtureA,fixtureB) == false) {
+				var cNuke = c;
+				c = cNuke.getNext();
+				this.destroy(cNuke);
+				continue;
+			}
+			c.m_flags &= ~box2D.dynamics.contacts.B2Contact.e_filterFlag;
+		}
+		var proxyA = fixtureA.m_proxy;
+		var proxyB = fixtureB.m_proxy;
+		var overlap = this.m_broadPhase.testOverlap(proxyA,proxyB);
+		if(overlap == false) {
+			var cNuke = c;
+			c = cNuke.getNext();
+			this.destroy(cNuke);
+			continue;
+		}
+		c.update(this.m_contactListener);
+		c = c.getNext();
+	}
+}
+box2D.dynamics.B2ContactManager.prototype.m_world = null;
+box2D.dynamics.B2ContactManager.prototype.m_broadPhase = null;
+box2D.dynamics.B2ContactManager.prototype.m_contactList = null;
+box2D.dynamics.B2ContactManager.prototype.m_contactCount = null;
+box2D.dynamics.B2ContactManager.prototype.m_contactFilter = null;
+box2D.dynamics.B2ContactManager.prototype.m_contactListener = null;
+box2D.dynamics.B2ContactManager.prototype.m_contactFactory = null;
+box2D.dynamics.B2ContactManager.prototype.m_allocator = null;
+box2D.dynamics.B2ContactManager.prototype.__class__ = box2D.dynamics.B2ContactManager;
+if(typeof haxe=='undefined') haxe = {}
+if(!haxe.xml) haxe.xml = {}
+haxe.xml.Filter = { __ename__ : ["haxe","xml","Filter"], __constructs__ : ["FInt","FBool","FEnum","FReg"] }
+haxe.xml.Filter.FInt = ["FInt",0];
+haxe.xml.Filter.FInt.toString = $estr;
+haxe.xml.Filter.FInt.__enum__ = haxe.xml.Filter;
+haxe.xml.Filter.FBool = ["FBool",1];
+haxe.xml.Filter.FBool.toString = $estr;
+haxe.xml.Filter.FBool.__enum__ = haxe.xml.Filter;
+haxe.xml.Filter.FEnum = function(values) { var $x = ["FEnum",2,values]; $x.__enum__ = haxe.xml.Filter; $x.toString = $estr; return $x; }
+haxe.xml.Filter.FReg = function(matcher) { var $x = ["FReg",3,matcher]; $x.__enum__ = haxe.xml.Filter; $x.toString = $estr; return $x; }
+haxe.xml.Attrib = { __ename__ : ["haxe","xml","Attrib"], __constructs__ : ["Att"] }
+haxe.xml.Attrib.Att = function(name,filter,defvalue) { var $x = ["Att",0,name,filter,defvalue]; $x.__enum__ = haxe.xml.Attrib; $x.toString = $estr; return $x; }
+haxe.xml.Rule = { __ename__ : ["haxe","xml","Rule"], __constructs__ : ["RNode","RData","RMulti","RList","RChoice","ROptional"] }
+haxe.xml.Rule.RNode = function(name,attribs,childs) { var $x = ["RNode",0,name,attribs,childs]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
+haxe.xml.Rule.RData = function(filter) { var $x = ["RData",1,filter]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
+haxe.xml.Rule.RMulti = function(rule,atLeastOne) { var $x = ["RMulti",2,rule,atLeastOne]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
+haxe.xml.Rule.RList = function(rules,ordered) { var $x = ["RList",3,rules,ordered]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
+haxe.xml.Rule.RChoice = function(choices) { var $x = ["RChoice",4,choices]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
+haxe.xml.Rule.ROptional = function(rule) { var $x = ["ROptional",5,rule]; $x.__enum__ = haxe.xml.Rule; $x.toString = $estr; return $x; }
+if(!haxe.xml._Check) haxe.xml._Check = {}
+haxe.xml._Check.CheckResult = { __ename__ : ["haxe","xml","_Check","CheckResult"], __constructs__ : ["CMatch","CMissing","CExtra","CElementExpected","CDataExpected","CExtraAttrib","CMissingAttrib","CInvalidAttrib","CInvalidData","CInElement"] }
+haxe.xml._Check.CheckResult.CMatch = ["CMatch",0];
+haxe.xml._Check.CheckResult.CMatch.toString = $estr;
+haxe.xml._Check.CheckResult.CMatch.__enum__ = haxe.xml._Check.CheckResult;
+haxe.xml._Check.CheckResult.CMissing = function(r) { var $x = ["CMissing",1,r]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
+haxe.xml._Check.CheckResult.CExtra = function(x) { var $x = ["CExtra",2,x]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
+haxe.xml._Check.CheckResult.CElementExpected = function(name,x) { var $x = ["CElementExpected",3,name,x]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
+haxe.xml._Check.CheckResult.CDataExpected = function(x) { var $x = ["CDataExpected",4,x]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
+haxe.xml._Check.CheckResult.CExtraAttrib = function(att,x) { var $x = ["CExtraAttrib",5,att,x]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
+haxe.xml._Check.CheckResult.CMissingAttrib = function(att,x) { var $x = ["CMissingAttrib",6,att,x]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
+haxe.xml._Check.CheckResult.CInvalidAttrib = function(att,x,f) { var $x = ["CInvalidAttrib",7,att,x,f]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
+haxe.xml._Check.CheckResult.CInvalidData = function(x,f) { var $x = ["CInvalidData",8,x,f]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
+haxe.xml._Check.CheckResult.CInElement = function(x,r) { var $x = ["CInElement",9,x,r]; $x.__enum__ = haxe.xml._Check.CheckResult; $x.toString = $estr; return $x; }
+EReg = function(r,opt) {
+	if( r === $_ ) return;
+	opt = opt.split("u").join("");
+	this.r = new RegExp(r,opt);
+}
+EReg.__name__ = ["EReg"];
+EReg.prototype.r = null;
+EReg.prototype.match = function(s) {
+	this.r.m = this.r.exec(s);
+	this.r.s = s;
+	this.r.l = RegExp.leftContext;
+	this.r.r = RegExp.rightContext;
+	return this.r.m != null;
+}
+EReg.prototype.matched = function(n) {
+	return this.r.m != null && n >= 0 && n < this.r.m.length?this.r.m[n]:(function($this) {
+		var $r;
+		throw "EReg::matched";
+		return $r;
+	}(this));
+}
+EReg.prototype.matchedLeft = function() {
+	if(this.r.m == null) throw "No string matched";
+	if(this.r.l == null) return this.r.s.substr(0,this.r.m.index);
+	return this.r.l;
+}
+EReg.prototype.matchedRight = function() {
+	if(this.r.m == null) throw "No string matched";
+	if(this.r.r == null) {
+		var sz = this.r.m.index + this.r.m[0].length;
+		return this.r.s.substr(sz,this.r.s.length - sz);
+	}
+	return this.r.r;
+}
+EReg.prototype.matchedPos = function() {
+	if(this.r.m == null) throw "No string matched";
+	return { pos : this.r.m.index, len : this.r.m[0].length};
+}
+EReg.prototype.split = function(s) {
+	var d = "#__delim__#";
+	return s.replace(this.r,d).split(d);
+}
+EReg.prototype.replace = function(s,by) {
+	return s.replace(this.r,by);
+}
+EReg.prototype.customReplace = function(s,f) {
+	var buf = new StringBuf();
+	while(true) {
+		if(!this.match(s)) break;
+		buf.add(this.matchedLeft());
+		buf.add(f(this));
+		s = this.matchedRight();
+	}
+	buf.b[buf.b.length] = s == null?"null":s;
+	return buf.b.join("");
+}
+EReg.prototype.__class__ = EReg;
+haxe.xml.Check = function() { }
+haxe.xml.Check.__name__ = ["haxe","xml","Check"];
+haxe.xml.Check.isBlank = function(x) {
+	return x.nodeType == Xml.PCData && haxe.xml.Check.blanks.match(x.getNodeValue()) || x.nodeType == Xml.Comment;
+}
+haxe.xml.Check.filterMatch = function(s,f) {
+	var $e = (f);
+	switch( $e[1] ) {
+	case 0:
+		return haxe.xml.Check.filterMatch(s,haxe.xml.Filter.FReg(new EReg("[0-9]+","")));
+	case 1:
+		return haxe.xml.Check.filterMatch(s,haxe.xml.Filter.FEnum(["true","false","0","1"]));
+	case 2:
+		var values = $e[2];
+		var _g = 0;
+		while(_g < values.length) {
+			var v = values[_g];
+			++_g;
+			if(s == v) return true;
+		}
+		return false;
+	case 3:
+		var r = $e[2];
+		return r.match(s);
+	}
+}
+haxe.xml.Check.isNullable = function(r) {
+	var $e = (r);
+	switch( $e[1] ) {
+	case 2:
+		var one = $e[3], r1 = $e[2];
+		return one != true || haxe.xml.Check.isNullable(r1);
+	case 3:
+		var rl = $e[2];
+		var _g = 0;
+		while(_g < rl.length) {
+			var r1 = rl[_g];
+			++_g;
+			if(!haxe.xml.Check.isNullable(r1)) return false;
+		}
+		return true;
+	case 4:
+		var rl = $e[2];
+		var _g = 0;
+		while(_g < rl.length) {
+			var r1 = rl[_g];
+			++_g;
+			if(haxe.xml.Check.isNullable(r1)) return true;
+		}
+		return false;
+	case 1:
+		return false;
+	case 0:
+		return false;
+	case 5:
+		return true;
+	}
+}
+haxe.xml.Check.check = function(x,r) {
+	var $e = (r);
+	switch( $e[1] ) {
+	case 0:
+		var childs = $e[4], attribs = $e[3], name = $e[2];
+		if(x.nodeType != Xml.Element || x.getNodeName() != name) return haxe.xml._Check.CheckResult.CElementExpected(name,x);
+		var attribs1 = attribs == null?new Array():attribs.copy();
+		var $it0 = x.attributes();
+		while( $it0.hasNext() ) {
+			var xatt = $it0.next();
+			var found = false;
+			var _g = 0;
+			while(_g < attribs1.length) {
+				var att = attribs1[_g];
+				++_g;
+				var $e = (att);
+				switch( $e[1] ) {
+				case 0:
+					var defvalue = $e[4], filter = $e[3], name1 = $e[2];
+					if(xatt != name1) continue;
+					if(filter != null && !haxe.xml.Check.filterMatch(x.get(xatt),filter)) return haxe.xml._Check.CheckResult.CInvalidAttrib(name1,x,filter);
+					attribs1.remove(att);
+					found = true;
+					break;
+				}
+			}
+			if(!found) return haxe.xml._Check.CheckResult.CExtraAttrib(xatt,x);
+		}
+		var _g = 0;
+		while(_g < attribs1.length) {
+			var att = attribs1[_g];
+			++_g;
+			var $e = (att);
+			switch( $e[1] ) {
+			case 0:
+				var defvalue = $e[4], name1 = $e[2];
+				if(defvalue == null) return haxe.xml._Check.CheckResult.CMissingAttrib(name1,x);
+				break;
+			}
+		}
+		if(childs == null) childs = haxe.xml.Rule.RList([]);
+		var m = haxe.xml.Check.checkList(x.iterator(),childs);
+		if(m != haxe.xml._Check.CheckResult.CMatch) return haxe.xml._Check.CheckResult.CInElement(x,m);
+		var _g = 0;
+		while(_g < attribs1.length) {
+			var att = attribs1[_g];
+			++_g;
+			var $e = (att);
+			switch( $e[1] ) {
+			case 0:
+				var defvalue = $e[4], name1 = $e[2];
+				x.set(name1,defvalue);
+				break;
+			}
+		}
+		return haxe.xml._Check.CheckResult.CMatch;
+	case 1:
+		var filter = $e[2];
+		if(x.nodeType != Xml.PCData && x.nodeType != Xml.CData) return haxe.xml._Check.CheckResult.CDataExpected(x);
+		if(filter != null && !haxe.xml.Check.filterMatch(x.getNodeValue(),filter)) return haxe.xml._Check.CheckResult.CInvalidData(x,filter);
+		return haxe.xml._Check.CheckResult.CMatch;
+	case 4:
+		var choices = $e[2];
+		if(choices.length == 0) throw "No choice possible";
+		var _g = 0;
+		while(_g < choices.length) {
+			var c = choices[_g];
+			++_g;
+			if(haxe.xml.Check.check(x,c) == haxe.xml._Check.CheckResult.CMatch) return haxe.xml._Check.CheckResult.CMatch;
+		}
+		return haxe.xml.Check.check(x,choices[0]);
+	case 5:
+		var r1 = $e[2];
+		return haxe.xml.Check.check(x,r1);
+	default:
+		throw "Unexpected " + Std.string(r);
+	}
+}
+haxe.xml.Check.checkList = function(it,r) {
+	var $e = (r);
+	switch( $e[1] ) {
+	case 3:
+		var ordered = $e[3], rules = $e[2];
+		var rules1 = rules.copy();
+		while( it.hasNext() ) {
+			var x = it.next();
+			if(haxe.xml.Check.isBlank(x)) continue;
+			var found = false;
+			var _g = 0;
+			while(_g < rules1.length) {
+				var r1 = rules1[_g];
+				++_g;
+				var m = haxe.xml.Check.checkList([x].iterator(),r1);
+				if(m == haxe.xml._Check.CheckResult.CMatch) {
+					found = true;
+					var $e = (r1);
+					switch( $e[1] ) {
+					case 2:
+						var one = $e[3], rsub = $e[2];
+						if(one) {
+							var i;
+							var _g2 = 0, _g1 = rules1.length;
+							while(_g2 < _g1) {
+								var i1 = _g2++;
+								if(rules1[i1] == r1) rules1[i1] = haxe.xml.Rule.RMulti(rsub);
+							}
+						}
+						break;
+					default:
+						rules1.remove(r1);
+					}
+					break;
+				} else if(ordered && !haxe.xml.Check.isNullable(r1)) return m;
+			}
+			if(!found) return haxe.xml._Check.CheckResult.CExtra(x);
+		}
+		var _g = 0;
+		while(_g < rules1.length) {
+			var r1 = rules1[_g];
+			++_g;
+			if(!haxe.xml.Check.isNullable(r1)) return haxe.xml._Check.CheckResult.CMissing(r1);
+		}
+		return haxe.xml._Check.CheckResult.CMatch;
+	case 2:
+		var one = $e[3], r1 = $e[2];
+		var found = false;
+		while( it.hasNext() ) {
+			var x = it.next();
+			if(haxe.xml.Check.isBlank(x)) continue;
+			var m = haxe.xml.Check.checkList([x].iterator(),r1);
+			if(m != haxe.xml._Check.CheckResult.CMatch) return m;
+			found = true;
+		}
+		if(one && !found) return haxe.xml._Check.CheckResult.CMissing(r1);
+		return haxe.xml._Check.CheckResult.CMatch;
+	default:
+		var found = false;
+		while( it.hasNext() ) {
+			var x = it.next();
+			if(haxe.xml.Check.isBlank(x)) continue;
+			var m = haxe.xml.Check.check(x,r);
+			if(m != haxe.xml._Check.CheckResult.CMatch) return m;
+			found = true;
+			break;
+		}
+		if(!found) {
+			switch( (r)[1] ) {
+			case 5:
+				break;
+			default:
+				return haxe.xml._Check.CheckResult.CMissing(r);
+			}
+		}
+		while( it.hasNext() ) {
+			var x = it.next();
+			if(haxe.xml.Check.isBlank(x)) continue;
+			return haxe.xml._Check.CheckResult.CExtra(x);
+		}
+		return haxe.xml._Check.CheckResult.CMatch;
+	}
+}
+haxe.xml.Check.makeWhere = function(path) {
+	if(path.length == 0) return "";
+	var s = "In ";
+	var first = true;
+	var _g = 0;
+	while(_g < path.length) {
+		var x = path[_g];
+		++_g;
+		if(first) first = false; else s += ".";
+		s += x.getNodeName();
+	}
+	return s + ": ";
+}
+haxe.xml.Check.makeString = function(x) {
+	if(x.nodeType == Xml.Element) return "element " + x.getNodeName();
+	var s = x.getNodeValue().split("\r").join("\\r").split("\n").join("\\n").split("\t").join("\\t");
+	if(s.length > 20) return s.substr(0,17) + "...";
+	return s;
+}
+haxe.xml.Check.makeRule = function(r) {
+	var $e = (r);
+	switch( $e[1] ) {
+	case 0:
+		var name = $e[2];
+		return "element " + name;
+	case 1:
+		return "data";
+	case 2:
+		var r1 = $e[2];
+		return haxe.xml.Check.makeRule(r1);
+	case 3:
+		var rules = $e[2];
+		return haxe.xml.Check.makeRule(rules[0]);
+	case 4:
+		var choices = $e[2];
+		return haxe.xml.Check.makeRule(choices[0]);
+	case 5:
+		var r1 = $e[2];
+		return haxe.xml.Check.makeRule(r1);
+	}
+}
+haxe.xml.Check.makeError = function(m,path) {
+	if(path == null) path = new Array();
+	var $e = (m);
+	switch( $e[1] ) {
+	case 0:
+		throw "assert";
+		break;
+	case 1:
+		var r = $e[2];
+		return haxe.xml.Check.makeWhere(path) + "Missing " + haxe.xml.Check.makeRule(r);
+	case 2:
+		var x = $e[2];
+		return haxe.xml.Check.makeWhere(path) + "Unexpected " + haxe.xml.Check.makeString(x);
+	case 3:
+		var x = $e[3], name = $e[2];
+		return haxe.xml.Check.makeWhere(path) + haxe.xml.Check.makeString(x) + " while expected element " + name;
+	case 4:
+		var x = $e[2];
+		return haxe.xml.Check.makeWhere(path) + haxe.xml.Check.makeString(x) + " while data expected";
+	case 5:
+		var x = $e[3], att = $e[2];
+		path.push(x);
+		return haxe.xml.Check.makeWhere(path) + "unexpected attribute " + att;
+	case 6:
+		var x = $e[3], att = $e[2];
+		path.push(x);
+		return haxe.xml.Check.makeWhere(path) + "missing required attribute " + att;
+	case 7:
+		var f = $e[4], x = $e[3], att = $e[2];
+		path.push(x);
+		return haxe.xml.Check.makeWhere(path) + "invalid attribute value for " + att;
+	case 8:
+		var f = $e[3], x = $e[2];
+		return haxe.xml.Check.makeWhere(path) + "invalid data format for " + haxe.xml.Check.makeString(x);
+	case 9:
+		var m1 = $e[3], x = $e[2];
+		path.push(x);
+		return haxe.xml.Check.makeError(m1,path);
+	}
+}
+haxe.xml.Check.checkNode = function(x,r) {
+	var m = haxe.xml.Check.checkList([x].iterator(),r);
+	if(m == haxe.xml._Check.CheckResult.CMatch) return;
+	throw haxe.xml.Check.makeError(m);
+}
+haxe.xml.Check.checkDocument = function(x,r) {
+	if(x.nodeType != Xml.Document) throw "Document expected";
+	var m = haxe.xml.Check.checkList(x.iterator(),r);
+	if(m == haxe.xml._Check.CheckResult.CMatch) return;
+	throw haxe.xml.Check.makeError(m);
+}
+haxe.xml.Check.prototype.__class__ = haxe.xml.Check;
+box2D.common.math.B2Vec2 = function(x_,y_) {
+	if( x_ === $_ ) return;
+	if(y_ == null) y_ = 0;
+	if(x_ == null) x_ = 0;
+	this.x = x_;
+	this.y = y_;
+}
+box2D.common.math.B2Vec2.__name__ = ["box2D","common","math","B2Vec2"];
+box2D.common.math.B2Vec2.make = function(x_,y_) {
+	return new box2D.common.math.B2Vec2(x_,y_);
+}
+box2D.common.math.B2Vec2.prototype.setZero = function() {
+	this.x = 0.0;
+	this.y = 0.0;
+}
+box2D.common.math.B2Vec2.prototype.set = function(x_,y_) {
+	if(y_ == null) y_ = 0;
+	if(x_ == null) x_ = 0;
+	this.x = x_;
+	this.y = y_;
+}
+box2D.common.math.B2Vec2.prototype.setV = function(v) {
+	this.x = v.x;
+	this.y = v.y;
+}
+box2D.common.math.B2Vec2.prototype.getNegative = function() {
+	return new box2D.common.math.B2Vec2(-this.x,-this.y);
+}
+box2D.common.math.B2Vec2.prototype.negativeSelf = function() {
+	this.x = -this.x;
+	this.y = -this.y;
+}
+box2D.common.math.B2Vec2.prototype.copy = function() {
+	return new box2D.common.math.B2Vec2(this.x,this.y);
+}
+box2D.common.math.B2Vec2.prototype.add = function(v) {
+	this.x += v.x;
+	this.y += v.y;
+}
+box2D.common.math.B2Vec2.prototype.subtract = function(v) {
+	this.x -= v.x;
+	this.y -= v.y;
+}
+box2D.common.math.B2Vec2.prototype.multiply = function(a) {
+	this.x *= a;
+	this.y *= a;
+}
+box2D.common.math.B2Vec2.prototype.mulM = function(A) {
+	var tX = this.x;
+	this.x = A.col1.x * tX + A.col2.x * this.y;
+	this.y = A.col1.y * tX + A.col2.y * this.y;
+}
+box2D.common.math.B2Vec2.prototype.mulTM = function(A) {
+	var tX = box2D.common.math.B2Math.dot(this,A.col1);
+	this.y = box2D.common.math.B2Math.dot(this,A.col2);
+	this.x = tX;
+}
+box2D.common.math.B2Vec2.prototype.crossVF = function(s) {
+	var tX = this.x;
+	this.x = s * this.y;
+	this.y = -s * tX;
+}
+box2D.common.math.B2Vec2.prototype.crossFV = function(s) {
+	var tX = this.x;
+	this.x = -s * this.y;
+	this.y = s * tX;
+}
+box2D.common.math.B2Vec2.prototype.minV = function(b) {
+	this.x = this.x < b.x?this.x:b.x;
+	this.y = this.y < b.y?this.y:b.y;
+}
+box2D.common.math.B2Vec2.prototype.maxV = function(b) {
+	this.x = this.x > b.x?this.x:b.x;
+	this.y = this.y > b.y?this.y:b.y;
+}
+box2D.common.math.B2Vec2.prototype.abs = function() {
+	if(this.x < 0) this.x = -this.x;
+	if(this.y < 0) this.y = -this.y;
+}
+box2D.common.math.B2Vec2.prototype.length = function() {
+	return Math.sqrt(this.x * this.x + this.y * this.y);
+}
+box2D.common.math.B2Vec2.prototype.lengthSquared = function() {
+	return this.x * this.x + this.y * this.y;
+}
+box2D.common.math.B2Vec2.prototype.normalize = function() {
+	var length = Math.sqrt(this.x * this.x + this.y * this.y);
+	if(length < Number.MIN_VALUE) return 0.0;
+	var invLength = 1.0 / length;
+	this.x *= invLength;
+	this.y *= invLength;
+	return length;
+}
+box2D.common.math.B2Vec2.prototype.isValid = function() {
+	return box2D.common.math.B2Math.isValid(this.x) && box2D.common.math.B2Math.isValid(this.y);
+}
+box2D.common.math.B2Vec2.prototype.x = null;
+box2D.common.math.B2Vec2.prototype.y = null;
+box2D.common.math.B2Vec2.prototype.__class__ = box2D.common.math.B2Vec2;
 com.citruxengine.core.State = function(p) {
 	if( p === $_ ) return;
 	jeash.display.Sprite.call(this);
@@ -2594,8 +2679,10 @@ com.citruxengine.core.State = function(p) {
 com.citruxengine.core.State.__name__ = ["com","citruxengine","core","State"];
 com.citruxengine.core.State.__super__ = jeash.display.Sprite;
 for(var k in jeash.display.Sprite.prototype ) com.citruxengine.core.State.prototype[k] = jeash.display.Sprite.prototype[k];
+com.citruxengine.core.State.prototype.view = null;
 com.citruxengine.core.State.prototype._ce = null;
 com.citruxengine.core.State.prototype._objects = null;
+com.citruxengine.core.State.prototype._view = null;
 com.citruxengine.core.State.prototype._input = null;
 com.citruxengine.core.State.prototype.destroy = function() {
 	var n = this._objects.length;
@@ -2604,8 +2691,13 @@ com.citruxengine.core.State.prototype.destroy = function() {
 		object.destroy();
 	}
 	this._objects = [];
+	this._view.destroy();
+}
+com.citruxengine.core.State.prototype.getView = function() {
+	return this._view;
 }
 com.citruxengine.core.State.prototype.initialize = function() {
+	this._view = this.createView();
 	this._input = this._ce.getInput();
 }
 com.citruxengine.core.State.prototype.update = function(timeDelta) {
@@ -2626,9 +2718,11 @@ com.citruxengine.core.State.prototype.update = function(timeDelta) {
 		garbageObject.destroy();
 	}
 	this._input.update();
+	this._view.update();
 }
 com.citruxengine.core.State.prototype.add = function(object) {
 	this._objects.push(object);
+	this._view.addArt(object);
 	return object;
 }
 com.citruxengine.core.State.prototype.remove = function(object) {
@@ -2661,6 +2755,9 @@ com.citruxengine.core.State.prototype.getObjectsByType = function(type) {
 		if(Std["is"](object,type)) objects.push(object);
 	}
 	return objects;
+}
+com.citruxengine.core.State.prototype.createView = function() {
+	return new com.citruxengine.view.spriteview.SpriteView(this);
 }
 com.citruxengine.core.State.prototype.__class__ = com.citruxengine.core.State;
 box2D.dynamics.joints.B2Jacobian = function(p) {
@@ -6260,6 +6357,74 @@ jeash.display.LineScaleMode.NORMAL.__enum__ = jeash.display.LineScaleMode;
 jeash.display.LineScaleMode.VERTICAL = ["VERTICAL",3];
 jeash.display.LineScaleMode.VERTICAL.toString = $estr;
 jeash.display.LineScaleMode.VERTICAL.__enum__ = jeash.display.LineScaleMode;
+jeash.display.MovieClip = function(p) {
+	if( p === $_ ) return;
+	jeash.display.Sprite.call(this);
+	this.enabled = true;
+	this.mCurrentFrame = 0;
+	this.mTotalFrames = 0;
+	this.name = "MovieClip " + jeash.display.DisplayObject.mNameID++;
+}
+jeash.display.MovieClip.__name__ = ["jeash","display","MovieClip"];
+jeash.display.MovieClip.__super__ = jeash.display.Sprite;
+for(var k in jeash.display.Sprite.prototype ) jeash.display.MovieClip.prototype[k] = jeash.display.Sprite.prototype[k];
+jeash.display.MovieClip.prototype.enabled = null;
+jeash.display.MovieClip.prototype.currentFrame = null;
+jeash.display.MovieClip.prototype.framesLoaded = null;
+jeash.display.MovieClip.prototype.totalFrames = null;
+jeash.display.MovieClip.prototype.mCurrentFrame = null;
+jeash.display.MovieClip.prototype.mTotalFrames = null;
+jeash.display.MovieClip.prototype.GetTotalFrames = function() {
+	return this.mTotalFrames;
+}
+jeash.display.MovieClip.prototype.GetCurrentFrame = function() {
+	return this.mCurrentFrame;
+}
+jeash.display.MovieClip.prototype.gotoAndPlay = function(frame,scene) {
+}
+jeash.display.MovieClip.prototype.gotoAndStop = function(frame,scene) {
+}
+jeash.display.MovieClip.prototype.play = function() {
+}
+jeash.display.MovieClip.prototype.stop = function() {
+}
+jeash.display.MovieClip.prototype.__class__ = jeash.display.MovieClip;
+com.citruxengine.view.spriteview.Box2DDebugArt = function(p) {
+	if( p === $_ ) return;
+	jeash.display.MovieClip.call(this);
+	this.addEventListener(jeash.events.Event.ADDED,$closure(this,"_handleAddedToParent"));
+	this.addEventListener(jeash.events.Event.ENTER_FRAME,$closure(this,"_handleEnterFrame"));
+	this.addEventListener(jeash.events.Event.REMOVED,$closure(this,"_destroy"));
+}
+com.citruxengine.view.spriteview.Box2DDebugArt.__name__ = ["com","citruxengine","view","spriteview","Box2DDebugArt"];
+com.citruxengine.view.spriteview.Box2DDebugArt.__super__ = jeash.display.MovieClip;
+for(var k in jeash.display.MovieClip.prototype ) com.citruxengine.view.spriteview.Box2DDebugArt.prototype[k] = jeash.display.MovieClip.prototype[k];
+com.citruxengine.view.spriteview.Box2DDebugArt.prototype._box2D = null;
+com.citruxengine.view.spriteview.Box2DDebugArt.prototype._debugDraw = null;
+com.citruxengine.view.spriteview.Box2DDebugArt.prototype._handleAddedToParent = function(evt) {
+	this.removeEventListener(jeash.events.Event.ADDED,$closure(this,"_handleAddedToParent"));
+	this._box2D = (function($this) {
+		var $r;
+		var $t = com.citruxengine.core.CitruxEngine.getInstance().getState().getFirstObjectByType(com.citruxengine.physics.Box2D);
+		if(Std["is"]($t,com.citruxengine.physics.Box2D)) $t; else throw "Class cast error";
+		$r = $t;
+		return $r;
+	}(this));
+	this._debugDraw = new box2D.dynamics.B2DebugDraw();
+	this._debugDraw.setSprite(this);
+	this._debugDraw.setDrawScale(this._box2D.getScale());
+	this._debugDraw.setFlags(box2D.dynamics.B2DebugDraw.e_shapeBit | box2D.dynamics.B2DebugDraw.e_jointBit);
+	this._box2D.getWorld().setDebugDraw(this._debugDraw);
+}
+com.citruxengine.view.spriteview.Box2DDebugArt.prototype._handleEnterFrame = function(evt) {
+	this._box2D.getWorld().drawDebugData();
+}
+com.citruxengine.view.spriteview.Box2DDebugArt.prototype._destroy = function(evt) {
+	this.removeEventListener(jeash.events.Event.ADDED,$closure(this,"_handleAddedToParent"));
+	this.removeEventListener(jeash.events.Event.ENTER_FRAME,$closure(this,"_handleEnterFrame"));
+	this.removeEventListener(jeash.events.Event.REMOVED,$closure(this,"_destroy"));
+}
+com.citruxengine.view.spriteview.Box2DDebugArt.prototype.__class__ = com.citruxengine.view.spriteview.Box2DDebugArt;
 StringTools = function() { }
 StringTools.__name__ = ["StringTools"];
 StringTools.urlEncode = function(s) {
@@ -6353,18 +6518,12 @@ jeash.display.StageQuality.prototype.__class__ = jeash.display.StageQuality;
 if(!com.citruxengine.physics) com.citruxengine.physics = {}
 com.citruxengine.physics.Box2D = function(name,params) {
 	if( name === $_ ) return;
-	com.citruxengine.core.CitruxObject.call(this,name,params);
 	this._visible = false;
 	this._group = 1;
 	this._scale = 30;
-	this.physicsDebug = new jeash.display.Sprite();
-	com.citruxengine.core.CitruxEngine.getInstance().addChild(this.physicsDebug);
+	this._view = com.citruxengine.view.spriteview.Box2DDebugArt;
+	com.citruxengine.core.CitruxObject.call(this,name,params);
 	this._world = new box2D.dynamics.B2World(new box2D.common.math.B2Vec2(0,0),true);
-	var debugDraw = new box2D.dynamics.B2DebugDraw();
-	debugDraw.setSprite(this.physicsDebug);
-	debugDraw.setDrawScale(this._scale);
-	debugDraw.setFlags(box2D.dynamics.B2DebugDraw.e_shapeBit);
-	this.getWorld().setDebugDraw(debugDraw);
 }
 com.citruxengine.physics.Box2D.__name__ = ["com","citruxengine","physics","Box2D"];
 com.citruxengine.physics.Box2D.__super__ = com.citruxengine.core.CitruxObject;
@@ -6383,7 +6542,6 @@ com.citruxengine.physics.Box2D.prototype.inverted = null;
 com.citruxengine.physics.Box2D.prototype.offsetX = null;
 com.citruxengine.physics.Box2D.prototype.offsetY = null;
 com.citruxengine.physics.Box2D.prototype.registration = null;
-com.citruxengine.physics.Box2D.prototype.physicsDebug = null;
 com.citruxengine.physics.Box2D.prototype._world = null;
 com.citruxengine.physics.Box2D.prototype._scale = null;
 com.citruxengine.physics.Box2D.prototype._visible = null;
@@ -6395,7 +6553,6 @@ com.citruxengine.physics.Box2D.prototype.destroy = function() {
 com.citruxengine.physics.Box2D.prototype.update = function(timeDelta) {
 	com.citruxengine.core.CitruxObject.prototype.update.call(this,timeDelta);
 	this._world.step(0.05,8,8);
-	this._world.drawDebugData();
 }
 com.citruxengine.physics.Box2D.prototype.getWorld = function() {
 	return this._world;
@@ -6429,9 +6586,6 @@ com.citruxengine.physics.Box2D.prototype.setVisible = function(value) {
 }
 com.citruxengine.physics.Box2D.prototype.getView = function() {
 	return this._view;
-}
-com.citruxengine.physics.Box2D.prototype.setView = function(value) {
-	return this._view = value;
 }
 com.citruxengine.physics.Box2D.prototype.getAnimation = function() {
 	return "";
@@ -9967,6 +10121,7 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	this.add(platformBot);
 	var hero = new com.citruxengine.objects.platformer.Hero("hero",{ x : 100, y : 20, width : 30, height : 60});
 	this.add(hero);
+	this.getView().setupCamera(hero,new com.citruxengine.utils.MathVector(320,240),new jeash.geom.Rectangle(0,0,1550,450),new com.citruxengine.utils.MathVector(.25,.05));
 }
 fr.aymericlamboley.test.GameState.prototype.__class__ = fr.aymericlamboley.test.GameState;
 jeash.geom.Transform = function(inParent) {
@@ -10562,13 +10717,6 @@ box2D.dynamics.joints.B2PrismaticJoint.prototype.m_enableLimit = null;
 box2D.dynamics.joints.B2PrismaticJoint.prototype.m_enableMotor = null;
 box2D.dynamics.joints.B2PrismaticJoint.prototype.m_limitState = null;
 box2D.dynamics.joints.B2PrismaticJoint.prototype.__class__ = box2D.dynamics.joints.B2PrismaticJoint;
-jeash.display.GraphicsFillType = { __ename__ : ["jeash","display","GraphicsFillType"], __constructs__ : ["SOLID_FILL","GRADIENT_FILL"] }
-jeash.display.GraphicsFillType.SOLID_FILL = ["SOLID_FILL",0];
-jeash.display.GraphicsFillType.SOLID_FILL.toString = $estr;
-jeash.display.GraphicsFillType.SOLID_FILL.__enum__ = jeash.display.GraphicsFillType;
-jeash.display.GraphicsFillType.GRADIENT_FILL = ["GRADIENT_FILL",1];
-jeash.display.GraphicsFillType.GRADIENT_FILL.toString = $estr;
-jeash.display.GraphicsFillType.GRADIENT_FILL.__enum__ = jeash.display.GraphicsFillType;
 IntIter = function(min,max) {
 	if( min === $_ ) return;
 	this.min = min;
@@ -10584,6 +10732,13 @@ IntIter.prototype.next = function() {
 	return this.min++;
 }
 IntIter.prototype.__class__ = IntIter;
+jeash.display.GraphicsFillType = { __ename__ : ["jeash","display","GraphicsFillType"], __constructs__ : ["SOLID_FILL","GRADIENT_FILL"] }
+jeash.display.GraphicsFillType.SOLID_FILL = ["SOLID_FILL",0];
+jeash.display.GraphicsFillType.SOLID_FILL.toString = $estr;
+jeash.display.GraphicsFillType.SOLID_FILL.__enum__ = jeash.display.GraphicsFillType;
+jeash.display.GraphicsFillType.GRADIENT_FILL = ["GRADIENT_FILL",1];
+jeash.display.GraphicsFillType.GRADIENT_FILL.toString = $estr;
+jeash.display.GraphicsFillType.GRADIENT_FILL.__enum__ = jeash.display.GraphicsFillType;
 jeash.geom.ColorTransform = function(inRedMultiplier,inGreenMultiplier,inBlueMultiplier,inAlphaMultiplier,inRedOffset,inGreenOffset,inBlueOffset,inAlphaOffset) {
 	if( inRedMultiplier === $_ ) return;
 	this.redMultiplier = inRedMultiplier == null?1.0:inRedMultiplier;
@@ -13622,6 +13777,50 @@ box2D.collision.B2ContactID.prototype.setKey = function(value) {
 box2D.collision.B2ContactID.prototype.features = null;
 box2D.collision.B2ContactID.prototype._key = null;
 box2D.collision.B2ContactID.prototype.__class__ = box2D.collision.B2ContactID;
+com.citruxengine.view.CitruxView = function(root,viewInterface) {
+	if( root === $_ ) return;
+	this._root = root;
+	this._viewInterface = viewInterface;
+	this._viewObjects = new Hash();
+	var ce = com.citruxengine.core.CitruxEngine.getInstance();
+	this.cameraLensWidth = ce.GetStage().jeashGetWidth();
+	this.cameraLensHeight = ce.GetStage().jeashGetHeight();
+	this.cameraOffset = new com.citruxengine.utils.MathVector();
+	this.cameraEasing = new com.citruxengine.utils.MathVector(0.25,0.05);
+}
+com.citruxengine.view.CitruxView.__name__ = ["com","citruxengine","view","CitruxView"];
+com.citruxengine.view.CitruxView.prototype.cameraTarget = null;
+com.citruxengine.view.CitruxView.prototype.cameraOffset = null;
+com.citruxengine.view.CitruxView.prototype.cameraEasing = null;
+com.citruxengine.view.CitruxView.prototype.cameraBounds = null;
+com.citruxengine.view.CitruxView.prototype.cameraLensWidth = null;
+com.citruxengine.view.CitruxView.prototype.cameraLensHeight = null;
+com.citruxengine.view.CitruxView.prototype._viewObjects = null;
+com.citruxengine.view.CitruxView.prototype._root = null;
+com.citruxengine.view.CitruxView.prototype._viewInterface = null;
+com.citruxengine.view.CitruxView.prototype.destroy = function() {
+}
+com.citruxengine.view.CitruxView.prototype.update = function() {
+}
+com.citruxengine.view.CitruxView.prototype.addArt = function(citruxObject) {
+	if(!Std["is"](citruxObject,this._viewInterface)) return;
+	var art = this.createArt(citruxObject);
+	if(art != null) this._viewObjects.set(citruxObject,art);
+}
+com.citruxengine.view.CitruxView.prototype.setupCamera = function(target,offset,bounds,easing) {
+	this.cameraTarget = target;
+	this.cameraOffset = offset;
+	this.cameraBounds = bounds;
+	this.cameraEasing = easing;
+}
+com.citruxengine.view.CitruxView.prototype.createArt = function(citruxObject) {
+	return null;
+}
+com.citruxengine.view.CitruxView.prototype.updateArt = function(citruxObject,art) {
+}
+com.citruxengine.view.CitruxView.prototype.destroyArt = function(citruxObject) {
+}
+com.citruxengine.view.CitruxView.prototype.__class__ = com.citruxengine.view.CitruxView;
 box2D.collision.shapes.B2MassData = function(p) {
 	if( p === $_ ) return;
 	this.mass = 0.0;
@@ -14580,38 +14779,6 @@ jeash.geom.Rectangle.prototype.extendBounds = function(r) {
 	if(r.get_bottom() > this.get_bottom()) this.set_bottom(r.get_bottom());
 }
 jeash.geom.Rectangle.prototype.__class__ = jeash.geom.Rectangle;
-jeash.display.MovieClip = function(p) {
-	if( p === $_ ) return;
-	jeash.display.Sprite.call(this);
-	this.enabled = true;
-	this.mCurrentFrame = 0;
-	this.mTotalFrames = 0;
-	this.name = "MovieClip " + jeash.display.DisplayObject.mNameID++;
-}
-jeash.display.MovieClip.__name__ = ["jeash","display","MovieClip"];
-jeash.display.MovieClip.__super__ = jeash.display.Sprite;
-for(var k in jeash.display.Sprite.prototype ) jeash.display.MovieClip.prototype[k] = jeash.display.Sprite.prototype[k];
-jeash.display.MovieClip.prototype.enabled = null;
-jeash.display.MovieClip.prototype.currentFrame = null;
-jeash.display.MovieClip.prototype.framesLoaded = null;
-jeash.display.MovieClip.prototype.totalFrames = null;
-jeash.display.MovieClip.prototype.mCurrentFrame = null;
-jeash.display.MovieClip.prototype.mTotalFrames = null;
-jeash.display.MovieClip.prototype.GetTotalFrames = function() {
-	return this.mTotalFrames;
-}
-jeash.display.MovieClip.prototype.GetCurrentFrame = function() {
-	return this.mCurrentFrame;
-}
-jeash.display.MovieClip.prototype.gotoAndPlay = function(frame,scene) {
-}
-jeash.display.MovieClip.prototype.gotoAndStop = function(frame,scene) {
-}
-jeash.display.MovieClip.prototype.play = function() {
-}
-jeash.display.MovieClip.prototype.stop = function() {
-}
-jeash.display.MovieClip.prototype.__class__ = jeash.display.MovieClip;
 box2D.dynamics.contacts.B2PolygonContact = function(p) {
 	if( p === $_ ) return;
 	box2D.dynamics.contacts.B2Contact.call(this);
@@ -14645,6 +14812,74 @@ box2D.dynamics.contacts.B2PolygonContact.prototype.evaluate = function() {
 	}(this)),bB.m_xf);
 }
 box2D.dynamics.contacts.B2PolygonContact.prototype.__class__ = box2D.dynamics.contacts.B2PolygonContact;
+com.citruxengine.view.spriteview.SpriteView = function(root) {
+	if( root === $_ ) return;
+	com.citruxengine.view.CitruxView.call(this,root,com.citruxengine.view.ISpriteView);
+	this._viewRoot = new jeash.display.Sprite();
+	root.addChild(this._viewRoot);
+}
+com.citruxengine.view.spriteview.SpriteView.__name__ = ["com","citruxengine","view","spriteview","SpriteView"];
+com.citruxengine.view.spriteview.SpriteView.__super__ = com.citruxengine.view.CitruxView;
+for(var k in com.citruxengine.view.CitruxView.prototype ) com.citruxengine.view.spriteview.SpriteView.prototype[k] = com.citruxengine.view.CitruxView.prototype[k];
+com.citruxengine.view.spriteview.SpriteView.prototype.viewRoot = null;
+com.citruxengine.view.spriteview.SpriteView.prototype._viewRoot = null;
+com.citruxengine.view.spriteview.SpriteView.prototype.getViewRoot = function() {
+	return this._viewRoot;
+}
+com.citruxengine.view.spriteview.SpriteView.prototype.update = function() {
+	com.citruxengine.view.CitruxView.prototype.update.call(this);
+	if(this.cameraTarget != null) {
+		var diffX = -this.cameraTarget.getX() + this.cameraOffset.x - this._viewRoot.jeashGetX();
+		var diffY = -this.cameraTarget.getY() + this.cameraOffset.y - this._viewRoot.jeashGetY();
+		var velocityX = diffX * this.cameraEasing.x;
+		var velocityY = diffY * this.cameraEasing.y;
+		var _g = this._viewRoot;
+		_g.jeashSetX(_g.jeashGetX() + velocityX);
+		var _g = this._viewRoot;
+		_g.jeashSetY(_g.jeashGetY() + velocityY);
+		if(this.cameraBounds != null) {
+			if(-this._viewRoot.jeashGetX() <= this.cameraBounds.get_left() || this.cameraBounds.width < this.cameraLensWidth) this._viewRoot.jeashSetX(-this.cameraBounds.get_left()); else if(-this._viewRoot.jeashGetX() + this.cameraLensWidth >= this.cameraBounds.get_right()) this._viewRoot.jeashSetX(-this.cameraBounds.get_right() + this.cameraLensWidth);
+			if(-this._viewRoot.jeashGetY() <= this.cameraBounds.get_top() || this.cameraBounds.height < this.cameraLensHeight) this._viewRoot.jeashSetY(-this.cameraBounds.get_top()); else if(-this._viewRoot.jeashGetY() + this.cameraLensHeight >= this.cameraBounds.get_bottom()) this._viewRoot.jeashSetY(-this.cameraBounds.get_bottom() + this.cameraLensHeight);
+		}
+	}
+	var $it0 = this._viewObjects.iterator();
+	while( $it0.hasNext() ) {
+		var sprite = $it0.next();
+		sprite = (function($this) {
+			var $r;
+			var $t = sprite;
+			if(Std["is"]($t,com.citruxengine.view.spriteview.SpriteArt)) $t; else throw "Class cast error";
+			$r = $t;
+			return $r;
+		}(this));
+		if(sprite.getGroup() != sprite.getCitruxObject().getGroup()) this._updateGroupForSprite(sprite);
+		sprite.update(this);
+	}
+}
+com.citruxengine.view.spriteview.SpriteView.prototype.createArt = function(citruxObject) {
+	var viewObject = (function($this) {
+		var $r;
+		var $t = citruxObject;
+		if(Std["is"]($t,com.citruxengine.view.ISpriteView)) $t; else throw "Class cast error";
+		$r = $t;
+		return $r;
+	}(this));
+	var art = new com.citruxengine.view.spriteview.SpriteArt(viewObject);
+	art.update(this);
+	this._updateGroupForSprite(art);
+	return art;
+}
+com.citruxengine.view.spriteview.SpriteView.prototype._updateGroupForSprite = function(sprite) {
+	while(sprite.getGroup() >= this._viewRoot.jeashGetNumChildren()) this._viewRoot.addChild(new jeash.display.Sprite());
+	((function($this) {
+		var $r;
+		var $t = $this._viewRoot.getChildAt(sprite.getGroup());
+		if(Std["is"]($t,jeash.display.Sprite)) $t; else throw "Class cast error";
+		$r = $t;
+		return $r;
+	}(this))).addChild(sprite);
+}
+com.citruxengine.view.spriteview.SpriteView.prototype.__class__ = com.citruxengine.view.spriteview.SpriteView;
 if(!jeash.filters) jeash.filters = {}
 jeash.filters.BitmapFilter = function(inType) {
 	if( inType === $_ ) return;
@@ -19348,10 +19583,10 @@ box2D.dynamics.joints.B2Joint.e_inactiveLimit = 0;
 box2D.dynamics.joints.B2Joint.e_atLowerLimit = 1;
 box2D.dynamics.joints.B2Joint.e_atUpperLimit = 2;
 box2D.dynamics.joints.B2Joint.e_equalLimits = 3;
+jeash.display.DisplayObject.mNameID = 0;
 jeash.errors.Error.DEFAULT_TO_STRING = "Error";
 box2D.dynamics.B2ContactManager.s_evalCP = new box2D.collision.B2ContactPoint();
 haxe.xml.Check.blanks = new EReg("^[ \r\n\t]*$","");
-jeash.display.DisplayObject.mNameID = 0;
 com.citruxengine.core.Input.JUST_PRESSED = 0;
 com.citruxengine.core.Input.DOWN = 1;
 com.citruxengine.core.Input.JUST_RELEASED = 2;

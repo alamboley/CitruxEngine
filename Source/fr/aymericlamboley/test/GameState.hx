@@ -9,6 +9,9 @@ import com.citruxengine.objects.platformer.MovingPlatform;
 import com.citruxengine.objects.platformer.Platform;
 import com.citruxengine.objects.platformer.Sensor;
 import com.citruxengine.physics.Box2D;
+import com.citruxengine.utils.MathVector;
+
+import nme.geom.Rectangle;
 
 class GameState extends State {
 
@@ -44,5 +47,7 @@ class GameState extends State {
 
 		var hero:Hero = new Hero("hero", {x:100, y:20, width:30, height:60});
 		add(hero);
+
+		view.setupCamera(hero, new MathVector(320, 240), new Rectangle(0, 0, 1550, 450), new MathVector(.25, .05));
 	}
 }

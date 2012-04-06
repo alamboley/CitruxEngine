@@ -3,6 +3,8 @@ package com.citruxengine.core;
 import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.core.CitruxObject;
 import com.citruxengine.core.Input;
+import com.citruxengine.view.CitruxView;
+import com.citruxengine.view.spriteview.SpriteView;
 
 import nme.display.Sprite;
 
@@ -15,10 +17,12 @@ import nme.display.Sprite;
  */
 class State extends Sprite {
 
+	public var view(getView, never):CitruxView;
+
 	private var _ce:CitruxEngine;
 
 	private var _objects:Array<CitruxObject>;
-
+	private var _view:CitruxView;
 	private var _input:Input;
 
 	public function new() {
@@ -43,6 +47,14 @@ class State extends Sprite {
 		}
 
 		_objects = [];
+		_view.destroy();
+	}
+
+	/**
+	 * Gets a reference to this state's view manager. Take a look at the class definition for more information about this. 
+	 */
+	public function getView():CitruxView {
+		return _view;
 	}
 
 	/**
@@ -52,6 +64,7 @@ class State extends Sprite {
 	 */
 	public function initialize():Void {
 		
+		_view = createView();
 		_input = _ce.input;
 	}
 
@@ -83,10 +96,14 @@ class State extends Sprite {
 			var garbageObject:CitruxObject = garbage[i];
 			_objects.splice(Lambda.indexOf(_objects, garbageObject), 1);
 			garbageObject.destroy();
+			//_view.removeArt(garbageObject);
 		}
 
 		//Update the input object
 		_input.update();
+
+		//Update the state's view
+		_view.update();
 	}
 
 	/**
@@ -97,7 +114,7 @@ class State extends Sprite {
 	public function add(object:CitruxObject):CitruxObject {
 
 		_objects.push(object);
-
+		_view.addArt(object);
 		return object;
 	}
 
@@ -154,5 +171,12 @@ class State extends Sprite {
 		}
 
 		return objects;
+	}
+
+	/**
+	 * Override this method if you want a state to create an instance of a custom view. 
+	 */		
+	private function createView():CitruxView {
+		return new SpriteView(this);
 	}
 }
