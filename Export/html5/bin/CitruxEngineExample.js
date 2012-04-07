@@ -605,21 +605,21 @@ com.citruxengine.objects.PhysicsObject.prototype.getWidth = function() {
 	return this._width * this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.setWidth = function(value) {
-	if(this._initialized) haxe.Log.trace("Warning: You cannot set width on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 281, className : "com.citruxengine.objects.PhysicsObject", methodName : "setWidth"});
+	if(this._initialized) haxe.Log.trace("Warning: You cannot set width on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 276, className : "com.citruxengine.objects.PhysicsObject", methodName : "setWidth"});
 	return this._width = value / this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.getHeight = function() {
 	return this._height * this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.setHeight = function(value) {
-	if(this._initialized) haxe.Log.trace("Warning: You cannot set height on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 293, className : "com.citruxengine.objects.PhysicsObject", methodName : "setHeight"});
+	if(this._initialized) haxe.Log.trace("Warning: You cannot set height on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 288, className : "com.citruxengine.objects.PhysicsObject", methodName : "setHeight"});
 	return this._height = value / this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.getRadius = function() {
 	return this._radius * this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.setRadius = function(value) {
-	if(this._initialized) haxe.Log.trace("Warning: You cannot set radius on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 305, className : "com.citruxengine.objects.PhysicsObject", methodName : "setRadius"});
+	if(this._initialized) haxe.Log.trace("Warning: You cannot set radius on object : " + this.name + ", type : " + this + ", after it has been created . Please set it in the constructor.",{ fileName : "PhysicsObject.hx", lineNumber : 300, className : "com.citruxengine.objects.PhysicsObject", methodName : "setRadius"});
 	return this._radius = value / this._box2D.getScale();
 }
 com.citruxengine.objects.PhysicsObject.prototype.getParallax = function() {
@@ -10091,7 +10091,7 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	this.add(new com.citruxengine.objects.platformer.Platform("platform3",{ x : 850, y : 550, width : 500, height : 30, rotation : 20}));
 	var hero = new com.citruxengine.objects.platformer.Hero("hero",{ x : 100, y : 20, width : 30, height : 60});
 	this.add(hero);
-	this.getView().setupCamera(hero,new com.citruxengine.math.MathVector(320,240),new jeash.geom.Rectangle(0,0,1550,450),new com.citruxengine.math.MathVector(.25,.05));
+	this.getView().setupCamera(hero,new com.citruxengine.math.MathVector(320,240),new jeash.geom.Rectangle(0,0,1550,1300),new com.citruxengine.math.MathVector(.25,.05));
 }
 fr.aymericlamboley.test.GameState.prototype.__class__ = fr.aymericlamboley.test.GameState;
 jeash.geom.Transform = function(inParent) {

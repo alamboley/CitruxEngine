@@ -18,8 +18,8 @@ import nme.display.Sprite;
  */
 class Box2D extends CitruxObject, implements ISpriteView {
 
-	public var world(getWorld, null):B2World;
-	public var scale(getScale, null):Int;
+	public var world(getWorld, never):B2World;
+	public var scale(getScale, never):Int;
 
 	public var x(getX, never):Float;
 	public var y(getY, never):Float;
@@ -54,8 +54,6 @@ class Box2D extends CitruxObject, implements ISpriteView {
 	}
 
 	override public function destroy():Void {
-
-		//world.destroy(); -> doesn't exist, why ??
 
 		super.destroy();
 	}

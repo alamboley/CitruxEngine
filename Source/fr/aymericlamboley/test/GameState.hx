@@ -39,7 +39,7 @@ class GameState extends State {
 		var sensor:Sensor = new Sensor("sensor", {x:400, y:420, width:20, height:20});
 		add(sensor);
 
-		var movingPlatform:MovingPlatform = new MovingPlatform("movingPlatform", {x:430, y:120, width:50, height:20, endX:430, startY:20, endY:300});
+		var movingPlatform:MovingPlatform = new MovingPlatform("movingPlatform", {x:430, y:120, width:120, height:20, endX:430, startY:20, endY:300});
 		add(movingPlatform);
 
 		add(new Platform("platform1", {x:260, y:450, width:500, height:30}));
@@ -49,6 +49,6 @@ class GameState extends State {
 		var hero:Hero = new Hero("hero", {x:100, y:20, width:30, height:60});
 		add(hero);
 
-		view.setupCamera(hero, new MathVector(320, 240), new Rectangle(0, 0, 1550, 450), new MathVector(.25, .05));
+		view.setupCamera(hero, new MathVector(320, 240), new Rectangle(0, 0, 1550, 1300), new MathVector(.25, .05));
 	}
 }

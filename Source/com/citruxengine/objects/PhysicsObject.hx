@@ -124,11 +124,6 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 		_body.DestroyFixture(_fixture);
 		_box2D.world.destroyBody(_body);
 
-		//_body.destroy(); -> doesn't exist, why ??
-		//_fixtureDef.destroy(); -> doesn't exist, why ??
-		//_shape.destroy(); -> doesn't exist, why ??
-		//_bodyDef.destroy(); -> doesn't exist, why ??
-
 		super.destroy();
 	}
 
@@ -195,8 +190,8 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 		_fixtureDef.density = 1;
 		_fixtureDef.friction = 0.6;
 		_fixtureDef.restitution = 0.3;
-		//_fixtureDef.filter.categoryBits -> à faire
-		//_fixtureDef.filter.maskBits -> à faire
+		//_fixtureDef.filter.categoryBits -> TO DO
+		//_fixtureDef.filter.maskBits -> TO DO
 	}
 
 	/**
