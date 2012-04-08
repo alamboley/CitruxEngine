@@ -6,6 +6,7 @@ import box2D.dynamics.B2World;
 
 import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.core.CitruxObject;
+import com.citruxengine.physics.ContactListener;
 import com.citruxengine.view.ISpriteView;
 import com.citruxengine.view.spriteview.Box2DDebugArt;
 
@@ -34,6 +35,8 @@ class Box2D extends CitruxObject, implements ISpriteView {
 	public var offsetY(getOffsetY, never):Float;
 	public var registration(getRegistration, never):String;
 
+	private var _contactListener:ContactListener;
+
 	var _world:B2World;
 	var _scale:Int;
 
@@ -51,6 +54,9 @@ class Box2D extends CitruxObject, implements ISpriteView {
 		super(name, params);
 
 		_world = new B2World(new B2Vec2(0, 0), true);
+		_contactListener = new ContactListener();
+
+		_world.setContactListener(_contactListener);
 	}
 
 	override public function destroy():Void {

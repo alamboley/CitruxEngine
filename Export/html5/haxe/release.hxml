@@ -3,6 +3,7 @@
 -cp Source
 -lib nme
 -lib box2d
+-lib hxs
 -D web
 -js Export/html5/bin/CitruxEngineExample.js
 -cp Export/html5/haxe

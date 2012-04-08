@@ -1,8 +1,11 @@
 package com.citruxengine.objects.platformer;
 
 import box2D.common.math.B2Vec2;
+import box2D.dynamics.contacts.B2Contact;
 
 import com.citruxengine.objects.PhysicsObject;
+
+import hxs.Signal;
 
 import nme.ui.Keyboard;
 
@@ -24,6 +27,27 @@ class Hero extends PhysicsObject {
 	public var controlsEnabled(getControlsEnabled, setControlsEnabled):Bool;
 	public var friction(getFriction, setFriction):Float;
 
+	//events
+    /**
+     * Dispatched whenever the hero jumps. 
+     */
+    public var onJump:Signal;
+
+     /**
+     * Dispatched whenever the hero gives damage to an enemy. 
+     */             
+    public var onGiveDamage:Signal;
+    
+    /**
+     * Dispatched whenever the hero takes damage from an enemy. 
+     */             
+    public var onTakeDamage:Signal;
+    
+    /**
+     * Dispatched whenever the hero's animation changes. 
+     */             
+    public var onAnimationChange:Signal;
+
 	private var _playerMovingHero:Bool;
 
 	var _acceleration:Float;
@@ -44,10 +68,20 @@ class Hero extends PhysicsObject {
 
 		super(name, params);
 
+		onJump = new Signal();
+		onGiveDamage = new Signal();
+		onTakeDamage = new Signal();
+		onAnimationChange = new Signal();
+
 		_playerMovingHero = false;
 	}
 
 	override public function destroy():Void {
+
+		onJump.removeAll();
+		onGiveDamage.removeAll();
+		onTakeDamage.removeAll();
+		onAnimationChange.removeAll();
 
 		super.destroy();
 	}
@@ -64,12 +98,12 @@ class Hero extends PhysicsObject {
 
 			if (_ce.input.isDown(Keyboard.RIGHT)) {
 
-				velocity.add(new B2Vec2(5, 0));
+				velocity.add(new B2Vec2(3, 0));
 				moveKeyPressed = true;
 			}
 
 			if (_ce.input.isDown(Keyboard.LEFT)) {
-				velocity.subtract(new B2Vec2(5, 0));
+				velocity.subtract(new B2Vec2(3, 0));
 				moveKeyPressed = true;
 			}
 
@@ -90,8 +124,12 @@ class Hero extends PhysicsObject {
 				_fixture.setFriction(_friction);
 			}
 
-			if (_ce.input.justPressed(Keyboard.SPACE))
+			if (_ce.input.justPressed(Keyboard.SPACE)) {
+
 				velocity.y = -_jumpHeight;
+				onJump.dispatch();
+			}
+				
 
 			if (_ce.input.isDown(Keyboard.SPACE))
 				velocity.y -= _jumpAcceleration;
@@ -111,6 +149,16 @@ class Hero extends PhysicsObject {
 
 	public function updateAnimation():Void {
 
+	}
+
+	override public function handleBeginContact(contact:B2Contact):Void {
+
+		//trace('start' + Date.now().getSeconds());
+	}
+
+	override public function handleEndContact(contact:B2Contact):Void {
+
+		//trace('end');
 	}
 
 	override private function createBody():Void {

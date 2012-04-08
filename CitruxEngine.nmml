@@ -11,6 +11,7 @@
 	
 	<haxelib name="nme" />
 	<haxelib name="box2d" />
+	<haxelib name="hxs" />
 
 	<assets path="Assets" rename="assets" include="*" exclude="CitruxEngine.png" />
 

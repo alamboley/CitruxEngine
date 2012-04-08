@@ -1,5 +1,6 @@
 package com.citruxengine.objects;
 
+import box2D.collision.B2Manifold;
 import box2D.collision.shapes.B2CircleShape;
 import box2D.collision.shapes.B2PolygonShape;
 import box2D.collision.shapes.B2Shape;
@@ -8,8 +9,10 @@ import box2D.common.math.B2Transform;
 import box2D.common.math.B2Vec2;
 import box2D.dynamics.B2Body;
 import box2D.dynamics.B2BodyDef;
+import box2D.dynamics.B2ContactImpulse;
 import box2D.dynamics.B2Fixture;
 import box2D.dynamics.B2FixtureDef;
+import box2D.dynamics.contacts.B2Contact;
 
 import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.core.CitruxObject;
@@ -142,6 +145,22 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 			velocity.y += gravity;
 			_body.setLinearVelocity(velocity);
 		}
+	}
+
+	public function handleBeginContact(contact:B2Contact):Void {
+
+	}
+
+	public function handleEndContact(contact:B2Contact):Void {
+
+	}
+
+	public function handlePreSolve(contact:B2Contact, oldManifold:B2Manifold):Void {
+
+	}
+
+	public function handlePostSolve(contact:B2Contact, impulse:B2ContactImpulse):Void {
+
 	}
 
 	/**
