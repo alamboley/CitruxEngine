@@ -65,12 +65,8 @@ class SpriteArt extends Sprite {
 
 		if (Std.is(_view, Class)) {
 
-			if (name == "Box2D") {
-
-				content = new Box2DDebugArt();
-				this.addChild(content);
-			}
-			
+			content = Type.createInstance(_citruxObject.view, []);
+			this.addChild(content);
 		}
 
 		return _view;

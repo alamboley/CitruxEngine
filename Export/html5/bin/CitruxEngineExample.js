@@ -1869,10 +1869,8 @@ com.citruxengine.view.spriteview.SpriteArt.prototype.setView = function(value) {
 	if(this._view == value) return this._view;
 	this._view = value;
 	if(Std["is"](this._view,Class)) {
-		if(this.name == "Box2D") {
-			this.content = new com.citruxengine.view.spriteview.Box2DDebugArt();
-			this.addChild(this.content);
-		}
+		this.content = Type.createInstance(this._citruxObject.getView(),[]);
+		this.addChild(this.content);
 	}
 	return this._view;
 }
