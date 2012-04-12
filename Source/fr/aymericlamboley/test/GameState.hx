@@ -1,10 +1,13 @@
 package fr.aymericlamboley.test;
 
+import box2D.dynamics.contacts.B2Contact;
+
 import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.core.State;
 import com.citruxengine.math.MathVector;
 import com.citruxengine.objects.PhysicsObject;
 import com.citruxengine.objects.platformer.Baddy;
+import com.citruxengine.objects.platformer.Coin;
 import com.citruxengine.objects.platformer.Hero;
 import com.citruxengine.objects.platformer.MovingPlatform;
 import com.citruxengine.objects.platformer.Platform;
@@ -33,11 +36,8 @@ class GameState extends State {
 		//var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:100, y:20, radius:20});
 		add(physicsObject);
 
-		var baddy:Baddy = new Baddy("baddy", {x:340, y:200, width:30, height:60});
+		var baddy:Baddy = new Baddy("baddy", {x:540, y:200, width:30, height:60});
 		add(baddy);
-
-		var sensor:Sensor = new Sensor("sensor", {x:400, y:420, width:20, height:20});
-		add(sensor);
 
 		var movingPlatform:MovingPlatform = new MovingPlatform("movingPlatform", {x:430, y:120, width:120, height:20, endX:430, startY:20, endY:300});
 		add(movingPlatform);
@@ -49,6 +49,18 @@ class GameState extends State {
 		var hero:Hero = new Hero("hero", {x:100, y:20, width:30, height:60});
 		add(hero);
 
+		var coin:Coin = new Coin("Coin", {x:Std.random(400), y:Std.random(300) + 100, radius:30});
+		add(coin);
+		coin.onBeginContact.addOnce(_recoltCoin);
+		
 		view.setupCamera(hero, new MathVector(320, 240), new Rectangle(0, 0, 1550, 1300), new MathVector(.25, .05));
+	}
+
+	private function _recoltCoin(ctc:B2Contact):Void {
+
+		var hero:Hero = Std.is(ctc.m_fixtureA.getBody().getUserData(), Hero) ? ctc.m_fixtureA.getBody().getUserData() : Std.is(ctc.m_fixtureB.getBody().getUserData(), Hero) ? ctc.m_fixtureB.getBody().getUserData() : null;
+		
+		if (hero != null)
+			remove(Std.is(ctc.m_fixtureA.getBody().getUserData(), Coin) ? ctc.m_fixtureA.getBody().getUserData() : ctc.m_fixtureB.getBody().getUserData());
 	}
 }

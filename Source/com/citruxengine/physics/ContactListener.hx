@@ -16,9 +16,6 @@ class ContactListener extends B2ContactListener {
 		
 		contact.m_fixtureA.getBody().getUserData().handleBeginContact(contact);
 		contact.m_fixtureB.getBody().getUserData().handleBeginContact(contact);
-		//trace(contact.getFixtureA().getBody().getUserData().name);
-		//trace(contact.isTouching());
-		//trace(contact.isContinuous());
 	}
 
 	override public function endContact(contact:B2Contact):Void {

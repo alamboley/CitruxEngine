@@ -2796,6 +2796,45 @@ box2D.common.math.B2Vec2.prototype.isValid = function() {
 box2D.common.math.B2Vec2.prototype.x = null;
 box2D.common.math.B2Vec2.prototype.y = null;
 box2D.common.math.B2Vec2.prototype.__class__ = box2D.common.math.B2Vec2;
+com.citruxengine.objects.platformer.Sensor = function(name,params) {
+	if( name === $_ ) return;
+	com.citruxengine.objects.PhysicsObject.call(this,name,params);
+	this.onBeginContact = new hxs.Signal1();
+	this.onEndContact = new hxs.Signal1();
+}
+com.citruxengine.objects.platformer.Sensor.__name__ = ["com","citruxengine","objects","platformer","Sensor"];
+com.citruxengine.objects.platformer.Sensor.__super__ = com.citruxengine.objects.PhysicsObject;
+for(var k in com.citruxengine.objects.PhysicsObject.prototype ) com.citruxengine.objects.platformer.Sensor.prototype[k] = com.citruxengine.objects.PhysicsObject.prototype[k];
+com.citruxengine.objects.platformer.Sensor.prototype.onBeginContact = null;
+com.citruxengine.objects.platformer.Sensor.prototype.onEndContact = null;
+com.citruxengine.objects.platformer.Sensor.prototype.destroy = function() {
+	this.onBeginContact.removeAll();
+	this.onEndContact.removeAll();
+	com.citruxengine.objects.PhysicsObject.prototype.destroy.call(this);
+}
+com.citruxengine.objects.platformer.Sensor.prototype.defineBody = function() {
+	com.citruxengine.objects.PhysicsObject.prototype.defineBody.call(this);
+	this._bodyDef.type = box2D.dynamics.B2Body.b2_staticBody;
+}
+com.citruxengine.objects.platformer.Sensor.prototype.defineFixture = function() {
+	com.citruxengine.objects.PhysicsObject.prototype.defineFixture.call(this);
+	this._fixtureDef.isSensor = true;
+}
+com.citruxengine.objects.platformer.Sensor.prototype.handleBeginContact = function(contact) {
+	this.onBeginContact.dispatch(contact);
+}
+com.citruxengine.objects.platformer.Sensor.prototype.handleEndContact = function(contact) {
+	this.onEndContact.dispatch(contact);
+}
+com.citruxengine.objects.platformer.Sensor.prototype.__class__ = com.citruxengine.objects.platformer.Sensor;
+com.citruxengine.objects.platformer.Coin = function(name,params) {
+	if( name === $_ ) return;
+	com.citruxengine.objects.platformer.Sensor.call(this,name,params);
+}
+com.citruxengine.objects.platformer.Coin.__name__ = ["com","citruxengine","objects","platformer","Coin"];
+com.citruxengine.objects.platformer.Coin.__super__ = com.citruxengine.objects.platformer.Sensor;
+for(var k in com.citruxengine.objects.platformer.Sensor.prototype ) com.citruxengine.objects.platformer.Coin.prototype[k] = com.citruxengine.objects.platformer.Sensor.prototype[k];
+com.citruxengine.objects.platformer.Coin.prototype.__class__ = com.citruxengine.objects.platformer.Coin;
 com.citruxengine.core.State = function(p) {
 	if( p === $_ ) return;
 	jeash.display.Sprite.call(this);
@@ -10341,10 +10380,8 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	this.add(box2d);
 	var physicsObject = new com.citruxengine.objects.PhysicsObject("physicsObject",{ x : 250, y : 200, width : 30, height : 30});
 	this.add(physicsObject);
-	var baddy = new com.citruxengine.objects.platformer.Baddy("baddy",{ x : 340, y : 200, width : 30, height : 60});
+	var baddy = new com.citruxengine.objects.platformer.Baddy("baddy",{ x : 540, y : 200, width : 30, height : 60});
 	this.add(baddy);
-	var sensor = new com.citruxengine.objects.platformer.Sensor("sensor",{ x : 400, y : 420, width : 20, height : 20});
-	this.add(sensor);
 	var movingPlatform = new com.citruxengine.objects.platformer.MovingPlatform("movingPlatform",{ x : 430, y : 120, width : 120, height : 20, endX : 430, startY : 20, endY : 300});
 	this.add(movingPlatform);
 	this.add(new com.citruxengine.objects.platformer.Platform("platform1",{ x : 260, y : 450, width : 500, height : 30}));
@@ -10352,7 +10389,14 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	this.add(new com.citruxengine.objects.platformer.Platform("platform3",{ x : 850, y : 550, width : 500, height : 30, rotation : 20}));
 	var hero = new com.citruxengine.objects.platformer.Hero("hero",{ x : 100, y : 20, width : 30, height : 60});
 	this.add(hero);
+	var coin = new com.citruxengine.objects.platformer.Coin("Coin",{ x : Std.random(400), y : Std.random(300) + 100, radius : 30});
+	this.add(coin);
+	coin.onBeginContact.addOnce($closure(this,"_recoltCoin"));
 	this.getView().setupCamera(hero,new com.citruxengine.math.MathVector(320,240),new jeash.geom.Rectangle(0,0,1550,1300),new com.citruxengine.math.MathVector(.25,.05));
+}
+fr.aymericlamboley.test.GameState.prototype._recoltCoin = function(ctc) {
+	var hero = Std["is"](ctc.m_fixtureA.getBody().getUserData(),com.citruxengine.objects.platformer.Hero)?ctc.m_fixtureA.getBody().getUserData():Std["is"](ctc.m_fixtureB.getBody().getUserData(),com.citruxengine.objects.platformer.Hero)?ctc.m_fixtureB.getBody().getUserData():null;
+	if(hero != null) this.remove(Std["is"](ctc.m_fixtureA.getBody().getUserData(),com.citruxengine.objects.platformer.Coin)?ctc.m_fixtureA.getBody().getUserData():ctc.m_fixtureB.getBody().getUserData());
 }
 fr.aymericlamboley.test.GameState.prototype.__class__ = fr.aymericlamboley.test.GameState;
 jeash.geom.Transform = function(inParent) {
@@ -17604,37 +17648,6 @@ box2D.dynamics.contacts.B2ContactConstraint.prototype.__class__ = box2D.dynamics
 jeash.display.BitmapDataChannel = function() { }
 jeash.display.BitmapDataChannel.__name__ = ["jeash","display","BitmapDataChannel"];
 jeash.display.BitmapDataChannel.prototype.__class__ = jeash.display.BitmapDataChannel;
-com.citruxengine.objects.platformer.Sensor = function(name,params) {
-	if( name === $_ ) return;
-	com.citruxengine.objects.PhysicsObject.call(this,name,params);
-	this.onBeginContact = new hxs.Signal1();
-	this.onEndContact = new hxs.Signal1();
-}
-com.citruxengine.objects.platformer.Sensor.__name__ = ["com","citruxengine","objects","platformer","Sensor"];
-com.citruxengine.objects.platformer.Sensor.__super__ = com.citruxengine.objects.PhysicsObject;
-for(var k in com.citruxengine.objects.PhysicsObject.prototype ) com.citruxengine.objects.platformer.Sensor.prototype[k] = com.citruxengine.objects.PhysicsObject.prototype[k];
-com.citruxengine.objects.platformer.Sensor.prototype.onBeginContact = null;
-com.citruxengine.objects.platformer.Sensor.prototype.onEndContact = null;
-com.citruxengine.objects.platformer.Sensor.prototype.destroy = function() {
-	this.onBeginContact.removeAll();
-	this.onEndContact.removeAll();
-	com.citruxengine.objects.PhysicsObject.prototype.destroy.call(this);
-}
-com.citruxengine.objects.platformer.Sensor.prototype.defineBody = function() {
-	com.citruxengine.objects.PhysicsObject.prototype.defineBody.call(this);
-	this._bodyDef.type = box2D.dynamics.B2Body.b2_staticBody;
-}
-com.citruxengine.objects.platformer.Sensor.prototype.defineFixture = function() {
-	com.citruxengine.objects.PhysicsObject.prototype.defineFixture.call(this);
-	this._fixtureDef.isSensor = true;
-}
-com.citruxengine.objects.platformer.Sensor.prototype.handleBeginContact = function(contact) {
-	this.onBeginContact.dispatch(contact);
-}
-com.citruxengine.objects.platformer.Sensor.prototype.handleEndContact = function(contact) {
-	this.onEndContact.dispatch(contact);
-}
-com.citruxengine.objects.platformer.Sensor.prototype.__class__ = com.citruxengine.objects.platformer.Sensor;
 js.Lib = function() { }
 js.Lib.__name__ = ["js","Lib"];
 js.Lib.isIE = null;
