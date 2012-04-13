@@ -10391,7 +10391,7 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	this.add(hero);
 	var coin = new com.citruxengine.objects.platformer.Coin("Coin",{ x : Std.random(400), y : Std.random(300) + 100, radius : 30});
 	this.add(coin);
-	coin.onBeginContact.addOnce($closure(this,"_recoltCoin"));
+	coin.onBeginContact.add($closure(this,"_recoltCoin"));
 	this.getView().setupCamera(hero,new com.citruxengine.math.MathVector(320,240),new jeash.geom.Rectangle(0,0,1550,1300),new com.citruxengine.math.MathVector(.25,.05));
 }
 fr.aymericlamboley.test.GameState.prototype._recoltCoin = function(ctc) {

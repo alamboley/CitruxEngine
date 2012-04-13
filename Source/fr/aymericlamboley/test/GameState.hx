@@ -51,7 +51,7 @@ class GameState extends State {
 
 		var coin:Coin = new Coin("Coin", {x:Std.random(400), y:Std.random(300) + 100, radius:30});
 		add(coin);
-		coin.onBeginContact.addOnce(_recoltCoin);
+		coin.onBeginContact.add(_recoltCoin);
 		
 		view.setupCamera(hero, new MathVector(320, 240), new Rectangle(0, 0, 1550, 1300), new MathVector(.25, .05));
 	}
