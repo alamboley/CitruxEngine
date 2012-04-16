@@ -3831,10 +3831,10 @@ nme.installer.Assets.__name__ = ["nme","installer","Assets"];
 nme.installer.Assets.getBitmapData = function(id,useCache) {
 	if(useCache == null) useCache = true;
 	switch(id) {
-	case "assets/jewel.png":
+	case "Assets/jewel.png":
 		return ((function($this) {
 			var $r;
-			var $t = ApplicationMain.loaders.get("assets/jewel.png").contentLoaderInfo.content;
+			var $t = ApplicationMain.loaders.get("Assets/jewel.png").contentLoaderInfo.content;
 			if(Std["is"]($t,jeash.display.Bitmap)) $t; else throw "Class cast error";
 			$r = $t;
 			return $r;
@@ -10406,7 +10406,7 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	this.add(new com.citruxengine.objects.platformer.Platform("platform3",{ x : 850, y : 550, width : 500, height : 30, rotation : 20}));
 	var hero = new com.citruxengine.objects.platformer.Hero("hero",{ x : 100, y : 20, width : 30, height : 60});
 	this.add(hero);
-	var coin = new com.citruxengine.objects.platformer.Coin("Coin",{ x : Std.random(400), y : Std.random(300) + 100, radius : 30, view : "assets/jewel.png"});
+	var coin = new com.citruxengine.objects.platformer.Coin("Coin",{ x : Std.random(400), y : Std.random(300) + 100, radius : 30, view : "Assets/jewel.png"});
 	this.add(coin);
 	coin.onBeginContact.add($closure(this,"_recoltCoin"));
 	this.getView().setupCamera(hero,new com.citruxengine.math.MathVector(320,240),new jeash.geom.Rectangle(0,0,1550,1300),new com.citruxengine.math.MathVector(.25,.05));
@@ -13568,7 +13568,7 @@ ApplicationMain.main = function() {
 	jeash.Lib.jeashGetCurrent().addChild(ApplicationMain.preloader);
 	ApplicationMain.preloader.onInit();
 	var loader = new jeash.display.Loader();
-	ApplicationMain.loaders.set("assets/jewel.png",loader);
+	ApplicationMain.loaders.set("Assets/jewel.png",loader);
 	ApplicationMain.total++;
 	if(ApplicationMain.total == 0) ApplicationMain.begin(); else {
 		var $it0 = ApplicationMain.loaders.keys();
@@ -13592,7 +13592,7 @@ ApplicationMain.begin = function() {
 	ApplicationMain.preloader.onLoaded();
 }
 ApplicationMain.getAsset = function(inName) {
-	if(inName == "assets/jewel.png") return nme.installer.Assets.getBitmapData("assets/jewel.png");
+	if(inName == "Assets/jewel.png") return nme.installer.Assets.getBitmapData("Assets/jewel.png");
 	return null;
 }
 ApplicationMain.loader_onComplete = function(event) {

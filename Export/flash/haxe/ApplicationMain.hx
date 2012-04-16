@@ -50,9 +50,9 @@ class ApplicationMain {
 	public static function getAsset (inName:String):Dynamic {
 		
 		
-		if (inName=="assets/jewel.png")
+		if (inName=="Assets/jewel.png")
 			 
-            return Assets.getBitmapData ("assets/jewel.png");
+            return Assets.getBitmapData ("Assets/jewel.png");
          
 		
 		
