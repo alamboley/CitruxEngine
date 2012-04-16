@@ -5,6 +5,8 @@ import com.citruxengine.view.ISpriteView;
 import com.citruxengine.view.spriteview.Box2DDebugArt;
 import com.citruxengine.view.spriteview.SpriteView;
 
+import nme.Assets;
+import nme.display.Bitmap;
 import nme.display.DisplayObject;
 import nme.display.Sprite;
 
@@ -63,10 +65,27 @@ class SpriteArt extends Sprite {
 		}
 		_view = value;
 
-		if (Std.is(_view, Class)) {
+		if (_view != null) {
 
-			content = Type.createInstance(_citruxObject.view, []);
-			this.addChild(content);
+			if (Std.is(_view, String)) {
+
+				// view property is a path to an image?
+				var classString:String = _view;
+				var suffix:String = classString.substr(classString.length - 4).toLowerCase();
+				if (suffix == ".png" || suffix == ".jpg") {
+
+					content = new Bitmap(Assets.getBitmapData(_view));
+					this.addChild(content);
+				}
+
+			} else if (Std.is(_view, Class)) {
+
+				content = Type.createInstance(_citruxObject.view, []);
+				this.addChild(content);
+
+			} else {
+				trace("SpriteArt doesn't know how to create a graphic object from the provided CitrusObject " + citruxObject);
+			}
 		}
 
 		return _view;

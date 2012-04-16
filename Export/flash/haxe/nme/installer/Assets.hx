@@ -28,6 +28,8 @@ class Assets {
 		
 		if (!initialized) {
 			
+			resourceClasses.set ("assets/jewel.png", NME_assets_jewel_png);
+			resourceTypes.set ("assets/jewel.png", "image");
 			
 			initialized = true;
 			

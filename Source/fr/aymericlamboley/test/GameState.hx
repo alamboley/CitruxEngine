@@ -49,7 +49,7 @@ class GameState extends State {
 		var hero:Hero = new Hero("hero", {x:100, y:20, width:30, height:60});
 		add(hero);
 
-		var coin:Coin = new Coin("Coin", {x:Std.random(400), y:Std.random(300) + 100, radius:30});
+		var coin:Coin = new Coin("Coin", {x:Std.random(400), y:Std.random(300) + 100, radius:30, view:"assets/jewel.png"});
 		add(coin);
 		coin.onBeginContact.add(_recoltCoin);
 		

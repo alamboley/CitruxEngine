@@ -50,6 +50,11 @@ class ApplicationMain {
 	public static function getAsset (inName:String):Dynamic {
 		
 		
+		if (inName=="assets/jewel.png")
+			 
+            return Assets.getBitmapData ("assets/jewel.png");
+         
+		
 		
 		return null;
 		
@@ -70,3 +75,7 @@ class ApplicationMain {
 }
 
 
+
+	
+		class NME_assets_jewel_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+	
