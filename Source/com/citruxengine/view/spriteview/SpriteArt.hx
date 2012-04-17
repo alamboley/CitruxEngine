@@ -84,7 +84,7 @@ class SpriteArt extends Sprite {
 				this.addChild(content);
 
 			} else {
-				trace("SpriteArt doesn't know how to create a graphic object from the provided CitrusObject " + citruxObject);
+				trace("SpriteArt doesn't know how to create a graphic object from the provided CitruxObject " + citruxObject);
 			}
 		}
 

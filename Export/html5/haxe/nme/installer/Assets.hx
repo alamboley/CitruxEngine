@@ -28,6 +28,7 @@ class Assets {
 		
 		switch (id) {
 			
+			case "Assets/background.jpg": return cast (ApplicationMain.loaders.get ("Assets/background.jpg").contentLoaderInfo.content, Bitmap).bitmapData;
 			case "Assets/jewel.png": return cast (ApplicationMain.loaders.get ("Assets/jewel.png").contentLoaderInfo.content, Bitmap).bitmapData;
 			
 		}
@@ -41,6 +42,7 @@ class Assets {
 		
 		switch (id) {
 			
+			//case "Assets/background.jpg": return ByteArray.readFile ("Assets/background.jpg");
 			//case "Assets/jewel.png": return ByteArray.readFile ("Assets/jewel.png");
 			//
 		}

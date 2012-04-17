@@ -73,7 +73,7 @@ class SpriteView extends CitruxView {
 
 		//Perform an initial update
 		art.update(this);
-
+		
 		_updateGroupForSprite(art);
 
 		return art;

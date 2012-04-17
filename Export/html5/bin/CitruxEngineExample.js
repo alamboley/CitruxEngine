@@ -1879,7 +1879,7 @@ com.citruxengine.view.spriteview.SpriteArt.prototype.setView = function(value) {
 		} else if(Std["is"](this._view,Class)) {
 			this.content = Type.createInstance(this._citruxObject.getView(),[]);
 			this.addChild(this.content);
-		} else haxe.Log.trace("SpriteArt doesn't know how to create a graphic object from the provided CitrusObject " + this.getCitruxObject(),{ fileName : "SpriteArt.hx", lineNumber : 87, className : "com.citruxengine.view.spriteview.SpriteArt", methodName : "setView"});
+		} else haxe.Log.trace("SpriteArt doesn't know how to create a graphic object from the provided CitruxObject " + this.getCitruxObject(),{ fileName : "SpriteArt.hx", lineNumber : 87, className : "com.citruxengine.view.spriteview.SpriteArt", methodName : "setView"});
 	}
 	return this._view;
 }
@@ -3831,6 +3831,14 @@ nme.installer.Assets.__name__ = ["nme","installer","Assets"];
 nme.installer.Assets.getBitmapData = function(id,useCache) {
 	if(useCache == null) useCache = true;
 	switch(id) {
+	case "Assets/background.jpg":
+		return ((function($this) {
+			var $r;
+			var $t = ApplicationMain.loaders.get("Assets/background.jpg").contentLoaderInfo.content;
+			if(Std["is"]($t,jeash.display.Bitmap)) $t; else throw "Class cast error";
+			$r = $t;
+			return $r;
+		}(this))).bitmapData;
 	case "Assets/jewel.png":
 		return ((function($this) {
 			var $r;
@@ -6784,6 +6792,141 @@ StringTools.isEOF = function(c) {
 	return c != c;
 }
 StringTools.prototype.__class__ = StringTools;
+com.citruxengine.objects.CitruxSprite = function(name,params) {
+	if( name === $_ ) return;
+	this._ce = com.citruxengine.core.CitruxEngine.getInstance();
+	this._x = this._y = this._rotation = this._offsetX = this._offsetY = 0;
+	this._width = this._height = 30;
+	this._group = 0;
+	this._parallax = 1;
+	this._visible = true;
+	this._animation = "";
+	this._inverted = false;
+	this._view = jeash.display.MovieClip;
+	this._registration = "topLeft";
+	com.citruxengine.core.CitruxObject.call(this,name,params);
+}
+com.citruxengine.objects.CitruxSprite.__name__ = ["com","citruxengine","objects","CitruxSprite"];
+com.citruxengine.objects.CitruxSprite.__super__ = com.citruxengine.core.CitruxObject;
+for(var k in com.citruxengine.core.CitruxObject.prototype ) com.citruxengine.objects.CitruxSprite.prototype[k] = com.citruxengine.core.CitruxObject.prototype[k];
+com.citruxengine.objects.CitruxSprite.prototype.x = null;
+com.citruxengine.objects.CitruxSprite.prototype.y = null;
+com.citruxengine.objects.CitruxSprite.prototype.width = null;
+com.citruxengine.objects.CitruxSprite.prototype.height = null;
+com.citruxengine.objects.CitruxSprite.prototype.rotation = null;
+com.citruxengine.objects.CitruxSprite.prototype.parallax = null;
+com.citruxengine.objects.CitruxSprite.prototype.group = null;
+com.citruxengine.objects.CitruxSprite.prototype.visible = null;
+com.citruxengine.objects.CitruxSprite.prototype.view = null;
+com.citruxengine.objects.CitruxSprite.prototype.animation = null;
+com.citruxengine.objects.CitruxSprite.prototype.inverted = null;
+com.citruxengine.objects.CitruxSprite.prototype.offsetX = null;
+com.citruxengine.objects.CitruxSprite.prototype.offsetY = null;
+com.citruxengine.objects.CitruxSprite.prototype.registration = null;
+com.citruxengine.objects.CitruxSprite.prototype._ce = null;
+com.citruxengine.objects.CitruxSprite.prototype._x = null;
+com.citruxengine.objects.CitruxSprite.prototype._y = null;
+com.citruxengine.objects.CitruxSprite.prototype._rotation = null;
+com.citruxengine.objects.CitruxSprite.prototype._width = null;
+com.citruxengine.objects.CitruxSprite.prototype._height = null;
+com.citruxengine.objects.CitruxSprite.prototype._parallax = null;
+com.citruxengine.objects.CitruxSprite.prototype._group = null;
+com.citruxengine.objects.CitruxSprite.prototype._visible = null;
+com.citruxengine.objects.CitruxSprite.prototype._offsetX = null;
+com.citruxengine.objects.CitruxSprite.prototype._offsetY = null;
+com.citruxengine.objects.CitruxSprite.prototype._inverted = null;
+com.citruxengine.objects.CitruxSprite.prototype._animation = null;
+com.citruxengine.objects.CitruxSprite.prototype._view = null;
+com.citruxengine.objects.CitruxSprite.prototype._registration = null;
+com.citruxengine.objects.CitruxSprite.prototype.destroy = function() {
+	com.citruxengine.core.CitruxObject.prototype.destroy.call(this);
+}
+com.citruxengine.objects.CitruxSprite.prototype.getX = function() {
+	return this._x;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setX = function(value) {
+	return this._x = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getY = function() {
+	return this._y;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setY = function(value) {
+	return this._y = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getWidth = function() {
+	return this._width;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setWidth = function(value) {
+	return this._width = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getHeight = function() {
+	return this._height;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setHeight = function(value) {
+	return this._height = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getRotation = function() {
+	return this._rotation;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setRotation = function(value) {
+	return this._rotation = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getParallax = function() {
+	return this._parallax;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setParallax = function(value) {
+	return this._parallax = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getGroup = function() {
+	return this._group;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setGroup = function(value) {
+	return this._group = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getVisible = function() {
+	return this._visible;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setVisible = function(value) {
+	return this._visible = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getView = function() {
+	return this._view;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setView = function(value) {
+	return this._view = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getAnimation = function() {
+	return this._animation;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setAnimation = function(value) {
+	return this._animation = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getInverted = function() {
+	return this._inverted;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setInverted = function(value) {
+	return this._inverted = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getOffsetX = function() {
+	return this._offsetX;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setOffsetX = function(value) {
+	return this._offsetX = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getOffsetY = function() {
+	return this._offsetY;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setOffsetY = function(value) {
+	return this._offsetY = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.getRegistration = function() {
+	return this._registration;
+}
+com.citruxengine.objects.CitruxSprite.prototype.setRegistration = function(value) {
+	return this._registration = value;
+}
+com.citruxengine.objects.CitruxSprite.prototype.__class__ = com.citruxengine.objects.CitruxSprite;
+com.citruxengine.objects.CitruxSprite.__interfaces__ = [com.citruxengine.view.ISpriteView];
 jeash.display.StageQuality = function() { }
 jeash.display.StageQuality.__name__ = ["jeash","display","StageQuality"];
 jeash.display.StageQuality.prototype.__class__ = jeash.display.StageQuality;
@@ -10395,6 +10538,8 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	var box2d = new com.citruxengine.physics.Box2D("Box2D");
 	box2d.setVisible(true);
 	this.add(box2d);
+	var background = new com.citruxengine.objects.CitruxSprite("background",{ x : 0, y : 0, view : "Assets/background.jpg"});
+	this.add(background);
 	var physicsObject = new com.citruxengine.objects.PhysicsObject("physicsObject",{ x : 250, y : 200, width : 30, height : 30});
 	this.add(physicsObject);
 	var baddy = new com.citruxengine.objects.platformer.Baddy("baddy",{ x : 540, y : 200, width : 30, height : 60});
@@ -10409,7 +10554,7 @@ fr.aymericlamboley.test.GameState.prototype.initialize = function() {
 	var coin = new com.citruxengine.objects.platformer.Coin("Coin",{ x : Std.random(400), y : Std.random(300) + 100, radius : 30, view : "Assets/jewel.png"});
 	this.add(coin);
 	coin.onBeginContact.add($closure(this,"_recoltCoin"));
-	this.getView().setupCamera(hero,new com.citruxengine.math.MathVector(320,240),new jeash.geom.Rectangle(0,0,1550,1300),new com.citruxengine.math.MathVector(.25,.05));
+	this.getView().setupCamera(hero,new com.citruxengine.math.MathVector(320,240),new jeash.geom.Rectangle(0,0,1550,0),new com.citruxengine.math.MathVector(.25,.05));
 }
 fr.aymericlamboley.test.GameState.prototype._recoltCoin = function(ctc) {
 	var hero = Std["is"](ctc.m_fixtureA.getBody().getUserData(),com.citruxengine.objects.platformer.Hero)?ctc.m_fixtureA.getBody().getUserData():Std["is"](ctc.m_fixtureB.getBody().getUserData(),com.citruxengine.objects.platformer.Hero)?ctc.m_fixtureB.getBody().getUserData():null;
@@ -13568,15 +13713,18 @@ ApplicationMain.main = function() {
 	jeash.Lib.jeashGetCurrent().addChild(ApplicationMain.preloader);
 	ApplicationMain.preloader.onInit();
 	var loader = new jeash.display.Loader();
-	ApplicationMain.loaders.set("Assets/jewel.png",loader);
+	ApplicationMain.loaders.set("Assets/background.jpg",loader);
+	ApplicationMain.total++;
+	var loader1 = new jeash.display.Loader();
+	ApplicationMain.loaders.set("Assets/jewel.png",loader1);
 	ApplicationMain.total++;
 	if(ApplicationMain.total == 0) ApplicationMain.begin(); else {
 		var $it0 = ApplicationMain.loaders.keys();
 		while( $it0.hasNext() ) {
 			var path = $it0.next();
-			var loader1 = ApplicationMain.loaders.get(path);
-			loader1.contentLoaderInfo.addEventListener("complete",ApplicationMain.loader_onComplete);
-			loader1.load(new jeash.net.URLRequest(path));
+			var loader2 = ApplicationMain.loaders.get(path);
+			loader2.contentLoaderInfo.addEventListener("complete",ApplicationMain.loader_onComplete);
+			loader2.load(new jeash.net.URLRequest(path));
 		}
 		var $it1 = ApplicationMain.urlLoaders.keys();
 		while( $it1.hasNext() ) {
@@ -13592,6 +13740,7 @@ ApplicationMain.begin = function() {
 	ApplicationMain.preloader.onLoaded();
 }
 ApplicationMain.getAsset = function(inName) {
+	if(inName == "Assets/background.jpg") return nme.installer.Assets.getBitmapData("Assets/background.jpg");
 	if(inName == "Assets/jewel.png") return nme.installer.Assets.getBitmapData("Assets/jewel.png");
 	return null;
 }
@@ -16087,10 +16236,10 @@ NMEPreloader.prototype.getBackgroundColor = function() {
 	return 16777215;
 }
 NMEPreloader.prototype.getHeight = function() {
-	return 600;
+	return 480;
 }
 NMEPreloader.prototype.getWidth = function() {
-	return 800;
+	return 640;
 }
 NMEPreloader.prototype.onInit = function() {
 }

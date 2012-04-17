@@ -5,6 +5,7 @@ import box2D.dynamics.contacts.B2Contact;
 import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.core.State;
 import com.citruxengine.math.MathVector;
+import com.citruxengine.objects.CitruxSprite;
 import com.citruxengine.objects.PhysicsObject;
 import com.citruxengine.objects.platformer.Baddy;
 import com.citruxengine.objects.platformer.Coin;
@@ -31,6 +32,9 @@ class GameState extends State {
 		box2d.visible = true;
 		add(box2d);
 
+		var background:CitruxSprite = new CitruxSprite("background", {x:0, y:0, view:"Assets/background.jpg"});
+		add(background);
+
 		var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:250, y:200, width:30, height:30});
 		//var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:100, y:20});
 		//var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:100, y:20, radius:20});
@@ -53,7 +57,7 @@ class GameState extends State {
 		add(coin);
 		coin.onBeginContact.add(_recoltCoin);
 		
-		view.setupCamera(hero, new MathVector(320, 240), new Rectangle(0, 0, 1550, 1300), new MathVector(.25, .05));
+		view.setupCamera(hero, new MathVector(320, 240), new Rectangle(0, 0, 1550, 0), new MathVector(.25, .05));
 	}
 
 	private function _recoltCoin(ctc:B2Contact):Void {

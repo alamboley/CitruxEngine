@@ -34,6 +34,11 @@ class ApplicationMain {
 		
 		
 		var loader:Loader = new Loader ();
+		loaders.set ("Assets/background.jpg", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader ();
 		loaders.set ("Assets/jewel.png", loader);
 		total ++;
 		
@@ -75,6 +80,12 @@ class ApplicationMain {
 
    public static function getAsset(inName:String):Dynamic {
 	   
+		
+		if (inName=="Assets/background.jpg") {
+			
+			return Assets.getBitmapData ("Assets/background.jpg");
+			
+		}
 		
 		if (inName=="Assets/jewel.png") {
 			
@@ -124,5 +135,7 @@ class ApplicationMain {
 }
 
 
+
+	
 
 	
