@@ -47,7 +47,7 @@ class Sensor extends PhysicsObject {
 
 		super.destroy();
 	}
-
+	
 	override private function defineBody():Void {
 
 		super.defineBody();

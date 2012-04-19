@@ -69,11 +69,6 @@ class CitruxSprite extends CitruxObject, implements ISpriteView {
 		super(name, params);
 	}
 
-	override public function destroy():Void {
-
-		super.destroy();
-	}
-
 	public function getX():Float {
 		return _x;
 	}

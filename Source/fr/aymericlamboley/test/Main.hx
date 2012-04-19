@@ -21,8 +21,10 @@ class Main extends CitruxEngine {
 		
 		super ();
 
+		sound.addSound("collect", "Assets/collect.wav");
+
 		state = new GameState();
 
-		Lib.current.addChild(new FPS(0, 0, 0xFF6600));
+		this.addChild(new FPS(0, 0, 0xFF6600));
 	}
 }

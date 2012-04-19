@@ -55,9 +55,29 @@ class ApplicationMain {
             return Assets.getBitmapData ("Assets/background.jpg");
          
 		
+		if (inName=="Assets/collect.wav")
+			 
+            return Assets.getSound ("Assets/collect.wav");
+         
+		
+		if (inName=="Assets/crate.png")
+			 
+            return Assets.getBitmapData ("Assets/crate.png");
+         
+		
 		if (inName=="Assets/jewel.png")
 			 
             return Assets.getBitmapData ("Assets/jewel.png");
+         
+		
+		if (inName=="Assets/LevelA1.swc")
+			 
+            return Assets.getBytes ("Assets/LevelA1.swc");
+         
+		
+		if (inName=="Assets/LevelA1.swf")
+			 
+            return Assets.getBytes ("Assets/LevelA1.swf");
          
 		
 		
@@ -86,5 +106,21 @@ class ApplicationMain {
 	
 
 	
+		class NME_assets_collect_wav extends nme.media.Sound { }
+	
+
+	
+		class NME_assets_crate_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+	
+
+	
 		class NME_assets_jewel_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+	
+
+	
+		class NME_assets_levela1_swc extends nme.utils.ByteArray { }
+	
+
+	
+		class NME_assets_levela1_swf extends nme.utils.ByteArray { }
 	

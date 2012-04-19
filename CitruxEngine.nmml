@@ -12,6 +12,7 @@
 	<haxelib name="nme" />
 	<haxelib name="box2d" />
 	<haxelib name="hxs" />
+	<haxelib name="swf" />
 
 	<assets path="Assets" include="*" exclude="CitruxEngine.png" />
 

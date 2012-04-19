@@ -9,12 +9,17 @@ import com.citruxengine.objects.CitruxSprite;
 import com.citruxengine.objects.PhysicsObject;
 import com.citruxengine.objects.platformer.Baddy;
 import com.citruxengine.objects.platformer.Coin;
+import com.citruxengine.objects.platformer.Crate;
 import com.citruxengine.objects.platformer.Hero;
 import com.citruxengine.objects.platformer.MovingPlatform;
 import com.citruxengine.objects.platformer.Platform;
 import com.citruxengine.objects.platformer.Sensor;
 import com.citruxengine.physics.Box2D;
+import com.citruxengine.utils.ObjectMaker;
 
+import format.SWF;
+
+import nme.Assets;
 import nme.geom.Rectangle;
 
 class GameState extends State {
@@ -32,10 +37,12 @@ class GameState extends State {
 		box2d.visible = true;
 		add(box2d);
 
+		//ObjectMaker.FromMovieClip(new SWF(Assets.getBytes("Assets/LevelA1.swf")).createMovieClip());
+
 		var background:CitruxSprite = new CitruxSprite("background", {x:0, y:0, view:"Assets/background.jpg"});
 		add(background);
 
-		var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:250, y:200, width:30, height:30});
+		var physicsObject:Crate = new Crate("physicsObject", {x:250, y:200, width:70, height:75, view:"Assets/crate.png"});
 		//var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:100, y:20});
 		//var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:100, y:20, radius:20});
 		add(physicsObject);
@@ -64,7 +71,10 @@ class GameState extends State {
 
 		var hero:Hero = Std.is(ctc.m_fixtureA.getBody().getUserData(), Hero) ? ctc.m_fixtureA.getBody().getUserData() : Std.is(ctc.m_fixtureB.getBody().getUserData(), Hero) ? ctc.m_fixtureB.getBody().getUserData() : null;
 		
-		if (hero != null)
+		if (hero != null) {
+
 			remove(Std.is(ctc.m_fixtureA.getBody().getUserData(), Coin) ? ctc.m_fixtureA.getBody().getUserData() : ctc.m_fixtureB.getBody().getUserData());
+			_ce.sound.playSound("collect");
+		}
 	}
 }

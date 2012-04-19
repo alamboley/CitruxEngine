@@ -1,6 +1,7 @@
 package com.citruxengine.core;
 
 import com.citruxengine.core.Input;
+import com.citruxengine.core.SoundManager;
 import com.citruxengine.core.State;
 
 import nme.display.Sprite;
@@ -23,6 +24,7 @@ class CitruxEngine extends Sprite {
 	public var state(getState, setState):State;
 	public var playing(getPlaying, setPlaying):Bool;
 	public var input(getInput, never):Input;
+	public var sound(getSound, never):SoundManager;
 
 	var _state:State;
 	var _newState:State;
@@ -31,6 +33,7 @@ class CitruxEngine extends Sprite {
 	var _playing:Bool;
 
 	var _input:Input;
+	var _sound:SoundManager;
 
 	var _startTime:Float;
 	var _gameTime:Float;
@@ -53,6 +56,9 @@ class CitruxEngine extends Sprite {
 
 		//Set up input
 		_input = new Input();
+
+		//Set up sound manager
+		_sound = new SoundManager();
 
 		this.addEventListener(Event.ENTER_FRAME, _handleEnterFrame);
 		this.addEventListener(Event.ADDED_TO_STAGE, _handleAddedToStage);
@@ -134,6 +140,13 @@ class CitruxEngine extends Sprite {
 	 */		
 	public function getInput():Input {
 		return _input;
+	}
+
+	/**
+	 * A reference to the SoundManager instance. Use it if you want.
+	 */
+	public function getSound():SoundManager {
+		return _sound;
 	}
 
 	/**

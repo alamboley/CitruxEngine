@@ -30,8 +30,16 @@ class Assets {
 			
 			resourceClasses.set ("Assets/background.jpg", NME_assets_background_jpg);
 			resourceTypes.set ("Assets/background.jpg", "image");
+			resourceClasses.set ("Assets/collect.wav", NME_assets_collect_wav);
+			resourceTypes.set ("Assets/collect.wav", "sound");
+			resourceClasses.set ("Assets/crate.png", NME_assets_crate_png);
+			resourceTypes.set ("Assets/crate.png", "image");
 			resourceClasses.set ("Assets/jewel.png", NME_assets_jewel_png);
 			resourceTypes.set ("Assets/jewel.png", "image");
+			resourceClasses.set ("Assets/LevelA1.swc", NME_assets_levela1_swc);
+			resourceTypes.set ("Assets/LevelA1.swc", "asset");
+			resourceClasses.set ("Assets/LevelA1.swf", NME_assets_levela1_swf);
+			resourceTypes.set ("Assets/LevelA1.swf", "asset");
 			
 			initialized = true;
 			

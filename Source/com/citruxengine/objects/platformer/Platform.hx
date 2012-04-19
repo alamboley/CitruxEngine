@@ -17,12 +17,7 @@ class Platform extends PhysicsObject {
 
 		super(name, params);
 	}
-
-	override public function destroy():Void {
-
-		super.destroy();
-	}
-
+	
 	override private function defineBody():Void {
 
 		super.defineBody();

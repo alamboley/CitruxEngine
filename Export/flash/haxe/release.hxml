@@ -4,6 +4,7 @@
 -lib nme
 -lib box2d
 -lib hxs
+-lib swf
 -D web
 -swf-version 10
 -swf9 Export/flash/bin/CitruxEngineExample.swf
