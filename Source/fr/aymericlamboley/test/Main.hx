@@ -2,8 +2,6 @@ package fr.aymericlamboley.test;
 
 import com.citruxengine.core.CitruxEngine;
 
-import fr.aymericlamboley.test.GameState;
-
 import nme.display.FPS;
 import nme.Lib;
 
@@ -22,6 +20,8 @@ class Main extends CitruxEngine {
 		super ();
 
 		sound.addSound("collect", "Assets/collect.wav");
+
+		gameData = new GameData();
 
 		state = new GameState();
 

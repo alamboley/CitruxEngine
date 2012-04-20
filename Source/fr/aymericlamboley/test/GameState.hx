@@ -32,6 +32,8 @@ class GameState extends State {
 	override public function initialize():Void {
 
 		super.initialize();
+		
+		_ce.gameData.dataChanged.add(_gameDataChanged);
 
 		var box2d:Box2D = new Box2D("Box2D");
 		box2d.visible = true;
@@ -63,8 +65,13 @@ class GameState extends State {
 		var coin:Coin = new Coin("Coin", {x:Std.random(400), y:Std.random(300) + 100, radius:30, view:"Assets/jewel.png"});
 		add(coin);
 		coin.onBeginContact.add(_recoltCoin);
-		
+
 		view.setupCamera(hero, new MathVector(320, 240), new Rectangle(0, 0, 1550, 0), new MathVector(.25, .05));
+	}
+
+	private function _gameDataChanged(object:String, value:Dynamic):Void {
+
+		trace(object + " - " + value);
 	}
 
 	private function _recoltCoin(ctc:B2Contact):Void {

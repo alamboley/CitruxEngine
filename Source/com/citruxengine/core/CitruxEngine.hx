@@ -3,6 +3,7 @@ package com.citruxengine.core;
 import com.citruxengine.core.Input;
 import com.citruxengine.core.SoundManager;
 import com.citruxengine.core.State;
+import com.citruxengine.utils.AGameData;
 
 import nme.display.Sprite;
 import nme.display.StageAlign;
@@ -23,6 +24,7 @@ class CitruxEngine extends Sprite {
 
 	public var state(getState, setState):State;
 	public var playing(getPlaying, setPlaying):Bool;
+	public var gameData(getGameData, setGameData):AGameData;
 	public var input(getInput, never):Input;
 	public var sound(getSound, never):SoundManager;
 
@@ -32,6 +34,7 @@ class CitruxEngine extends Sprite {
 
 	var _playing:Bool;
 
+	var _gameData:AGameData;
 	var _input:Input;
 	var _sound:SoundManager;
 
@@ -133,6 +136,21 @@ class CitruxEngine extends Sprite {
 			_gameTime = Date.now().getTime();
 
 		return _playing;
+	}
+
+	/**
+	 * A reference to the Abstract GameData instance. Use it if you want.
+	 * It's a dynamic class, so you don't have problem to access informations in its extended class.
+	 */
+	public function getGameData():AGameData {
+		return _gameData;
+	}
+
+	/**
+	 * You may use a class to store your game's data, there is already an abstract class for that :
+	 */
+	public function setGameData(value:AGameData):AGameData {
+		return _gameData = value;
 	}
 
 	/**

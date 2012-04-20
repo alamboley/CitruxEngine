@@ -42,7 +42,7 @@ class ObjectMaker {
 	 		// TODO : find a way to access code inside movieclips!
 
 	 		for (param in Reflect.fields(child)) {
-	 			
+
 	 		}
 
 	 		if (child != null) {
