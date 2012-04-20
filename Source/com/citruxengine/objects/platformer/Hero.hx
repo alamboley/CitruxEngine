@@ -96,13 +96,14 @@ class Hero extends PhysicsObject {
 			
 			var moveKeyPressed:Bool = false;
 
-			if (_ce.input.isDown(Keyboard.RIGHT)) {
+			if (_ce.input.isDown(Keyboard.RIGHT) || _ce.input.accelerometerXDirection == "right") {
 
 				velocity.add(new B2Vec2(3, 0));
 				moveKeyPressed = true;
 			}
 
-			if (_ce.input.isDown(Keyboard.LEFT)) {
+			if (_ce.input.isDown(Keyboard.LEFT) || _ce.input.accelerometerXDirection == "left") {
+
 				velocity.subtract(new B2Vec2(3, 0));
 				moveKeyPressed = true;
 			}
@@ -124,14 +125,14 @@ class Hero extends PhysicsObject {
 				_fixture.setFriction(_friction);
 			}
 
-			if (_ce.input.justPressed(Keyboard.SPACE)) {
+			if (_ce.input.justPressed(Keyboard.SPACE) || _ce.input.justJumpTouched()) {
 
 				velocity.y = -_jumpHeight;
 				onJump.dispatch();
 			}
 				
 
-			if (_ce.input.isDown(Keyboard.SPACE))
+			if (_ce.input.isDown(Keyboard.SPACE) || _ce.input.jumpTouch)
 				velocity.y -= _jumpAcceleration;
 
 			//Cap velocities

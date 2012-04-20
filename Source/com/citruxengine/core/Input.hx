@@ -1,7 +1,13 @@
 package com.citruxengine.core;
 
+import nme.events.AccelerometerEvent;
 import nme.events.KeyboardEvent;
+import nme.events.TouchEvent;
 import nme.Lib;
+import nme.ui.Acceleration;
+import nme.ui.Accelerometer;
+import nme.ui.Multitouch;
+import nme.ui.MultitouchInputMode;
 
 class Input {
 
@@ -11,20 +17,31 @@ class Input {
 	static inline public var UP:Int = 3;
 
 	public var enabled(getEnabled, setEnabled):Bool;
+	public var jumpTouch(getJumpTouch, null):Bool;
+	public var accelerometerXDirection(getAccelerometerXDirection, null):String;
 
 	private var _keys:IntHash<Int>;
 	private var _keysReleased:Array<Int>;
 	private var _initialized:Bool;
 
+	private var _acceleration:Acceleration;
+	private var _firstJumpTouch:Bool;
+
 	var _enabled:Bool;
+	var _jumpTouch:Bool;
+	var _accelerometerXDirection:String;
 
 	public function new() {
+
+		Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 
 		_keys = new IntHash<Int>();
 		_keysReleased = new Array<Int>();
 
 		_initialized = false;
 		_enabled = true;
+
+		_jumpTouch = _firstJumpTouch = false;
 	}
 
 	/**
@@ -37,9 +54,15 @@ class Input {
 
 		_initialized = true;
 
+		#if (flash || desktop)
+			Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+			Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, _onKeyUp);
 
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
-		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, _onKeyUp);
+		#elseif mobile
+			Lib.current.stage.addEventListener(TouchEvent.TOUCH_BEGIN, _touchBegin);
+			Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, _touchEnd);
+
+		#end
 	}
 
 	/**
@@ -51,14 +74,45 @@ class Input {
 		if (!_enabled)
 			return;
 
-		for (key in _keys.keys()) {
+		#if mobile
 
-			if (_keys.get(key) == JUST_PRESSED) {
-				_keys.set(key, DOWN);
+			_acceleration =  Accelerometer.get();
+
+			if (_acceleration != null) {
+
+				#if landscape
+
+					if (_acceleration.y > 0.3)
+						_accelerometerXDirection = "right";
+					else if (_acceleration.y < -0.3)
+						_accelerometerXDirection = "left";
+					else
+						_accelerometerXDirection = "immobile";
+
+				#elseif portrait 
+
+					if (_acceleration.x > 0.3)
+						_accelerometerXDirection = "right";
+					else if (_acceleration.x < -0.3)
+						_accelerometerXDirection = "left";
+					else
+						_accelerometerXDirection = "immobile";
+
+				#end
 			}
-		}
 
-		_keysReleased = [];
+		#elseif (flash || desktop)
+
+			for (key in _keys.keys()) {
+
+				if (_keys.get(key) == JUST_PRESSED) {
+					_keys.set(key, DOWN);
+				}
+			}
+
+			_keysReleased = [];
+
+		#end
 	}
 
 	/**
@@ -85,6 +139,34 @@ class Input {
 	 	return Lambda.indexOf(_keysReleased, keyCode) != -1;
 	 }
 
+	 /**
+	  * @return Says Yes if the user just pressed on the phone
+	  */
+	 public function justJumpTouched():Bool {
+
+		if (_jumpTouch && _firstJumpTouch) {
+
+			_firstJumpTouch = false;
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return Says Yes if the user still press on his phone
+	 */
+	public function getJumpTouch():Bool {
+		return _jumpTouch;
+	}
+
+	/**
+	 * @return a string with the X direction guessed by the accelerometer
+	 */
+	public function getAccelerometerXDirection():String {
+		return _accelerometerXDirection;
+	}
+
 	private function _onKeyDown(kEvt:KeyboardEvent):Void {
 
 		if (_keys.get(kEvt.keyCode) == null) {
@@ -97,6 +179,14 @@ class Input {
 
 		_keys.remove(kEvt.keyCode);
 		_keysReleased.push(kEvt.keyCode);
+	}
+
+	private function _touchBegin(tEvt:TouchEvent):Void {
+		_firstJumpTouch = _jumpTouch = true;
+	}
+
+	private function _touchEnd(tEvt:TouchEvent):Void {
+		_firstJumpTouch = _jumpTouch = false;
 	}
 
 	/**
@@ -115,11 +205,28 @@ class Input {
 		_enabled = value;
 
 		if (_enabled) {
-			Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
-			Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, _onKeyUp);
+
+			#if (flash || desktop)
+				Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+				Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, _onKeyUp);
+
+			#elseif mobile
+				Lib.current.stage.addEventListener(TouchEvent.TOUCH_BEGIN, _touchBegin);
+				Lib.current.stage.addEventListener(TouchEvent.TOUCH_END, _touchEnd);
+				
+			#end
+
 		} else {
-			Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
-			Lib.current.stage.removeEventListener(KeyboardEvent.KEY_UP, _onKeyUp);
+
+			#if (flash || desktop)
+				Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);
+				Lib.current.stage.removeEventListener(KeyboardEvent.KEY_UP, _onKeyUp);
+
+			#elseif mobile
+				Lib.current.stage.removeEventListener(TouchEvent.TOUCH_BEGIN, _touchBegin);
+				Lib.current.stage.removeEventListener(TouchEvent.TOUCH_END, _touchEnd);
+				
+			#end
 		}
 
 		return _enabled;

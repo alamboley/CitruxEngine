@@ -3,6 +3,7 @@ package fr.aymericlamboley.test;
 import com.citruxengine.core.CitruxEngine;
 
 import nme.display.FPS;
+import nme.events.Event;
 import nme.Lib;
 
 /**
@@ -27,4 +28,5 @@ class Main extends CitruxEngine {
 
 		this.addChild(new FPS(0, 0, 0xFF6600));
 	}
+
 }

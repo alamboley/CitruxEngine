@@ -5,7 +5,12 @@
 	<app main="fr.aymericlamboley.test.Main" file="CitruxEngineExample" path="Export" />
 
 	<window width="640" height="480" unless="mobile" />
+	<window orientation="portrait" if="mobile" />
 	<window fps="30" />
+
+	<haxedef name="portrait" />
+
+	<set name="SWF_VERSION" value="10.1" />
 
 	<source path="Source" />
 	
