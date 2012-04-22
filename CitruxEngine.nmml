@@ -8,6 +8,7 @@
 	<window orientation="portrait" if="mobile" />
 	<window fps="30" />
 
+	<!-- portrait or landscape (used for mobile accelerometer direction) ! -->
 	<haxedef name="portrait" />
 
 	<set name="SWF_VERSION" value="10.1" />

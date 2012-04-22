@@ -39,7 +39,7 @@ class SoundManager {
 		return sounds.exists(id);
 	}
 
-	public function playSound(id:String, volume:Float = 1.0, timesToRepeat:Int = 0):Void {
+	public function playSound(id:String, timesToRepeat:Int = 0, volume:Float = 1.0):Void {
 
 		var soundFactory:Sound = Assets.getSound(sounds.get(id));
 		soundFactory.play(0, timesToRepeat);

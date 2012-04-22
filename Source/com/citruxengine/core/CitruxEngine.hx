@@ -1,5 +1,7 @@
 package com.citruxengine.core;
 
+import com.citruxengine.core.CitruxObject;
+import com.citruxengine.core.Console;
 import com.citruxengine.core.Input;
 import com.citruxengine.core.SoundManager;
 import com.citruxengine.core.State;
@@ -27,6 +29,7 @@ class CitruxEngine extends Sprite {
 	public var gameData(getGameData, setGameData):AGameData;
 	public var input(getInput, never):Input;
 	public var sound(getSound, never):SoundManager;
+	public var console(getConsole, never):Console;
 
 	var _state:State;
 	var _newState:State;
@@ -37,6 +40,7 @@ class CitruxEngine extends Sprite {
 	var _gameData:AGameData;
 	var _input:Input;
 	var _sound:SoundManager;
+	var _console:Console;
 
 	var _startTime:Float;
 	var _gameTime:Float;
@@ -62,6 +66,11 @@ class CitruxEngine extends Sprite {
 
 		//Set up sound manager
 		_sound = new SoundManager();
+
+		//Set up console
+		_console = new Console();
+		_console.addCommand("set", _handleConsoleSetCommand);
+		this.addChild(_console);
 
 		this.addEventListener(Event.ENTER_FRAME, _handleEnterFrame);
 		this.addEventListener(Event.ADDED_TO_STAGE, _handleAddedToStage);
@@ -168,9 +177,22 @@ class CitruxEngine extends Sprite {
 	}
 
 	/**
+	 * A reference to the console, so that you can add your own console commands. See the class documentation for more info.
+	 * The console can be opened by pressing the tilde key (It looks like this: "~" right below the escape key).
+	 * There is one console command built-in by default, but you can add more by using the addCommand() method.
+	 * 
+	 * <p>To try it out, try using the "set" command to change a property on a CitrusObject. You can toggle Box2D's
+	 * debug draw visibility like this "set Box2D visible false". If your Box2D CitrusObject instance is not named
+	 * "Box2D", use the name you gave it instead.</p>
+	 */
+	public function getConsole():Console {
+		return _console;
+	}
+
+	/**
 	 * Set up things that need the stage access.
 	 */
-	 private function _handleAddedToStage(evt:Event):Void {
+	private function _handleAddedToStage(evt:Event):Void {
 
 	 	this.removeEventListener(Event.ADDED_TO_STAGE, _handleAddedToStage);
 
@@ -179,20 +201,39 @@ class CitruxEngine extends Sprite {
 		Lib.current.stage.addEventListener(Event.DEACTIVATE, _handleStageDeactivated);
 
 		_input.initialize();
-	 }
+	}
 
-	 private function _handleStageDeactivated(evt:Event):Void {
+	private function _handleStageDeactivated(evt:Event):Void {
 
-	 	if (_playing) {
+		if (_playing) {
 
 	 		_playing = false;
 	 		Lib.current.stage.addEventListener(Event.ACTIVATE, _handleStageActivated);
 	 	}
-	 }
+	}
 
-	 private function _handleStageActivated(evt:Event):Void {
+	private function _handleStageActivated(evt:Event):Void {
 
 	 	_playing = true;
 	 	Lib.current.stage.removeEventListener(Event.ACTIVATE, _handleStageActivated);
-	 }
+	}
+
+	private function _handleConsoleSetCommand(objectName:String, paramName:String, paramValue:String):Void {
+		trace('function set exec');
+	 	var object:CitruxObject = _state.getObjectByName(objectName);
+
+		if (object == null) {
+
+			trace("Warning: There is no object named " + objectName);
+	 		return;
+	 	}
+
+	 	var value:Dynamic = paramValue;
+
+	 	if (Reflect.hasField(object, paramName)) {
+	 		Reflect.setField(object, paramName, value);
+	 	} else {
+	 		trace("Warning: " + objectName + " has no parameter named " + paramName + ".");
+	 	}
+	}
 }

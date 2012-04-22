@@ -11,6 +11,5 @@
 -swf9 Export/flash/bin/CitruxEngineExample.swf
 -swf-header 640:480:30:ffffff
 -cp Export/flash/haxe
--D fdb
 --no-inline
 -debug
