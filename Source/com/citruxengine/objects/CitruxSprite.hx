@@ -31,7 +31,7 @@ class CitruxSprite extends CitruxObject, implements ISpriteView {
 	public var offsetY(getOffsetY, setOffsetY):Float;
 	public var registration(getRegistration, setRegistration):String;
 
-	var _ce:CitruxEngine;
+	var _ce:CitruxEngine<Dynamic>;
 
 	var _x:Float;
 	var _y:Float;

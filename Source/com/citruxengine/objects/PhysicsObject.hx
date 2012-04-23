@@ -51,7 +51,7 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 	 */
 	public var gravity:Float;
 
-	var _ce:CitruxEngine;
+	var _ce:CitruxEngine<Dynamic>;
 	var _box2D:Box2D;
 	var _bodyDef:B2BodyDef;
 	var _body:B2Body;

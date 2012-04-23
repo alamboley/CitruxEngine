@@ -9,7 +9,7 @@ import nme.Lib;
 /**
  * @author Aymeric Lamboley
  */
-class Main extends CitruxEngine {
+class Main extends CitruxEngine<GameData> {
 
 	public static function main() {
 		

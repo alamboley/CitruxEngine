@@ -15,11 +15,11 @@ import nme.display.Sprite;
  * create a state that represents all your levels. You can get and set the reference to your active
  * state via the CitruxEngine class.
  */
-class State extends Sprite {
+class State<T> extends Sprite {
 
 	public var view(getView, never):CitruxView;
 
-	private var _ce:CitruxEngine;
+	private var _ce:CitruxEngine<T>;
 
 	private var _objects:Array<CitruxObject>;
 	private var _view:CitruxView;
@@ -29,7 +29,7 @@ class State extends Sprite {
 
 		super();
 
-		_ce = CitruxEngine.getInstance();
+		_ce = cast CitruxEngine.getInstance();
 
 		_objects = new Array<CitruxObject>();
 	}

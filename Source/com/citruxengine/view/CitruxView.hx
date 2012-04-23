@@ -66,7 +66,7 @@ class CitruxView  {
 
 		_viewObjects = new Hash<Dynamic>();
 
-		var ce:CitruxEngine = CitruxEngine.getInstance();
+		var ce:CitruxEngine<Dynamic> = CitruxEngine.getInstance();
 
 		cameraLensWidth = ce.stage.width;
 		cameraLensHeight = ce.stage.height;

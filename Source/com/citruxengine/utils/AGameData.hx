@@ -8,13 +8,17 @@ import hxs.Signal2;
  * You can dispatch a signal, dataChanged, if you update one of your data.
  * For more information, watch the example below. 
  */
-class AGameData implements Dynamic<Dynamic> {
+class AGameData {
 
 	public var dataChanged:Signal2<String, Dynamic>;
 
-	private var _lives:Int;
-	private var _score:Int;
-	private var _timeLeft:Int;
+	public var lives(getLives, setLives):Int;
+	public var score(getScore, setScore):Int;
+	public var timeLeft(getTimeLeft, setTimeLeft):Int;
+
+	var _lives:Int;
+	var _score:Int;
+	var _timeLeft:Int;
 
 	private var _levels:Array<Dynamic>;
 

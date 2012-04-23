@@ -7,7 +7,5 @@ class GameData extends AGameData {
 	public function new () {
 
 		super();
-
-		_lives = 5;
 	}
 }

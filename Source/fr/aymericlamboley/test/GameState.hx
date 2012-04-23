@@ -22,7 +22,7 @@ import format.SWF;
 import nme.Assets;
 import nme.geom.Rectangle;
 
-class GameState extends State {
+class GameState extends State<GameData> {
 
 	public function new() {
 
