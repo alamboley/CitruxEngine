@@ -97,13 +97,13 @@ class Hero extends PhysicsObject {
 			var moveKeyPressed:Bool = false;
 
 			if (_ce.input.isDown(Keyboard.RIGHT) || _ce.input.accelerometerXDirection == "right") {
-
+				_animation = "walk";
 				velocity.add(new B2Vec2(3, 0));
 				moveKeyPressed = true;
 			}
 
 			if (_ce.input.isDown(Keyboard.LEFT) || _ce.input.accelerometerXDirection == "left") {
-
+				_animation = "walk";
 				velocity.subtract(new B2Vec2(3, 0));
 				moveKeyPressed = true;
 			}
@@ -126,7 +126,7 @@ class Hero extends PhysicsObject {
 			}
 
 			if (_ce.input.justPressed(Keyboard.SPACE) || _ce.input.justJumpTouched()) {
-
+				_animation = "jump";
 				velocity.y = -_jumpHeight;
 				onJump.dispatch();
 			}

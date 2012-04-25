@@ -65,6 +65,16 @@ class ApplicationMain {
             return Assets.getBitmapData ("Assets/crate.png");
          
 		
+		if (inName=="Assets/hero.png")
+			 
+            return Assets.getBitmapData ("Assets/hero.png");
+         
+		
+		if (inName=="Assets/hero.xml")
+			 
+            return Assets.getBytes ("Assets/hero.xml");
+         
+		
 		if (inName=="Assets/jewel.png")
 			 
             return Assets.getBitmapData ("Assets/jewel.png");
@@ -111,6 +121,14 @@ class ApplicationMain {
 
 	
 		class NME_assets_crate_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+	
+
+	
+		class NME_assets_hero_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+	
+
+	
+		class NME_assets_hero_xml extends nme.utils.ByteArray { }
 	
 
 	

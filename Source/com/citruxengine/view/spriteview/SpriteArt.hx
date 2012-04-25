@@ -2,6 +2,7 @@ package com.citruxengine.view.spriteview;
 
 import com.citruxengine.core.CitruxObject;
 import com.citruxengine.view.ISpriteView;
+import com.citruxengine.view.spriteview.AnimationSequence;
 import com.citruxengine.view.spriteview.Box2DDebugArt;
 import com.citruxengine.view.spriteview.SpriteView;
 
@@ -79,9 +80,14 @@ class SpriteArt extends Sprite {
 				}
 
 			} else if (Std.is(_view, Class)) {
-
+				// view property is a class reference
 				content = Type.createInstance(_citruxObject.view, []);
 				this.addChild(content);
+
+			} else if (Std.is(_view, DisplayObject)) {
+				// view property is a Display Object reference
+				content = _view;
+				addChild(content);
 
 			} else {
 				trace("SpriteArt doesn't know how to create a graphic object from the provided CitruxObject " + citruxObject);
@@ -101,6 +107,12 @@ class SpriteArt extends Sprite {
 			return _animation;
 
 		_animation = value;
+
+		if (_animation != "") {
+
+			if (Std.is(content, AnimationSequence))
+				cast(content, AnimationSequence).changeAnimation(_animation);
+		}
 
 		return _animation;
 	}

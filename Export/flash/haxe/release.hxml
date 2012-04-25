@@ -5,6 +5,7 @@
 -lib nme
 -lib box2d
 -lib hxs
+-lib spritesheet
 -lib swf
 -D web
 -swf-version 10.1

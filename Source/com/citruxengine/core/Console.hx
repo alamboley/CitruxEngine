@@ -122,6 +122,7 @@ class Console extends Sprite {
 			// TODO :
 			var func:String->String->String->Void = Reflect.getProperty(_commandDelegates, "set");			
 			func("Box2D", "visible", "false");
+			//trace(Reflect.callMethod(this.parent, Reflect.getProperty(_commandDelegates, "set"), ["Box2D", "visible", "false"]));
 		}
 	}
 

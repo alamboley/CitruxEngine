@@ -16,6 +16,10 @@ import com.citruxengine.objects.platformer.Platform;
 import com.citruxengine.objects.platformer.Sensor;
 import com.citruxengine.physics.Box2D;
 import com.citruxengine.utils.ObjectMaker;
+import com.citruxengine.view.spriteview.AnimationSequence;
+
+import com.eclecticdesignstudio.spritesheet.SpriteSheet;
+import com.eclecticdesignstudio.spritesheet.importers.SpriteLoq;
 
 import format.SWF;
 
@@ -36,7 +40,7 @@ class GameState extends State<GameData> {
 		_ce.gameData.dataChanged.add(_gameDataChanged);
 
 		var box2d:Box2D = new Box2D("Box2D");
-		box2d.visible = true;
+		//box2d.visible = true;
 		add(box2d);
 
 		//ObjectMaker.FromMovieClip(new SWF(Assets.getBytes("Assets/LevelA1.swf")).createMovieClip());
@@ -59,7 +63,8 @@ class GameState extends State<GameData> {
 		add(new Platform("platform2", {x:700, y:380, width:500, height:30}));
 		add(new Platform("platform3", {x:850, y:550, width:500, height:30, rotation:20}));
 
-		var hero:Hero = new Hero("hero", {x:100, y:20, width:30, height:60});
+		var spriteSheet:SpriteSheet = SpriteLoq.parse(ApplicationMain.getAsset("Assets/hero.xml"), "Assets");
+		var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new AnimationSequence(spriteSheet, "idle")});
 		add(hero);
 
 		var coin:Coin = new Coin("Coin", {x:Std.random(400), y:Std.random(300) + 100, radius:30, view:"Assets/jewel.png"});

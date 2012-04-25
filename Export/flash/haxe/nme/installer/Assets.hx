@@ -34,6 +34,10 @@ class Assets {
 			resourceTypes.set ("Assets/collect.wav", "sound");
 			resourceClasses.set ("Assets/crate.png", NME_assets_crate_png);
 			resourceTypes.set ("Assets/crate.png", "image");
+			resourceClasses.set ("Assets/hero.png", NME_assets_hero_png);
+			resourceTypes.set ("Assets/hero.png", "image");
+			resourceClasses.set ("Assets/hero.xml", NME_assets_hero_xml);
+			resourceTypes.set ("Assets/hero.xml", "asset");
 			resourceClasses.set ("Assets/jewel.png", NME_assets_jewel_png);
 			resourceTypes.set ("Assets/jewel.png", "image");
 			resourceClasses.set ("Assets/LevelA1.swc", NME_assets_levela1_swc);
