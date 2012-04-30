@@ -30,6 +30,10 @@ class Assets {
 			
 			resourceClasses.set ("Assets/background.jpg", NME_assets_background_jpg);
 			resourceTypes.set ("Assets/background.jpg", "image");
+			resourceClasses.set ("Assets/baddy.png", NME_assets_baddy_png);
+			resourceTypes.set ("Assets/baddy.png", "image");
+			resourceClasses.set ("Assets/baddy.xml", NME_assets_baddy_xml);
+			resourceTypes.set ("Assets/baddy.xml", "asset");
 			resourceClasses.set ("Assets/collect.wav", NME_assets_collect_wav);
 			resourceTypes.set ("Assets/collect.wav", "sound");
 			resourceClasses.set ("Assets/crate.png", NME_assets_crate_png);

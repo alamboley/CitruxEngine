@@ -51,21 +51,23 @@ class GameState extends State<GameData> {
 		var physicsObject:Crate = new Crate("physicsObject", {x:250, y:200, width:70, height:75, view:"Assets/crate.png"});
 		//var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:100, y:20});
 		//var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:100, y:20, radius:20});
-		add(physicsObject);
+		add(physicsObject);		
 
-		var baddy:Baddy = new Baddy("baddy", {x:540, y:200, width:30, height:60});
-		add(baddy);
+		//var movingPlatform:MovingPlatform = new MovingPlatform("movingPlatform", {x:430, y:120, width:120, height:20, endX:430, startY:20, endY:270});
+		//add(movingPlatform);
 
-		var movingPlatform:MovingPlatform = new MovingPlatform("movingPlatform", {x:430, y:120, width:120, height:20, endX:430, startY:20, endY:300});
-		add(movingPlatform);
-
-		add(new Platform("platform1", {x:260, y:450, width:500, height:30}));
-		add(new Platform("platform2", {x:700, y:380, width:500, height:30}));
-		add(new Platform("platform3", {x:850, y:550, width:500, height:30, rotation:20}));
+		add(new Platform("platform1", {x:498, y:403, width:948, height:20}));
+		add(new Platform("platform2", {x:0, y:202, width:20, height:404}));
+		add(new Platform("platform3", {x:1278, y:363, width:624, height:20}));
+		add(new Platform("platform4", {x:1566, y:165, width:20, height:404}));
 
 		var spriteSheet:SpriteSheet = SpriteLoq.parse(ApplicationMain.getAsset("Assets/hero.xml"), "Assets");
 		var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new AnimationSequence(spriteSheet, "idle")});
 		add(hero);
+
+		spriteSheet = SpriteLoq.parse(ApplicationMain.getAsset("Assets/baddy.xml"), "Assets");
+		var baddy:Baddy = new Baddy("baddy", {x:540, y:200, width:46, height:68, view:new AnimationSequence(spriteSheet, "walk")});
+		add(baddy);
 
 		var coin:Coin = new Coin("Coin", {x:Std.random(400), y:Std.random(300) + 100, radius:30, view:"Assets/jewel.png"});
 		add(coin);

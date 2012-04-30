@@ -55,6 +55,16 @@ class ApplicationMain {
             return Assets.getBitmapData ("Assets/background.jpg");
          
 		
+		if (inName=="Assets/baddy.png")
+			 
+            return Assets.getBitmapData ("Assets/baddy.png");
+         
+		
+		if (inName=="Assets/baddy.xml")
+			 
+            return Assets.getBytes ("Assets/baddy.xml");
+         
+		
 		if (inName=="Assets/collect.wav")
 			 
             return Assets.getSound ("Assets/collect.wav");
@@ -113,6 +123,14 @@ class ApplicationMain {
 
 	
 		class NME_assets_background_jpg extends nme.display.BitmapData { public function new () { super (0, 0); } }
+	
+
+	
+		class NME_assets_baddy_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+	
+
+	
+		class NME_assets_baddy_xml extends nme.utils.ByteArray { }
 	
 
 	

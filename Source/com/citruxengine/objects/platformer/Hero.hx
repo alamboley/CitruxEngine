@@ -150,6 +150,9 @@ class Hero extends PhysicsObject {
 
 	public function updateAnimation():Void {
 
+		var prevAnimation:String = _animation;
+
+		var velocity:B2Vec2 = _body.getLinearVelocity();
 	}
 
 	override public function handleBeginContact(contact:B2Contact):Void {

@@ -4,7 +4,7 @@
 	<meta title="Citrux Engine Example" package="fr.aymericlamboley.test" version="1.0.0" company="Aymeric Lamboley" />
 	<app main="fr.aymericlamboley.test.Main" file="CitruxEngineExample" path="Export" />
 
-	<window width="640" height="480" unless="mobile" />
+	<window width="640" height="450" unless="mobile" />
 	<window orientation="portrait" if="mobile" />
 	<window fps="30" />
 

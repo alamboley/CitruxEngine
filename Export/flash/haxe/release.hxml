@@ -10,5 +10,5 @@
 -D web
 -swf-version 10.1
 -swf9 Export/flash/bin/CitruxEngineExample.swf
--swf-header 640:480:30:ffffff
+-swf-header 640:450:30:ffffff
 -cp Export/flash/haxe

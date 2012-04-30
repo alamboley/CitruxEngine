@@ -25,13 +25,13 @@ class AnimationSequence extends Sprite {
 
 		_previousTime = Lib.getTimer();
 
-		this.addEventListener(Event.ENTER_FRAME, _enterFrame);
+		this.addEventListener(Event.ENTER_FRAME, _update);
 	}
 
 	public function destroy():Void {
 
 		this.removeChild(_animatedSprite);
-		this.removeEventListener(Event.ENTER_FRAME, _enterFrame);
+		this.removeEventListener(Event.ENTER_FRAME, _update);
 	}
 
 	public function changeAnimation(animation:String):Void {
@@ -39,7 +39,7 @@ class AnimationSequence extends Sprite {
 		_animatedSprite.showBehavior(animation);
 	}
 
-	private function _enterFrame(evt:Event):Void {
+	private function _update(evt:Event):Void {
 
 		var currentTime:Int = Lib.getTimer ();
 		var deltaTime:Int = currentTime - _previousTime;
