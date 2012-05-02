@@ -28,7 +28,31 @@ class ApplicationMain {
 		
 		
 		if (call_real)
-			Main.main();
+			begin ();
+	}
+	
+	private static function begin () {
+		
+		var hasMain = false;
+		
+		for (methodName in Type.getClassFields(fr.aymericlamboley.test.Main))
+		{
+			if (methodName == "main")
+			{
+				hasMain = true;
+				break;
+			}
+		}
+		
+		if (hasMain)
+		{
+			Reflect.callMethod (fr.aymericlamboley.test.Main, Reflect.field (fr.aymericlamboley.test.Main, "main"), []);
+		}
+		else
+		{
+			nme.Lib.current.addChild(cast (Type.createInstance(fr.aymericlamboley.test.Main, []), nme.display.DisplayObject));	
+		}
+		
 	}
 
 	static function onEnter (_) {
@@ -113,7 +137,7 @@ class ApplicationMain {
 		nme.Lib.current.removeChild(mPreloader);
 		mPreloader = null;
 		
-		Main.main ();
+		begin ();
 		
 	}
 	

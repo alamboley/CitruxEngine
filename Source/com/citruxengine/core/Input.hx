@@ -24,7 +24,10 @@ class Input {
 	private var _keysReleased:Array<Int>;
 	private var _initialized:Bool;
 
-	private var _acceleration:Acceleration;
+	#if mobile
+		private var _acceleration:Acceleration;
+	#end
+
 	private var _firstJumpTouch:Bool;
 
 	var _enabled:Bool;

@@ -51,7 +51,7 @@ class GameState extends State<GameData> {
 		var physicsObject:Crate = new Crate("physicsObject", {x:250, y:200, width:70, height:75, view:"Assets/crate.png"});
 		//var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:100, y:20});
 		//var physicsObject:PhysicsObject = new PhysicsObject("physicsObject", {x:100, y:20, radius:20});
-		add(physicsObject);		
+		add(physicsObject);
 
 		//var movingPlatform:MovingPlatform = new MovingPlatform("movingPlatform", {x:430, y:120, width:120, height:20, endX:430, startY:20, endY:270});
 		//add(movingPlatform);
