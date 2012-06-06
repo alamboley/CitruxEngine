@@ -17,8 +17,10 @@
 	
 	<haxelib name="nme" />
 	<haxelib name="box2d" />
+	<haxelib name="nape" />
 	<haxelib name="hxs" />
 	<haxelib name="spritesheet" />
+	<haxelib name="tilelayer" />
 	<haxelib name="swf" />
 
 	<assets path="Assets" include="*" exclude="CitruxEngine.png" />

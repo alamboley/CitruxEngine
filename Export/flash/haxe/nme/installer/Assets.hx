@@ -33,7 +33,7 @@ class Assets {
 			resourceClasses.set ("Assets/baddy.png", NME_assets_baddy_png);
 			resourceTypes.set ("Assets/baddy.png", "image");
 			resourceClasses.set ("Assets/baddy.xml", NME_assets_baddy_xml);
-			resourceTypes.set ("Assets/baddy.xml", "asset");
+			resourceTypes.set ("Assets/baddy.xml", "text");
 			resourceClasses.set ("Assets/collect.wav", NME_assets_collect_wav);
 			resourceTypes.set ("Assets/collect.wav", "sound");
 			resourceClasses.set ("Assets/crate.png", NME_assets_crate_png);
@@ -41,13 +41,13 @@ class Assets {
 			resourceClasses.set ("Assets/hero.png", NME_assets_hero_png);
 			resourceTypes.set ("Assets/hero.png", "image");
 			resourceClasses.set ("Assets/hero.xml", NME_assets_hero_xml);
-			resourceTypes.set ("Assets/hero.xml", "asset");
+			resourceTypes.set ("Assets/hero.xml", "text");
 			resourceClasses.set ("Assets/jewel.png", NME_assets_jewel_png);
 			resourceTypes.set ("Assets/jewel.png", "image");
 			resourceClasses.set ("Assets/LevelA1.swc", NME_assets_levela1_swc);
-			resourceTypes.set ("Assets/LevelA1.swc", "asset");
+			resourceTypes.set ("Assets/LevelA1.swc", "binary");
 			resourceClasses.set ("Assets/LevelA1.swf", NME_assets_levela1_swf);
-			resourceTypes.set ("Assets/LevelA1.swf", "asset");
+			resourceTypes.set ("Assets/LevelA1.swf", "binary");
 			
 			initialized = true;
 			
@@ -97,11 +97,11 @@ class Assets {
 		
 		if (resourceClasses.exists (id)) {
 			
-			return cast (Type.createInstance (resourceClasses.get (id), []), ByteArray);
+			return Type.createInstance (resourceClasses.get (id), []);
 			
 		} else {
 			
-			trace ("[nme.Assets] There is no String or ByteArray asset with an ID of \"" + id + "\"");
+			trace ("[nme.Assets] There is no ByteArray asset with an ID of \"" + id + "\"");
 			
 			return null;
 			

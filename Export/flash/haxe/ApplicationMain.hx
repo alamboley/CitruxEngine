@@ -86,7 +86,7 @@ class ApplicationMain {
 		
 		if (inName=="Assets/baddy.xml")
 			 
-            return Assets.getBytes ("Assets/baddy.xml");
+			 return Assets.getText ("Assets/baddy.xml");
          
 		
 		if (inName=="Assets/collect.wav")
@@ -106,7 +106,7 @@ class ApplicationMain {
 		
 		if (inName=="Assets/hero.xml")
 			 
-            return Assets.getBytes ("Assets/hero.xml");
+			 return Assets.getText ("Assets/hero.xml");
          
 		
 		if (inName=="Assets/jewel.png")
@@ -144,43 +144,13 @@ class ApplicationMain {
 }
 
 
-
-	
-		class NME_assets_background_jpg extends nme.display.BitmapData { public function new () { super (0, 0); } }
-	
-
-	
-		class NME_assets_baddy_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
-	
-
-	
-		class NME_assets_baddy_xml extends nme.utils.ByteArray { }
-	
-
-	
-		class NME_assets_collect_wav extends nme.media.Sound { }
-	
-
-	
-		class NME_assets_crate_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
-	
-
-	
-		class NME_assets_hero_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
-	
-
-	
-		class NME_assets_hero_xml extends nme.utils.ByteArray { }
-	
-
-	
-		class NME_assets_jewel_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
-	
-
-	
-		class NME_assets_levela1_swc extends nme.utils.ByteArray { }
-	
-
-	
-		class NME_assets_levela1_swf extends nme.utils.ByteArray { }
-	
+class NME_assets_background_jpg extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_baddy_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_baddy_xml extends nme.utils.ByteArray { }
+class NME_assets_collect_wav extends nme.media.Sound { }
+class NME_assets_crate_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_hero_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_hero_xml extends nme.utils.ByteArray { }
+class NME_assets_jewel_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_levela1_swc extends nme.utils.ByteArray { }
+class NME_assets_levela1_swf extends nme.utils.ByteArray { }
