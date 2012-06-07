@@ -11,16 +11,19 @@ import nme.Lib;
 class SparrowAnimationSequence extends Sprite {
 
 	private var _tilerLayer:TileLayer;
+	private var _fps:Int;
 
 	private var _previousTime:Int;
 
-	public function new(tileSheet:SparrowTilesheet, animations:Array<String>, defaultAnimation:String) {
+	public function new(tileSheet:SparrowTilesheet, defaultAnimation:String, fps:Int = 30) {
 
 		super();
 
+		_fps = fps;
+
 		_tilerLayer = new TileLayer(tileSheet);
 
-		_tilerLayer.addChild(new TileClip(defaultAnimation));
+		_tilerLayer.addChild(new TileClip(defaultAnimation, _fps));
 
 		this.addChild(_tilerLayer.view);
 
@@ -37,7 +40,7 @@ class SparrowAnimationSequence extends Sprite {
 
 	public function changeAnimation(animation:String):Void {
 
-		_tilerLayer.addChild(new TileClip(animation));
+		_tilerLayer.addChild(new TileClip(animation, _fps));
 		_tilerLayer.removeChildAt(0);
 	}
 

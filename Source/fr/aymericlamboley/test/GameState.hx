@@ -1,7 +1,6 @@
 package fr.aymericlamboley.test;
 
 import aze.display.SparrowTilesheet;
-import aze.display.TileClip;
 import aze.display.TileLayer;
 
 import box2D.dynamics.contacts.B2Contact;
@@ -72,7 +71,7 @@ class GameState extends State<GameData> {
 		//var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new SpriteLoqAnimationSequence(spriteSheet, "idle")});
 
 		var tileSheet:SparrowTilesheet = new SparrowTilesheet(Assets.getBitmapData("Assets/heroSparrow.png"), Assets.getText("Assets/heroSparrow.xml"));
-		var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new SparrowAnimationSequence(tileSheet, ["idle", "walk", "jump"], "idle")});
+		var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new SparrowAnimationSequence(tileSheet, "idle")});
 
 		add(hero);
 
