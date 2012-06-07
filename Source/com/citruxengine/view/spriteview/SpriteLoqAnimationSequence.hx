@@ -7,7 +7,7 @@ import nme.display.Sprite;
 import nme.events.Event;
 import nme.Lib;
 
-class AnimationSequence extends Sprite {
+class SpriteLoqAnimationSequence extends Sprite {
 
 	private var _animatedSprite:AnimatedSprite;
 

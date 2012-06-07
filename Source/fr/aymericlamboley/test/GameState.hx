@@ -1,5 +1,9 @@
 package fr.aymericlamboley.test;
 
+import aze.display.SparrowTilesheet;
+import aze.display.TileClip;
+import aze.display.TileLayer;
+
 import box2D.dynamics.contacts.B2Contact;
 
 import com.citruxengine.core.CitruxEngine;
@@ -16,7 +20,8 @@ import com.citruxengine.objects.platformer.Platform;
 import com.citruxengine.objects.platformer.Sensor;
 import com.citruxengine.physics.Box2D;
 import com.citruxengine.utils.ObjectMaker;
-import com.citruxengine.view.spriteview.AnimationSequence;
+import com.citruxengine.view.spriteview.SparrowAnimationSequence;
+import com.citruxengine.view.spriteview.SpriteLoqAnimationSequence;
 
 import com.eclecticdesignstudio.spritesheet.SpriteSheet;
 import com.eclecticdesignstudio.spritesheet.importers.SpriteLoq;
@@ -27,6 +32,8 @@ import nme.Assets;
 import nme.geom.Rectangle;
 
 class GameState extends State<GameData> {
+
+	var layer:TileLayer;
 
 	public function new() {
 
@@ -61,12 +68,16 @@ class GameState extends State<GameData> {
 		add(new Platform("platform3", {x:1278, y:363, width:624, height:20}));
 		add(new Platform("platform4", {x:1566, y:165, width:20, height:404}));
 
-		var spriteSheet:SpriteSheet = SpriteLoq.parse(ApplicationMain.getAsset("Assets/hero.xml"), "Assets");
-		var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new AnimationSequence(spriteSheet, "idle")});
+		var spriteSheet:SpriteSheet = SpriteLoq.parse(ApplicationMain.getAsset("Assets/heroSpriteLoq.xml"), "Assets");
+		//var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new SpriteLoqAnimationSequence(spriteSheet, "idle")});
+
+		var tileSheet:SparrowTilesheet = new SparrowTilesheet(Assets.getBitmapData("Assets/heroSparrow.png"), Assets.getText("Assets/heroSparrow.xml"));
+		var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new SparrowAnimationSequence(tileSheet, ["idle", "walk", "jump"], "idle")});
+
 		add(hero);
 
 		spriteSheet = SpriteLoq.parse(ApplicationMain.getAsset("Assets/baddy.xml"), "Assets");
-		var baddy:Baddy = new Baddy("baddy", {x:540, y:200, width:46, height:68, view:new AnimationSequence(spriteSheet, "walk")});
+		var baddy:Baddy = new Baddy("baddy", {x:540, y:200, width:46, height:68, view:new SpriteLoqAnimationSequence(spriteSheet, "walk")});
 		add(baddy);
 
 		var coin:Coin = new Coin("Coin", {x:Std.random(400), y:Std.random(300) + 100, radius:30, view:"Assets/jewel.png"});
@@ -74,6 +85,11 @@ class GameState extends State<GameData> {
 		coin.onBeginContact.add(_recoltCoin);
 
 		view.setupCamera(hero, new MathVector(320, 240), new Rectangle(0, 0, 1550, 0), new MathVector(.25, .05));
+	}
+
+	override public function update(timeDelta:Float):Void {
+
+		super.update(timeDelta);
 	}
 
 	private function _gameDataChanged(object:String, value:Dynamic):Void {

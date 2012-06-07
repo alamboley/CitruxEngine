@@ -18,7 +18,7 @@ walk; animations/walk.swf; (x=0, y=0); 1; 12; 30; (x=10, y=13); (x=89, y=145); (
 assetShapes 0
 -->
 
-<spritesheet name="hero" path="hero.png">
+<spritesheet name="hero" path="heroSpriteLoq.png">
 	<behavior name="die" referencePoint="0,0" frameRate="30" loop="1">
 		117,125,67,123,0,0;
 		86,399,74,113,3,10;

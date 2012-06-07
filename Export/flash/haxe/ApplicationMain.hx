@@ -99,14 +99,24 @@ class ApplicationMain {
             return Assets.getBitmapData ("Assets/crate.png");
          
 		
-		if (inName=="Assets/hero.png")
+		if (inName=="Assets/heroSparrow.png")
 			 
-            return Assets.getBitmapData ("Assets/hero.png");
+            return Assets.getBitmapData ("Assets/heroSparrow.png");
          
 		
-		if (inName=="Assets/hero.xml")
+		if (inName=="Assets/heroSparrow.xml")
 			 
-			 return Assets.getText ("Assets/hero.xml");
+			 return Assets.getText ("Assets/heroSparrow.xml");
+         
+		
+		if (inName=="Assets/heroSpriteLoq.png")
+			 
+            return Assets.getBitmapData ("Assets/heroSpriteLoq.png");
+         
+		
+		if (inName=="Assets/heroSpriteLoq.xml")
+			 
+			 return Assets.getText ("Assets/heroSpriteLoq.xml");
          
 		
 		if (inName=="Assets/jewel.png")
@@ -149,8 +159,10 @@ class NME_assets_baddy_png extends nme.display.BitmapData { public function new 
 class NME_assets_baddy_xml extends nme.utils.ByteArray { }
 class NME_assets_collect_wav extends nme.media.Sound { }
 class NME_assets_crate_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
-class NME_assets_hero_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
-class NME_assets_hero_xml extends nme.utils.ByteArray { }
+class NME_assets_herosparrow_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_herosparrow_xml extends nme.utils.ByteArray { }
+class NME_assets_herospriteloq_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_herospriteloq_xml extends nme.utils.ByteArray { }
 class NME_assets_jewel_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_levela1_swc extends nme.utils.ByteArray { }
 class NME_assets_levela1_swf extends nme.utils.ByteArray { }

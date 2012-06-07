@@ -2,8 +2,9 @@ package com.citruxengine.view.spriteview;
 
 import com.citruxengine.core.CitruxObject;
 import com.citruxengine.view.ISpriteView;
-import com.citruxengine.view.spriteview.AnimationSequence;
 import com.citruxengine.view.spriteview.Box2DDebugArt;
+import com.citruxengine.view.spriteview.SparrowAnimationSequence;
+import com.citruxengine.view.spriteview.SpriteLoqAnimationSequence;
 import com.citruxengine.view.spriteview.SpriteView;
 
 import nme.Assets;
@@ -110,8 +111,11 @@ class SpriteArt extends Sprite {
 
 		if (_animation != "") {
 
-			if (Std.is(content, AnimationSequence))
-				cast(content, AnimationSequence).changeAnimation(_animation);
+			if (Std.is(content, SpriteLoqAnimationSequence))
+				cast(content, SpriteLoqAnimationSequence).changeAnimation(_animation);
+
+			if (Std.is(content, SparrowAnimationSequence))
+				cast(content, SparrowAnimationSequence).changeAnimation(_animation);
 		}
 
 		return _animation;
