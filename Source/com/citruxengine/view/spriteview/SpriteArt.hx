@@ -22,6 +22,7 @@ class SpriteArt extends Sprite {
 	public var group(getGroup, setGroup):Int;
 
 	public var content:DisplayObject;
+	public var stateView:SpriteView;
 
 	var _citruxObject:ISpriteView;
 	var _view:Dynamic;
@@ -29,17 +30,18 @@ class SpriteArt extends Sprite {
 	var _registration:String;
 	var _group:Int;
 
-	public function new(object:ISpriteView) {
+	public function new(object:ISpriteView, rootView:SpriteView) {
 
 		super();
 
 		_citruxObject = object;
+		stateView = rootView;
 
 		this.name = cast(_citruxObject, CitruxObject).name;
 	}
 
-	public function update(stateView:SpriteView):Void {
-
+	public function update():Void {
+		
 		this.scaleX = _citruxObject.inverted ? - 1 : 1;
 		//position = object position + (camera position * inverse parallax)
 		this.x =  _citruxObject.x + (-stateView.viewRoot.x * (1 - _citruxObject.parallax)) + _citruxObject.offsetX * this.scaleX;

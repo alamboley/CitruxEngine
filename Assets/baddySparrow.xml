@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:9d170aba2bbdb1ce04699ea1ca1c4067$ -->
+<TextureAtlas imagePath="baddySparrow.png">
+    <SubTexture name="walk/0000" x="100" y="142" width="48" height="68" frameX="-243" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0001" x="100" y="142" width="48" height="68" frameX="-243" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0002" x="198" y="142" width="46" height="68" frameX="-245" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0003" x="198" y="142" width="46" height="68" frameX="-245" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0004" x="2" y="146" width="46" height="70" frameX="-244" frameY="-174" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0005" x="2" y="146" width="46" height="70" frameX="-244" frameY="-174" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0006" x="50" y="72" width="52" height="68" frameX="-241" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0007" x="50" y="72" width="52" height="68" frameX="-241" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0008" x="120" y="2" width="60" height="68" frameX="-237" frameY="-175" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0009" x="120" y="2" width="60" height="68" frameX="-237" frameY="-175" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0010" x="50" y="2" width="68" height="68" frameX="-234" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0011" x="50" y="2" width="68" height="68" frameX="-234" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0012" x="182" y="2" width="56" height="68" frameX="-239" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0013" x="182" y="2" width="56" height="68" frameX="-239" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0014" x="2" y="74" width="46" height="70" frameX="-245" frameY="-175" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0015" x="2" y="74" width="46" height="70" frameX="-245" frameY="-175" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0016" x="200" y="72" width="46" height="68" frameX="-245" frameY="-177" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0017" x="200" y="72" width="46" height="68" frameX="-245" frameY="-177" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0018" x="2" y="2" width="46" height="70" frameX="-245" frameY="-175" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0019" x="2" y="2" width="46" height="70" frameX="-245" frameY="-175" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0020" x="152" y="72" width="46" height="68" frameX="-246" frameY="-177" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0021" x="152" y="72" width="46" height="68" frameX="-246" frameY="-177" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0022" x="150" y="142" width="46" height="68" frameX="-246" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0023" x="150" y="142" width="46" height="68" frameX="-246" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0024" x="50" y="142" width="48" height="68" frameX="-245" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0025" x="50" y="142" width="48" height="68" frameX="-245" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0026" x="104" y="72" width="46" height="68" frameX="-246" frameY="-176" frameWidth="550" frameHeight="400"/>
+    <SubTexture name="walk/0027" x="104" y="72" width="46" height="68" frameX="-246" frameY="-176" frameWidth="550" frameHeight="400"/>
+</TextureAtlas>

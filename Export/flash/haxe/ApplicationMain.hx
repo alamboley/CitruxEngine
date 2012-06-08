@@ -79,14 +79,24 @@ class ApplicationMain {
             return Assets.getBitmapData ("Assets/background.jpg");
          
 		
-		if (inName=="Assets/baddy.png")
+		if (inName=="Assets/baddySparrow.png")
 			 
-            return Assets.getBitmapData ("Assets/baddy.png");
+            return Assets.getBitmapData ("Assets/baddySparrow.png");
          
 		
-		if (inName=="Assets/baddy.xml")
+		if (inName=="Assets/baddySparrow.xml")
 			 
-			 return Assets.getText ("Assets/baddy.xml");
+			 return Assets.getText ("Assets/baddySparrow.xml");
+         
+		
+		if (inName=="Assets/baddySpriteLoq.png")
+			 
+            return Assets.getBitmapData ("Assets/baddySpriteLoq.png");
+         
+		
+		if (inName=="Assets/baddySpriteLoq.xml")
+			 
+			 return Assets.getText ("Assets/baddySpriteLoq.xml");
          
 		
 		if (inName=="Assets/collect.wav")
@@ -155,8 +165,10 @@ class ApplicationMain {
 
 
 class NME_assets_background_jpg extends nme.display.BitmapData { public function new () { super (0, 0); } }
-class NME_assets_baddy_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
-class NME_assets_baddy_xml extends nme.utils.ByteArray { }
+class NME_assets_baddysparrow_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_baddysparrow_xml extends nme.utils.ByteArray { }
+class NME_assets_baddyspriteloq_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
+class NME_assets_baddyspriteloq_xml extends nme.utils.ByteArray { }
 class NME_assets_collect_wav extends nme.media.Sound { }
 class NME_assets_crate_png extends nme.display.BitmapData { public function new () { super (0, 0); } }
 class NME_assets_herosparrow_png extends nme.display.BitmapData { public function new () { super (0, 0); } }

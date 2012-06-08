@@ -30,10 +30,14 @@ class Assets {
 			
 			resourceClasses.set ("Assets/background.jpg", NME_assets_background_jpg);
 			resourceTypes.set ("Assets/background.jpg", "image");
-			resourceClasses.set ("Assets/baddy.png", NME_assets_baddy_png);
-			resourceTypes.set ("Assets/baddy.png", "image");
-			resourceClasses.set ("Assets/baddy.xml", NME_assets_baddy_xml);
-			resourceTypes.set ("Assets/baddy.xml", "text");
+			resourceClasses.set ("Assets/baddySparrow.png", NME_assets_baddysparrow_png);
+			resourceTypes.set ("Assets/baddySparrow.png", "image");
+			resourceClasses.set ("Assets/baddySparrow.xml", NME_assets_baddysparrow_xml);
+			resourceTypes.set ("Assets/baddySparrow.xml", "text");
+			resourceClasses.set ("Assets/baddySpriteLoq.png", NME_assets_baddyspriteloq_png);
+			resourceTypes.set ("Assets/baddySpriteLoq.png", "image");
+			resourceClasses.set ("Assets/baddySpriteLoq.xml", NME_assets_baddyspriteloq_xml);
+			resourceTypes.set ("Assets/baddySpriteLoq.xml", "text");
 			resourceClasses.set ("Assets/collect.wav", NME_assets_collect_wav);
 			resourceTypes.set ("Assets/collect.wav", "sound");
 			resourceClasses.set ("Assets/crate.png", NME_assets_crate_png);

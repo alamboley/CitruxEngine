@@ -21,6 +21,7 @@ import com.citruxengine.physics.Box2D;
 import com.citruxengine.utils.ObjectMaker;
 import com.citruxengine.view.spriteview.SparrowAnimationSequence;
 import com.citruxengine.view.spriteview.SpriteLoqAnimationSequence;
+import com.citruxengine.view.spriteview.SpriteView;
 
 import com.eclecticdesignstudio.spritesheet.SpriteSheet;
 import com.eclecticdesignstudio.spritesheet.importers.SpriteLoq;
@@ -31,8 +32,6 @@ import nme.Assets;
 import nme.geom.Rectangle;
 
 class GameState extends State<GameData> {
-
-	var layer:TileLayer;
 
 	public function new() {
 
@@ -71,13 +70,20 @@ class GameState extends State<GameData> {
 		//var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new SpriteLoqAnimationSequence(spriteSheet, "idle")});
 
 		var tileSheet:SparrowTilesheet = new SparrowTilesheet(Assets.getBitmapData("Assets/heroSparrow.png"), Assets.getText("Assets/heroSparrow.xml"));
-		var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new SparrowAnimationSequence(tileSheet, "idle")});
+		var heroTileLayer:TileLayer = cast(view, SpriteView).createTileLayer(tileSheet, "hero");
+		var hero:Hero = new Hero("hero", {x:100, y:20, width:60, height:135, view:new SparrowAnimationSequence(heroTileLayer, "idle")});
 
 		add(hero);
 
-		spriteSheet = SpriteLoq.parse(ApplicationMain.getAsset("Assets/baddy.xml"), "Assets");
-		var baddy:Baddy = new Baddy("baddy", {x:540, y:200, width:46, height:68, view:new SpriteLoqAnimationSequence(spriteSheet, "walk")});
-		add(baddy);
+		spriteSheet = SpriteLoq.parse(ApplicationMain.getAsset("Assets/baddySpriteLoq.xml"), "Assets");
+		tileSheet = new SparrowTilesheet(Assets.getBitmapData("Assets/baddySparrow.png"), Assets.getText("Assets/baddySparrow.xml"));
+		var baddyTileLayer:TileLayer = new TileLayer(tileSheet);
+		//var baddy:Baddy = new Baddy("baddy", {x:540, y:200, width:46, height:68, view:new SpriteLoqAnimationSequence(spriteSheet, "walk")});
+		var baddy1:Baddy = new Baddy("baddy1", {x:440, y:200, width:46, height:68, view:new SparrowAnimationSequence(baddyTileLayer, "walk")});
+		add(baddy1);
+
+		//var baddy2:Baddy = new Baddy("baddy2", {x:540, y:200, width:46, height:68, view:new SparrowAnimationSequence(baddyTileLayer, "walk")});
+		//add(baddy2);
 
 		var coin:Coin = new Coin("Coin", {x:Std.random(400), y:Std.random(300) + 100, radius:30, view:"Assets/jewel.png"});
 		add(coin);

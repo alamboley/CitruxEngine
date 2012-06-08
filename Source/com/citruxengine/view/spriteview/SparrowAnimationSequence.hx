@@ -1,6 +1,5 @@
 package com.citruxengine.view.spriteview;
 
-import aze.display.SparrowTilesheet;
 import aze.display.TileClip;
 import aze.display.TileLayer;
 
@@ -15,16 +14,15 @@ class SparrowAnimationSequence extends Sprite {
 
 	private var _previousTime:Int;
 
-	public function new(tileSheet:SparrowTilesheet, defaultAnimation:String, fps:Int = 30) {
+	public function new(tilerLayer:TileLayer, defaultAnimation:String, fps:Int = 30) {
 
 		super();
 
+		_tilerLayer = tilerLayer;
 		_fps = fps;
 
-		_tilerLayer = new TileLayer(tileSheet);
-
 		_tilerLayer.addChild(new TileClip(defaultAnimation, _fps));
-
+		
 		this.addChild(_tilerLayer.view);
 
 		_previousTime = Lib.getTimer();
@@ -47,12 +45,5 @@ class SparrowAnimationSequence extends Sprite {
 	private function _update(evt:Event):Void {
 
 		_tilerLayer.render();
-		
-		/*var currentTime:Int = Lib.getTimer ();
-		var deltaTime:Int = currentTime - _previousTime;
-
-		_tilerLayer.step(deltaTime);
-
-		_previousTime = currentTime;*/
 	}
 }

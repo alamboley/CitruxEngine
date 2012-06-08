@@ -14,7 +14,7 @@ die; ../.Trash/die.swf; (x=0, y=0); 1; 11; 30; (x=-2, y=0); (x=59, y=64); (x=-4,
 assetShapes 0
 -->
 
-<spritesheet name="baddy" path="baddy.png">
+<spritesheet name="baddy" path="baddySpriteLoq.png">
 	<behavior name="walk" referencePoint="0,0" frameRate="30" loop="0">
 		50,73,51,72,9,1;
 		50,73,51,72,9,1;

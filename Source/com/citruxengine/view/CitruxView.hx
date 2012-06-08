@@ -4,6 +4,7 @@ import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.math.MathVector;
 import com.citruxengine.view.ISpriteView;
 
+import nme.ObjectHash;
 import nme.geom.Rectangle;
 
 /**
@@ -48,11 +49,11 @@ class CitruxView  {
 	/**
 	 * The height of the visible game screen. This will usually be the same as your stage width unless your game has a border.
 	 */
-	 public var cameraLensHeight:Float;
+	public var cameraLensHeight:Float;
 
-	 private var _viewObjects:Hash<Dynamic>;
-	 private var _root:Dynamic;
-	 private var _viewInterface:Class<ISpriteView>;
+	private var _viewObjects:ObjectHash<Dynamic, Dynamic>;
+	private var _root:Dynamic;
+	private var _viewInterface:Class<ISpriteView>;
 	
 	/**
 	 * There is one CitrusView per state, so when a new state is initialized, it creates the view instance.
@@ -64,7 +65,7 @@ class CitruxView  {
 		_root = root;
 		_viewInterface = viewInterface;
 
-		_viewObjects = new Hash<Dynamic>();
+		_viewObjects = new ObjectHash<Dynamic, Dynamic>();
 
 		var ce:CitruxEngine<Dynamic> = CitruxEngine.getInstance();
 

@@ -1,5 +1,8 @@
 package com.citruxengine.view.spriteview;
 
+import aze.display.SparrowTilesheet;
+import aze.display.TileLayer;
+
 import com.citruxengine.view.CitruxView;
 import com.citruxengine.view.ISpriteView;
 import com.citruxengine.view.spriteview.SpriteArt;
@@ -60,8 +63,8 @@ class SpriteView extends CitruxView {
 
 			if (sprite.group != sprite.citruxObject.group)
 				_updateGroupForSprite(sprite);
-
-			sprite.update(this);
+				
+			sprite.update();
 		}
 	}
 
@@ -69,10 +72,10 @@ class SpriteView extends CitruxView {
 
 		var viewObject:ISpriteView = cast(citruxObject, ISpriteView);
 
-		var art:SpriteArt = new SpriteArt(viewObject);
+		var art:SpriteArt = new SpriteArt(viewObject, this);
 
 		//Perform an initial update
-		art.update(this);
+		art.update();
 		
 		_updateGroupForSprite(art);
 
@@ -85,6 +88,16 @@ class SpriteView extends CitruxView {
 		spriteArt.parent.removeChild(spriteArt);
 	}
 
+	public function createTileLayer(tileSheet:SparrowTilesheet, name:String, group:Int = 0):TileLayer {
+
+		var tileLayer:TileLayer = new TileLayer(tileSheet);
+		tileLayer.view.name = name;
+
+		_updateGroupForTileLayer(tileLayer.view, group);
+
+		return tileLayer;
+	}
+
 	private function _updateGroupForSprite(sprite:SpriteArt):Void {
 
 		//Create the container sprite (group) if it has not been created yet.
@@ -93,5 +106,15 @@ class SpriteView extends CitruxView {
 
 		//Add the sprite to the appropriate group
 		cast(_viewRoot.getChildAt(sprite.group), Sprite).addChild(sprite);
+	}
+
+	private function _updateGroupForTileLayer(sprite:Sprite, group:Int):Void {
+
+		//Create the container sprite (group) if it has not been created yet.
+		while (group >= _viewRoot.numChildren)
+			_viewRoot.addChild(new Sprite());
+
+		//Add the sprite to the appropriate group
+		cast(_viewRoot.getChildAt(group), Sprite).addChild(sprite);
 	}
 }

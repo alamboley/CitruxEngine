@@ -4,7 +4,6 @@ import box2D.dynamics.B2DebugDraw;
 
 import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.physics.Box2D;
-import com.citruxengine.view.spriteview.SpriteArt;
 
 import nme.display.Sprite;
 import nme.events.Event;
