@@ -21,6 +21,7 @@ class Box2D extends CitruxObject, implements ISpriteView {
 
 	public var world(getWorld, never):B2World;
 	public var scale(getScale, never):Int;
+	public var gravity(getGravity, setGravity):B2Vec2;
 
 	public var x(getX, never):Float;
 	public var y(getY, never):Float;
@@ -39,6 +40,7 @@ class Box2D extends CitruxObject, implements ISpriteView {
 
 	var _world:B2World;
 	var _scale:Int;
+	var _gravity:B2Vec2;
 
 	var _visible:Bool;
 	var _group:Int;
@@ -49,11 +51,12 @@ class Box2D extends CitruxObject, implements ISpriteView {
 		_visible = false;
 		_group = 1;
 		_scale = 30;
+		_gravity = new B2Vec2(0, 15);
 		_view = Box2DDebugArt;
 
 		super(name, params);
 
-		_world = new B2World(new B2Vec2(0, 0), true);
+		_world = new B2World(_gravity, true);
 		_contactListener = new ContactListener();
 
 		_world.setContactListener(_contactListener);
@@ -70,6 +73,7 @@ class Box2D extends CitruxObject, implements ISpriteView {
 
 		// 0.05 = 1 / 20
 		_world.step(0.05, 8, 8);
+		_world.clearForces();
 	}
 
 	public function getWorld():B2World {
@@ -84,6 +88,14 @@ class Box2D extends CitruxObject, implements ISpriteView {
 	 */	
 	public function getScale():Int {
 		return _scale;
+	}
+
+	public function getGravity():B2Vec2 {
+		return _gravity;
+	}
+
+	public function setGravity(value:B2Vec2):B2Vec2 {
+		return _gravity = value;
 	}
 
 	public function getX():Float {

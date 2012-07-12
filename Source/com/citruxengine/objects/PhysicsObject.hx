@@ -132,19 +132,9 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 
 	/**
 	 * You should override this method to extend the functionality of your physics object. This is where you will 
-	 * want to do any velocity/force logic. By default, this method also updates the gravitatonal effect on the object.
-	 * I have chosen to implement gravity in each individual object instead of globally via Box2D so that it is easy
-	 * to create objects that defy gravity (like birds or bullets). This is difficult to do naturally in Box2D. Instead,
-	 * you can simply set your PhysicsObject's gravity property to 0, and baddabing: no gravity. 
+	 * want to do any velocity/force logic.
 	 */	
 	override public function update(timeDelta:Float):Void {
-
-		if (_bodyDef.type == B2Body.b2_dynamicBody) {
-
-			var velocity:B2Vec2 = _body.getLinearVelocity();
-			velocity.y += gravity;
-			_body.setLinearVelocity(velocity);
-		}
 	}
 
 	public function handleBeginContact(contact:B2Contact):Void {
