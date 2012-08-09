@@ -165,11 +165,12 @@ class Hero extends PhysicsObject {
 		//trace('end');
 	}
 
-	override private function createBody():Void {
+	override private function defineBody():Void {
 
-		super.createBody();
+		super.defineBody();
 
-		_body.setFixedRotation(true);
+		_bodyDef.fixedRotation = true;
+		_bodyDef.allowSleep = false;
 	}
 
 	public function getAcceleration():Float {
