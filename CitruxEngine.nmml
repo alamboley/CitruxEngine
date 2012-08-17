@@ -27,9 +27,4 @@
 
 	<icon path="Assets/CitruxEngine.png" width="32" height="32" />
 	
-	<ndll name="std" />
-	<ndll name="regexp" />
-	<ndll name="zlib" />
-	<ndll name="nme" haxelib="nme" />
-	
 </project>
