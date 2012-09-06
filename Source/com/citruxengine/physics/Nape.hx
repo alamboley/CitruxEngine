@@ -20,6 +20,7 @@ class Nape extends CitruxObject, implements ISpriteView {
 
 	public var space(getSpace, never):Space;
 	public var gravity(getGravity, setGravity):Vec2;
+	public var contactListener(getContactListener, never):NapeContactListener;
 
 	public var x(getX, never):Float;
 	public var y(getY, never):Float;
@@ -34,11 +35,9 @@ class Nape extends CitruxObject, implements ISpriteView {
 	public var offsetY(getOffsetY, never):Float;
 	public var registration(getRegistration, never):String;
 
-	private var _contactListener:NapeContactListener;
-
 	var _space:Space;
-	var _scale:Int;
 	var _gravity:Vec2;
+	var _contactListener:NapeContactListener;
 
 	var _visible:Bool;
 	var _group:Int;
@@ -76,13 +75,17 @@ class Nape extends CitruxObject, implements ISpriteView {
 	public function getSpace():Space {
 		return _space;
 	}
-	
+
 	public function getGravity():Vec2 {
 		return _gravity;
 	}
 
 	public function setGravity(value:Vec2):Vec2 {
 		return _gravity = value;
+	}
+
+	public function getContactListener():NapeContactListener {
+		return _contactListener;
 	}
 
 	public function getX():Float {

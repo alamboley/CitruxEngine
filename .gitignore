@@ -2,4 +2,5 @@ CitruxEngine.build
 Export/cpp
 Export/iphone
 Export/ios
+Export/html5
 .build

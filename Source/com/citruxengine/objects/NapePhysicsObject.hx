@@ -24,7 +24,7 @@ import nme.display.MovieClip;
  */
 class NapePhysicsObject extends CitruxObject, implements ISpriteView {
 
-	inline public static var PHYSICS_OBJECT:CbType = new CbType();
+	public static var PHYSICS_OBJECT:CbType = new CbType();
 
 	public var x(getX, setX):Float;
 	public var y(getY, setY):Float;
@@ -124,17 +124,17 @@ class NapePhysicsObject extends CitruxObject, implements ISpriteView {
 	override public function update(timeDelta:Float):Void {
 	}
 
-	/*public function handleBeginContact(callback:InteractionCallback):Void {
-
+	public function handleBeginContact(cb:InteractionCallback):Void {
+		
 	}
 
-	public function handleEndContact(callback:InteractionCallback):Void {
-
+	public function handleEndContact(cb:InteractionCallback):Void {
+		
 	}
 
-	public function handlePreContact(callback:PreCallback):PreFlag {
+	public function handlePreContact(cb:PreCallback):PreFlag {
 		return PreFlag.ACCEPT;
-	}*/
+	}
 
 	private function defineBody():Void {
 

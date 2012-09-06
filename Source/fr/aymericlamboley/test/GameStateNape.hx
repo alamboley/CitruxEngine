@@ -5,7 +5,17 @@ import com.citruxengine.core.State;
 import com.citruxengine.math.MathVector;
 import com.citruxengine.objects.CitruxSprite;
 import com.citruxengine.objects.NapePhysicsObject;
+import com.citruxengine.objects.platformer.nape.Platform;
 import com.citruxengine.physics.Nape;
+
+import fr.aymericlamboley.test.ShopsWoman;
+
+import nape.callbacks.CbEvent;
+import nape.callbacks.CbType;
+import nape.callbacks.InteractionCallback;
+import nape.callbacks.InteractionListener;
+import nape.callbacks.InteractionType;
+import nape.geom.Vec2;
 
 class GameStateNape extends State<GameData> {
 
@@ -18,15 +28,18 @@ class GameStateNape extends State<GameData> {
 
 		super.initialize();
 
-		var nape:Nape = new Nape("Box2D");
-		nape.visible = true;
-		add(nape);
+		var napePhysics:Nape = new Nape("Nape", {gravity:new Vec2()});
+		napePhysics.visible = true;
+		add(napePhysics);
 
-		add(new NapePhysicsObject("nape object", {x:200, y:200, width:30, height:60}));
+		napePhysics.space.listeners.add(new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, ShopsWoman.SHOPSWOMAN, CbType.ANY_BODY, napePhysics.contactListener.onInteractionBegin));
+		napePhysics.space.listeners.add(new InteractionListener(CbEvent.END, InteractionType.COLLISION, ShopsWoman.SHOPSWOMAN, CbType.ANY_BODY, napePhysics.contactListener.onInteractionEnd));
 
-		/*add(new Platform("platform1", {x:498, y:403, width:948, height:20}));
-		add(new Platform("platform2", {x:0, y:202, width:20, height:404}));
-		add(new Platform("platform3", {x:1278, y:363, width:624, height:20}));
-		add(new Platform("platform4", {x:1566, y:165, width:20, height:404}));*/
+
+		var shopsWoman:ShopsWoman = new ShopsWoman("shopsWoman", {x:300, y:30});
+		add(shopsWoman);
+
+		var block:Block = new Block("block", {x:150, y:30});
+		add(block);
 	}
 }
