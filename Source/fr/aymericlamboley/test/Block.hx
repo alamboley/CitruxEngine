@@ -15,20 +15,20 @@ class Block extends Platform {
 	
 	public var life:UInt = 2;
 	
-	private var _timerHurt:Timer;
+	public var timerHurt:Timer;
 
 	public function new(name:String, params:Dynamic = null) {
 		
 		super(name, params);
 		
-		_timerHurt = new Timer(1000);
-		_timerHurt.addEventListener(TimerEvent.TIMER, _removeLife);
+		timerHurt = new Timer(1000);
+		timerHurt.addEventListener(TimerEvent.TIMER, _removeLife);
 	}
 	
 	override public function destroy():Void {
 		
-		_timerHurt.removeEventListener(TimerEvent.TIMER, _removeLife);
-		_timerHurt = null;
+		timerHurt.removeEventListener(TimerEvent.TIMER, _removeLife);
+		timerHurt = null;
 		
 		super.destroy();
 	}
@@ -50,8 +50,8 @@ class Block extends Platform {
 		
 		if (Std.is(cb.int1.userData.myData, ShopsWoman)) {
 			
-			if (!_timerHurt.running)
-				_timerHurt.start();
+			if (!cb.int2.userData.myData.timerHurt.running)
+				cb.int2.userData.myData.timerHurt.start();
 		}
 	}
 	
@@ -59,8 +59,8 @@ class Block extends Platform {
 		
 		if (Std.is(cb.int1.userData.myData, ShopsWoman)) {
 			
-			if (_timerHurt.running)
-				_timerHurt.stop();
+			if (cb.int2.userData.myData.timerHurt)
+				cb.int2.userData.myData.timerHurt.stop();
 		}
 	}
 	

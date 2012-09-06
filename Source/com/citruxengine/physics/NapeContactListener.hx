@@ -21,15 +21,15 @@ class NapeContactListener {
 	}
 
 	public function onInteractionBegin(cb:InteractionCallback):Void {
-		
+
 		cb.int1.userData.myData.handleBeginContact(cb);
 		cb.int2.userData.myData.handleBeginContact(cb);
 	}
 
 	public function onInteractionEnd(cb:InteractionCallback):Void {
 
-		cb.int1.userData.myData.handleBeginContact(cb);
-		cb.int2.userData.myData.handleBeginContact(cb);
+		cb.int1.userData.myData.handleEndContact(cb);
+		cb.int2.userData.myData.handleEndContact(cb);
 	}
 
 }
