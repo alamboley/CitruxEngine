@@ -46,11 +46,6 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 	public var radius(getRadius, setRadius):Float;
 	public var body(getBody, never):B2Body;
 
-	/**
-	 * The speed at which this object will be affected by gravity. 
-	 */
-	public var gravity:Float;
-
 	var _ce:CitruxEngine<Dynamic>;
 	var _box2D:Box2D;
 	var _bodyDef:B2BodyDef;
@@ -90,8 +85,6 @@ class PhysicsObject extends CitruxObject, implements ISpriteView {
 
 		_ce = CitruxEngine.getInstance();
 		_box2D = cast(_ce.state.getFirstObjectByType(Box2D), Box2D);
-
-		gravity = 1.6;
 
 		_x = _y = _rotation = _radius = _offsetX = _offsetY = 0;
 		_width = _height = 1;

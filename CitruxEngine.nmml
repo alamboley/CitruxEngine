@@ -22,6 +22,9 @@
 	<haxelib name="spritesheet" />
 	<haxelib name="tilelayer" />
 	<haxelib name="swf" />
+	
+	<haxeflag name="--dead-code-elimination" if="html5" />
+	<haxeflag name="--js-modern" if="html5" />
 
 	<assets path="Assets" include="*" exclude="CitruxEngine.png" />
 
