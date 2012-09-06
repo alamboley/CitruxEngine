@@ -24,7 +24,7 @@ class Main extends CitruxEngine<GameData> {
 
 		gameData = new GameData();
 
-		state = new GameStateNape();
+		state = new GameState();
 
 		this.addChild(new FPS(0, 0, 0xFF6600));
 	}

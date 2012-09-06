@@ -2,7 +2,6 @@ package com.citruxengine.physics;
 
 import com.citruxengine.core.CitruxEngine;
 import com.citruxengine.core.CitruxObject;
-import com.citruxengine.physics.NapeContactListener;
 import com.citruxengine.view.ISpriteView;
 import com.citruxengine.view.spriteview.NapeDebugArt;
 
