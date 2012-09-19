@@ -15,7 +15,7 @@ class ShopsWoman extends NapePhysicsObject {
 	public static var SHOPSWOMAN:CbType = new CbType();
 	
 	public var speed:Float = 21;
-	public var life:UInt = 4;
+	public var life:Int = 4;
 	public var fighting:Bool = false;
 
 	public function new(name:String, params:Dynamic = null) {

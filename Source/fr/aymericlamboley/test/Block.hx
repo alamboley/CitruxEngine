@@ -13,7 +13,7 @@ import flash.utils.Timer;
  */
 class Block extends Platform {
 	
-	public var life:UInt = 2;
+	public var life:Int = 2;
 	
 	public var timerHurt:Timer;
 
